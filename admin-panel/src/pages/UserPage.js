@@ -205,7 +205,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Dac Rapide </title>
       </Helmet>
 
       <Container>
