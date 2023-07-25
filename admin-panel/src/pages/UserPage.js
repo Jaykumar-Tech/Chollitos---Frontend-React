@@ -99,15 +99,17 @@ export default function UserPage() {
     
     axios.get("/api/user/getall")
       .then((response)=>{
+        console.log(response.data.data);
         setUsers(response.data.data.map((val)=>{
           return {
             id: val.id,
             name: val.name,
             email: val.email,
             password: val.password,
+            role: val.role,
+            status: (val.status?"Active":"Banned"),
             createdAt: fDate(val.created_at),
-            updatedAt: fDate(val.updated_at),
-            status: sample(['active', 'banned'])
+            updatedAt: fDate(val.updated_at)
           }
         }));
       })
@@ -246,7 +248,6 @@ export default function UserPage() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
                               {name}
                             </Typography>

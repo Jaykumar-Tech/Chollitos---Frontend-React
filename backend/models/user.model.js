@@ -10,6 +10,12 @@ const User = sequelize.define('User', {
     },
     password: {
         type: DataTypes.STRING 
+    },
+    role: {
+        type: DataTypes.STRING
+    },
+    status: {
+        type: DataTypes.STRING
     }
 }, {
     createdAt: 'created_at',

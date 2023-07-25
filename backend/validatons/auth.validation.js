@@ -11,10 +11,13 @@ module.exports = {
     register: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).max(16).required().external(validatePassword)
+        password: Joi.string().required()//.min(8).max(16).external(validatePassword)
     }),
     login: Joi.object().keys({
         email: Joi.string().email().required(),
         password: Joi.string().required()
-    })
+    }),
+    otpGen: Joi.object().keys({
+        email: Joi.string().email().required()
+    }),
 }

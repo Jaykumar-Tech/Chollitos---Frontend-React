@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
@@ -9,6 +10,7 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { RegisterForm } from '../sections/auth/register';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +44,11 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+  const [isLogin, setLogin] = useState(true)
+
+  const handleSwitch = () => {
+    setLogin(!isLogin);
+  }
 
   return (
     <>
@@ -60,7 +67,8 @@ export default function LoginPage() {
 
         {mdUp && (
           <StyledSection>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+            <Typography variant="h3"
+              sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back
             </Typography>
             <img src="/assets/illustrations/illustration_login.png" alt="login" />
@@ -69,13 +77,16 @@ export default function LoginPage() {
 
         <Container maxWidth="sm">
           <StyledContent>
-            <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+            <Typography variant="h4"
+              gutterBottom >
+              Sign {isLogin ? "in" : "up"} to Dac Rapide
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
+              <Link variant="subtitle2"
+                style={{ cursor: 'pointer' }}
+                onClick={handleSwitch}>{isLogin ? "Signup" : "Signin"}</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
@@ -98,7 +109,11 @@ export default function LoginPage() {
               </Typography>
             </Divider>
 
-            <LoginForm />
+            {
+              isLogin ? <LoginForm /> :
+                <RegisterForm />
+            }
+
           </StyledContent>
         </Container>
       </StyledRoot>
