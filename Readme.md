@@ -42,7 +42,7 @@
          password: xxxxxxxxx ( received in email )
        }
 
-# JWT
+# JWT for common access except login and register
 - HEADER of request
     headers: {
       'Content-Type': 'application/json',
