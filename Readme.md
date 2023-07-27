@@ -39,7 +39,8 @@
        {
          email: xyz@outlook.com,
          name: name,
-         password: xxxxxxxxx ( received in email )
+         password: xxxxxxxxx, // ( received in email )
+         role: role
        }
 
 # JWT for common access except login and register
