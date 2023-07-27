@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, Snackbar } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, TextField, RadioGroup, Radio, FormControlLabel, Snackbar } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
@@ -22,9 +22,22 @@ export default function RegisterForm() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [selectedOption, setSelectedOption] = useState("customer");
+
   const handleAlert = (_message) => {
     setMessage(_message)
     setOpen(true);
+  };
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+    if (event.target.value === 'customer') {
+      // Perform actions for public office selected
+      console.log('Public Office selected');
+    } else if (event.target.value === 'business') {
+      // Perform actions for business account selected
+      console.log('Business Account selected');
+    }
   };
 
   const handleClickOtpSent = () => {
@@ -43,12 +56,15 @@ export default function RegisterForm() {
       })
   }
 
+  const role = selectedOption;
+
   const handleClick = () => {
     axios.post("/api/user/register",
       {
         email,
         name,
-        password
+        password,
+        role
       })
       .then((response) => {
         console.log(response)
@@ -93,6 +109,7 @@ export default function RegisterForm() {
             onChange={handleInputChange}
             name="name" label="Full name" /> : null}
 
+
         {
           otpSent ? <TextField
             name="password"
@@ -110,6 +127,14 @@ export default function RegisterForm() {
               ),
             }}
           /> : null}
+
+          
+        {
+          otpSent ?
+            <RadioGroup value={selectedOption} onChange={handleOptionChange}>
+              <FormControlLabel value="customer" control={<Radio />} label="Public Office" />
+              <FormControlLabel value="business" control={<Radio />} label="Business Account" />
+            </RadioGroup> : null}
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>

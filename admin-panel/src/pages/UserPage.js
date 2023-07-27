@@ -39,6 +39,7 @@ import axios from "../axios.instance";
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
+  { id: 'role', label: 'Role', alignRight: false },
   { id: 'createdAt', label: 'Created', alignRight: false },
   { id: 'updatedAt', label: 'Updated', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
@@ -237,7 +238,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, email, createdAt, status, updatedAt, avatarUrl} = row;
+                    const { id, name, email, role, createdAt, status, updatedAt, avatarUrl} = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -255,6 +256,8 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
+
+                        <TableCell align="left">{role==="customer"?"Public Officer":"Business Account"}</TableCell>
 
                         <TableCell align="left">{createdAt}</TableCell>
 

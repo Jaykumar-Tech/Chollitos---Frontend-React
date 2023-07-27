@@ -23,7 +23,7 @@ exports.otpGen = async (req, res) => {
         const mailOptions = {
           from: mailConfig.mail,
           to: recvEmail,
-          subject: 'One Time Password',
+          subject: 'One Time Password From Dac Rapide',
           text: `Your password is: <${otpPswd}>`,
         };
     
@@ -62,7 +62,7 @@ exports.register = async (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        role: "user", // or admin
+        role: req.body.role, // "customer, business, admin"
         status: true
     }
     const user = await AuthService.createUser(userData);
