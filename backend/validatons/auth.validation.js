@@ -27,4 +27,11 @@ module.exports = {
     otpGen: Joi.object().keys({
         email: Joi.string().email().required()
     }),
+    edit: Joi.object().keys({
+        name: Joi.string().required(),
+        email: Joi.string().email().required(),
+        oldPassword: Joi.string().required(),//.min(8).max(16).external(validatePassword)
+        newPassword: Joi.string().required(),//.min(8).max(16).external(validatePassword)
+        role: Joi.string().required().external(validateRole)
+    })
 }

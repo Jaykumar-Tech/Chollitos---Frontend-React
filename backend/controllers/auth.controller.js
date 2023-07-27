@@ -117,3 +117,39 @@ exports.deleteUser = async (req, res) => {
         message: "Success"
     })
 }
+
+exports.verifyPassword = async ( req, res ) => {
+    const user = await AuthService.findUserByEmail(req.body.email) ;
+    if ( user ) {
+        const isMatched = req.body.password == user.password ;
+        if ( isMatched ) {
+            return res.json({
+                message: "success"
+            })
+        }
+    }
+    return res.status(400).json({
+        message: "Unauthorized."
+    })
+}
+
+exports.edit = async ( req, res)=> {
+    const user = await AuthService.findUserById(req.user.id);
+    if (user) {
+        const isMatched = req.body.oldPassword == user.password;
+        if (isMatched) {
+            const userData = {
+                name: req.body.name,
+                email: user.email,
+                password: req.body.newPassword,
+                role: user.role, // "customer, business, admin"
+                status: true
+            }
+            const userUpdated = await AuthService.updateUser(userData, user.id);
+            return res.json({
+                message: 'User updated successfully.'
+            });
+        }
+    }
+    return res.status(400).json({ message: 'User Failed Updating' });
+}

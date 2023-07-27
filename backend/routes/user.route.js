@@ -14,6 +14,7 @@ router.get('/logout',    AuthGuard,                 ErrorHandler(AuthController.
 router.get('/getall',                               ErrorHandler(AuthController.getAllUsers));
 router.post('/delete/:userId',                      ErrorHandler(AuthController.deleteUser));
 router.post('/otpgen',   validate(schema.otpGen),    ErrorHandler(AuthController.otpGen));
+router.post('/edit',   validate(schema.edit),  AuthGuard,  ErrorHandler(AuthController.edit));
 
 router.all('*',  (req, res) => res.status(400).json({ message: 'Bad Request.'}))
 

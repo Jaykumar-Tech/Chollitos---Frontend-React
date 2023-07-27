@@ -1,6 +1,13 @@
 const UserModel = require('../models/user.model');
 const cacheUtil = require('../utils/cache.util');
 
+exports.updateUser = (user, id)=> {
+    return UserModel.update(user, {
+          where: { id: id } // Specify the condition for the record to update
+        }
+      );
+}
+
 exports.createUser = (user) => {
     return UserModel.create(user);
 }
