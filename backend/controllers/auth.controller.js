@@ -78,11 +78,15 @@ exports.login = async (req, res) => {
         // const isMatched = await bcryptUtil.compareHash(req.body.password, user.password);
         const isMatched = req.body.password == user.password;
         if (isMatched) {
-            const token = await jwtUtil.createToken({ id: user.id });
+            const token = await jwtUtil.createToken({ id: user.id, role: user.role });
             return res.json({
                 access_token: token,
                 token_type: 'Bearer',
-                expires_in: jwtConfig.ttl
+                expires_in: jwtConfig.ttl,
+                user: {
+                    name: user.name,
+                    role: user.role
+                }
             });
         }
     }
