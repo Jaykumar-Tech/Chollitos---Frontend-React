@@ -4,7 +4,7 @@ const router = express.Router();
 const AuthController = require('../controllers/auth.controller');
 const ErrorHandler = require('../middleware/error.middleware');
 const AuthGuard = require('../middleware/auth.middleware');
-const schema = require('../validatons/auth.validation');
+const schema = require('../validations/auth.validation');
 const validate = require('../utils/validator.util'); 
 
 router.post('/register', validate(schema.register), ErrorHandler(AuthController.register));
