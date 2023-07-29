@@ -44,26 +44,27 @@ exports.otpGen = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
+    console.log(req.body)
     const isExist = await AuthService.findUserByEmail(req.body.email);
     if (isExist) {
         return res.status(400).json({
             message: 'Email already exists.'
         });
     }
-    if ( !otps.find((val)=>{
-        return val.email == req.body.email && val.password == req.body.password;
-    }) ) {
-        return res.status(400).json({
-            message: 'Email or password is not valid'
-        });
-    }
-    // const hashedPassword = await bcryptUtil.createHash(req.body.password);
+    // if ( !otps.find((val)=>{
+    //     return val.email == req.body.email && val.password == req.body.password;
+    // }) ) {
+    //     return res.status(400).json({
+    //         message: 'Email or password is not valid'
+    //     });
+    // }
+    const hashedPassword = await bcryptUtil.createHash(req.body.password);
     const userData = {
-        name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: hashedPassword,
         role: req.body.role, // "customer, business, admin"
-        status: true
+        status: true,
+        name: req.body.name
     }
     const user = await AuthService.createUser(userData);
     return res.json({
@@ -75,8 +76,9 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const user = await AuthService.findUserByEmail(req.body.email);
     if (user) {
-        // const isMatched = await bcryptUtil.compareHash(req.body.password, user.password);
-        const isMatched = req.body.password == user.password;
+        console.log(await bcryptUtil.createHash(req.body.password), user.password);
+        const isMatched = await bcryptUtil.compareHash(req.body.password, user.password);
+        // const isMatched = req.body.password == user.password;
         if (isMatched) {
             const token = await jwtUtil.createToken({ id: user.id, role: user.role });
             return res.json({
@@ -143,7 +145,8 @@ exports.edit = async ( req, res)=> {
         const isMatched = req.body.oldPassword == user.password;
         if (isMatched) {
             const userData = {
-                name: req.body.name,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
                 email: user.email,
                 password: req.body.newPassword,
                 role: user.role, // "customer, business, admin"
