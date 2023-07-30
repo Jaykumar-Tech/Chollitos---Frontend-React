@@ -1,11 +1,16 @@
-const { Sequelize } = require('sequelize');
-const config = require('../config/database.config'); 
+const mysql = require("mysql")
 
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-    host: config.host,
-    dialect: 'mysql',
-    operatorsAliases: 'false',
-    logging: false
-});  
+const client = mysql.createConnection({
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    port: process.env.RDS_PORT
+    // host: "localhost",
+    // user: "root",
+    // password: "",
+    // port: 3306
+});
+client.connect();
+client.query("USE dac_rapide");
 
-module.exports = sequelize
+module.exports = client;

@@ -4,11 +4,14 @@ const mailConfig = require("../config/server.mail");
 const bcryptUtil = require('../utils/bcrypt.util');
 const jwtUtil = require('../utils/jwt.util');
 const nodemailer = require("nodemailer");
+const moment = require("moment")
+const mysql = require("mysql")
+const UserModel = require("../models/user.model");
 
-var otps = [] ;
+var otps = [];
 
 exports.otpGen = async (req, res) => {
-    var recvEmail = req.body.email ;
+    var recvEmail = req.body.email;
     const transporter = nodemailer.createTransport({
         host: 'smtp-mail.outlook.com',
         port: 587,
@@ -17,16 +20,16 @@ exports.otpGen = async (req, res) => {
             user: mailConfig.mail,
             pass: mailConfig.password
         },
-      });
+    });
     var otpPswd = bcryptUtil.generateStrongPassword();
     try {
         const mailOptions = {
-          from: mailConfig.mail,
-          to: recvEmail,
-          subject: 'One Time Password From Dac Rapide',
-          text: `Your password is: <${otpPswd}>`,
+            from: mailConfig.mail,
+            to: recvEmail,
+            subject: 'One Time Password From Dac Rapide',
+            text: `Your password is: <${otpPswd}>`,
         };
-    
+
         const info = await transporter.sendMail(mailOptions);
         otps.push({
             email: recvEmail,
@@ -44,63 +47,89 @@ exports.otpGen = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
-    console.log(req.body)
-    const isExist = await AuthService.findUserByEmail(req.body.email);
-    if (isExist) {
-        return res.status(400).json({
-            message: 'Email already exists.'
-        });
-    }
-    // if ( !otps.find((val)=>{
-    //     return val.email == req.body.email && val.password == req.body.password;
-    // }) ) {
-    //     return res.status(400).json({
-    //         message: 'Email or password is not valid'
-    //     });
-    // }
-    const hashedPassword = await bcryptUtil.createHash(req.body.password);
-    const userData = {
-        email: req.body.email,
-        password: hashedPassword,
-        role: req.body.role, // "customer, business, admin"
-        status: true,
-        name: req.body.name
-    }
-    const user = await AuthService.createUser(userData);
-    return res.json({
-        data: user,
-        message: 'User registered successfully.'
-    });
+    UserModel.findByEmail(req.body.email,
+        async (err, row) => {
+            if (!err) {
+                return res.status(400).json({
+                    message: 'Email already exists.'
+                });
+            } else {
+                const hashedPassword = await bcryptUtil.createHash(req.body.password);
+                const userData = {
+                    name: req.body.name,
+                    email: req.body.email,
+                    password: hashedPassword,
+                    role: req.body.role, // "customer, business, admin"
+                    status: true,
+                    created_at: moment().format('YYYY-MM-DD'),
+                    updated_at: moment().format('YYYY-MM-DD')
+                }
+                UserModel.create(userData,
+                    (err, row) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: err,
+                                message: 'Failed Register'
+                            });
+                        } else {
+                            return res.json({
+                                data: row,
+                                message: 'User registered successfully.'
+                            });
+                        }
+                    }
+                )
+            }
+
+        }
+    )
 }
 
 exports.login = async (req, res) => {
-    const user = await AuthService.findUserByEmail(req.body.email);
-    if (user) {
-        console.log(await bcryptUtil.createHash(req.body.password), user.password);
-        const isMatched = await bcryptUtil.compareHash(req.body.password, user.password);
-        // const isMatched = req.body.password == user.password;
-        if (isMatched) {
-            const token = await jwtUtil.createToken({ id: user.id, role: user.role });
-            return res.json({
-                access_token: token,
-                token_type: 'Bearer',
-                expires_in: jwtConfig.ttl,
-                user: {
-                    name: user.name,
-                    role: user.role
+    UserModel.findByEmail(req.body.email,
+        async (err, row) => {
+            if (err) {
+                return res.status(400).send({
+                    message: "Email doesn't exist"
+                });
+            } else {
+                const user = row;
+                const isMatched = await bcryptUtil.compareHash(req.body.password, user.password);
+                // const isMatched = req.body.password == user.password;
+                if (isMatched) {
+                    const token = await jwtUtil.createToken({ id: user.id, role: user.role });
+                    return res.json({
+                        access_token: token,
+                        token_type: 'Bearer',
+                        expires_in: jwtConfig.ttl,
+                        user: {
+                            name: user.name,
+                            role: user.role
+                        }
+                    });
                 }
-            });
-        }
-    }
-    return res.status(400).json({ message: 'Unauthorized.' });
+                return res.status(400).json({
+                    message: "Unauthorized."
+                })
+            }
+        });
 }
 
 exports.getUser = async (req, res) => {
-    const user = await AuthService.findUserById(req.user.id);
-    return res.json({
-        data: user,
-        message: 'Success.'
-    });
+    UserModel.findById(req.user.id,
+        async (err, row) => {
+            if (!err) {
+                return res.json({
+                    data: row,
+                    message: 'Success.'
+                });
+            } else {
+                return res.status(400).send({
+                    message: "Get User Failed"
+                })
+            }
+        }
+    )
 }
 
 exports.logout = async (req, res) => {
@@ -109,54 +138,84 @@ exports.logout = async (req, res) => {
 }
 
 exports.getAllUsers = async (req, res) => {
-    const users = await AuthService.getAllUsers();
-    return res.json({
-        data: users,
-        message: "Success"
-    })
-}
-
-exports.deleteUser = async (req, res) => {
-    const userID = req.params.userId;
-    await AuthService.deleteUser(userID);
-    return res.json({
-        message: "Success"
-    })
-}
-
-exports.verifyPassword = async ( req, res ) => {
-    const user = await AuthService.findUserByEmail(req.body.email) ;
-    if ( user ) {
-        const isMatched = req.body.password == user.password ;
-        if ( isMatched ) {
+    UserModel.getAll(async (err, rows) => {
+        if (!err) {
             return res.json({
-                message: "success"
+                data: rows,
+                message: "Success"
+            })
+        } else {
+            return res.status(400).json({
+                message: "No Users"
             })
         }
     }
-    return res.status(400).json({
-        message: "Unauthorized."
+    )
+}
+
+exports.deleteUser = async (req, res) => {
+    UserModel.findById(req.params.userId,
+        async (err, row) => {
+            if (!err) {
+                return res.json({
+                    message: "Delete Success"
+                })
+            } else {
+                return res.status(400).json({
+                    message: "Delete Failed"
+                })
+            }
+        }
+    )
+}
+
+exports.deleteAll = async (req, res) => {
+    UserModel.removeAll(async (err, row) => {
+        if (!err) {
+            return res.json({
+                message: "Delete All Success"
+            })
+        } else {
+            return res.status(400).json({
+                message: "Delete All Failed"
+            })
+        }
     })
 }
 
-exports.edit = async ( req, res)=> {
-    const user = await AuthService.findUserById(req.user.id);
-    if (user) {
-        const isMatched = req.body.oldPassword == user.password;
-        if (isMatched) {
-            const userData = {
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                email: user.email,
-                password: req.body.newPassword,
-                role: user.role, // "customer, business, admin"
-                status: true
+exports.edit = async (req, res) => {
+    UserModel.findById(req.user.id,
+        async (err, row) => {
+            if (!err) {
+                const isMatched = await bcryptUtil.compareHash(req.body.oldPassword, row.password);
+                if (isMatched) {
+                    const hashedPassword = await bcryptUtil.createHash(req.body.newPassword);
+                    UserModel.updateById(req.user.id, {
+                        name: req.body.name,
+                        password: hashedPassword,
+                        role: req.body.role,
+                        status: true,
+                        email: row.email
+                    }, (err, rows) => {
+                        if (!err) {
+                            return res.json({
+                                message: "User Updated Successfully"
+                            })
+                        } else {
+                            return res.status(400).json({
+                                message: "Failed to update"
+                            })
+                        }
+                    }
+                    )
+                } else {
+                    return res.status(400).json({ message: 'Your password is incorrect' });
+                }
+            } else {
+                return res.status(400).send({
+                    message: "Get User Failed"
+                })
             }
-            const userUpdated = await AuthService.updateUser(userData, user.id);
-            return res.json({
-                message: 'User updated successfully.'
-            });
         }
-    }
-    return res.status(400).json({ message: 'User Failed Updating' });
+    )
 }
