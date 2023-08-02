@@ -10,7 +10,11 @@ const client = mysql.createConnection({
     // password: "",
     // port: 3306
 });
-client.connect();
-client.query("USE dac_rapide");
+try {
+    client.connect();
+    client.query("USE dac_rapide");
+} catch (error) {
+
+}
 
 module.exports = client;

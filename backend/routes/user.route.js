@@ -16,6 +16,9 @@ router.get('/delete/:userId',                      ErrorHandler(AuthController.d
 router.get('/deleteAll',                           ErrorHandler(AuthController.deleteAll));
 router.post('/otpgen',   validate(schema.otpGen),    ErrorHandler(AuthController.otpGen));
 router.post('/edit',   validate(schema.edit),  AuthGuard,  ErrorHandler(AuthController.edit));
+router.post('/addreview',   validate(schema.addreview),  ErrorHandler(AuthController.addReview));
+router.post('/incbalance',   validate(schema.incbalance),  ErrorHandler(AuthController.incBalance));
+router.post('/decbalance',   validate(schema.decbalance),  ErrorHandler(AuthController.decBalance));
 
 router.all('*',  (req, res) => res.status(400).json({ message: 'Bad Request.'}))
 

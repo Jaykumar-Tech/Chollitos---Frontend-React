@@ -52,7 +52,7 @@ User.findByEmail = (email, result) => {
         result({ kind: "not_found" }, null);
     });
 };
-User.getAll = ( result) => {
+User.getAll = (result) => {
     let query = "SELECT * FROM users";
     // if (name) {
     //     query += " WHERE name LIKE '%${name}%'";
@@ -60,7 +60,7 @@ User.getAll = ( result) => {
     client.query(query, (err, res) => {
         if (err) {
             console.log("error: ", err);
-            result(null, err);
+            result(err, null);
             return;
         }
         console.log("users: ", res);
@@ -69,12 +69,12 @@ User.getAll = ( result) => {
 };
 User.updateById = (id, user, result) => {
     client.query(
-        "UPDATE users SET name = ?, password = ?, email = ?, role = ?, status = ? WHERE id = ?",
-        [user.name, user.password, user.email, user.role, user.status, id],
+        "UPDATE users SET firstname = ?, lastname = ?, password = ?, email = ?, role = ?, status = ? WHERE id = ?",
+        [user.firstname, user.lastname, user.password, user.email, user.role, user.status, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
-                result(null, err);
+                result(err, null);
                 return;
             }
             if (res.affectedRows == 0) {
@@ -91,7 +91,7 @@ User.remove = (id, result) => {
     client.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
-            result(null, err);
+            result(err, null);
             return;
         }
         if (res.affectedRows == 0) {
@@ -107,11 +107,85 @@ User.removeAll = result => {
     client.query("DELETE FROM users", (err, res) => {
         if (err) {
             console.log("error: ", err);
-            result(null, err);
+            result(err, null);
             return;
         }
         console.log(`deleted ${res.affectedRows} users`);
         result(null, res);
     });
 };
+User.addReview = (email, star, result) => {
+    client.query("SELECT * FROM users WHERE email=?", email, 
+    (err, users) => {
+        if (err) {
+            result(err, null);
+            return ;
+        }
+        if ( users.length == 0 ) {
+            result({kind: "not found"}, null) ;
+            return ;
+        }
+        var review = JSON.parse(users[0].review);
+        review[star - 1] = review[star - 1] + 1;
+        client.query("UPDATE users SET review = ? WHERE email = ? ",
+            [JSON.stringify(review), email], (err, user) => {
+                if (err) {
+                    result(err, null);
+                    return ;
+                }
+                result(null, { id: users[0].id });
+                return ;
+            })
+    })
+}
+User.incBalance = (email, value, result) => {
+    client.query("SELECT * FROM users WHERE email=?", email, 
+    (err, users) => {
+        if (err) {
+            result(err, null);
+            return ;
+        }
+        if ( users.length == 0 ) {
+            result({kind: "not found"}, null) ;
+            return ;
+        }
+        var balance = users[0].balance + value;
+        client.query("UPDATE users SET balance = ? WHERE email = ? ",
+            [balance, email], (err, user) => {
+                if (err) {
+                    result(err, null);
+                    return ;
+                }
+                result(null, { id: users[0].id });
+                return ;
+            })
+    })
+}
+User.decBalance = (email, value, result) => {
+    client.query("SELECT * FROM users WHERE email=?", email, 
+    (err, users) => {
+        if (err) {
+            result(err, null);
+            return ;
+        }
+        if ( users.length == 0 ) {
+            result({kind: "not found"}, null) ;
+            return ;
+        }
+        if ( users[0].balance < value ) {
+            result({balance: "not enough balance"}, null) ;
+            return ;
+        }
+        var balance = users[0].balance - value;
+        client.query("UPDATE users SET balance = ? WHERE email = ? ",
+            [balance, email], (err, user) => {
+                if (err) {
+                    result(err, null);
+                    return ;
+                }
+                result(null, { id: users[0].id });
+                return ;
+            })
+    })
+}
 module.exports = User;

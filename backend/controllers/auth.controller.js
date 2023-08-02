@@ -56,7 +56,8 @@ exports.register = async (req, res) => {
             } else {
                 const hashedPassword = await bcryptUtil.createHash(req.body.password);
                 const userData = {
-                    name: req.body.name,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
                     email: req.body.email,
                     password: hashedPassword,
                     role: req.body.role, // "customer, business, admin"
@@ -103,7 +104,7 @@ exports.login = async (req, res) => {
                         token_type: 'Bearer',
                         expires_in: jwtConfig.ttl,
                         user: {
-                            name: user.name,
+                            name: user.firstname + " " + user.lastname,
                             role: user.role
                         }
                     });
@@ -191,7 +192,8 @@ exports.edit = async (req, res) => {
                 if (isMatched) {
                     const hashedPassword = await bcryptUtil.createHash(req.body.newPassword);
                     UserModel.updateById(req.user.id, {
-                        name: req.body.name,
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
                         password: hashedPassword,
                         role: req.body.role,
                         status: true,
@@ -218,4 +220,48 @@ exports.edit = async (req, res) => {
             }
         }
     )
+}
+exports.addReview = async (req, res) => {
+    UserModel.addReview(req.body.email, req.body.star, (err, user)=>{
+        if ( err ) {
+            return res.status(400).send({
+                message: "Your email doesn't exist"
+            })
+        }
+        return res.json({
+            user: user,
+            message: "Adding Review success!"
+        })
+    })
+}
+exports.incBalance = async (req, res) => {
+    UserModel.incBalance(req.body.email, req.body.value, (err, user)=>{
+        if ( err ) {
+            return res.status(400).send({
+                message: "Your email doesn't exist"
+            })
+        }
+        return res.json({
+            user: user,
+            message: "success!"
+        })
+    })
+}
+exports.decBalance = async (req, res) => {
+    UserModel.decBalance(req.body.email, req.body.value, (err, user)=>{
+        if ( err ) {
+            if ( err.balance ) {
+                return res.status(400).send({
+                    message: "You don't have enough balance"
+                })
+            }
+            return res.status(400).send({
+                message: "Your email doesn't exist"
+            })
+        }
+        return res.json({
+            user: user,
+            message: "success!"
+        })
+    })
 }
