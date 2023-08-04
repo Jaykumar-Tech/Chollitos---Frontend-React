@@ -17,3 +17,12 @@ exports.generateStrongPassword = (length = 12) => {
 
   return password.join('');
 }
+
+exports.genCode = () => {
+  const password = [];
+  const characters = '1234567890';
+  for ( let i = 0 ; i < 4 ; i ++ ) {
+    password.push(characters[crypto.randomInt(0,9)]);
+  }
+  return password.join("");
+}

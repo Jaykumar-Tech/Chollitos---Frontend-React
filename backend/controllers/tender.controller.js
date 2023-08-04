@@ -1,56 +1,109 @@
-const TenderService = require('../services/auth.service');
+const TenderModel = require('../models/tender.model');
 
-exports.addTender = async (req, res) => {
-    const tenderData = req.body;
-    const tender = await TenderService.createTender(tenderData);
-    return res.json({
-        data: tender,
-        message: 'Tender added successfully.'
-    });
-}
-
-exports.getTender = async (req, res) => {
-    const tender = await TenderService.findTenderById(req.params.tenderId);
-    return res.json({
-        data: tender,
-        message: 'Success.'
-    });
-}
-
-exports.getAllTenders = async (req, res) => {
-    const tenders = await TenderService.getAllTenders();
-    return res.json({
-        data: tenders,
-        message: "Success"
-    })
-}
-
-exports.deleteTender = async (req, res) => {
-    const tenderID = req.params.tenderId;
-    await TenderService.deleteTender(tenderID);
-    return res.json({
-        message: "Success"
-    })
-}
-
-exports.updateTender = async (req, res) => {
-    const tender = await TenderService.findTenderById(req.params.tenderId);
-    if (tender) {
-        const tenderData = req.body;
-        const tenderUpdated = await TenderService.updateTender(tenderData, tender.id);
+exports.create = async (req, res) => {
+    try {
+        var result = await TenderModel.create(req.body);
         return res.json({
-            message: 'Tender updated successfully.'
-        });
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
     }
-    return res.status(400).json({ message: 'Tender Failed Updating' });
 }
 
-exports.addVote = async ( req, res ) => {
-    const tender = await TenderService.addVote(req.params.tenderId) ;
-    if ( tender ) {
+exports.get = async (req, res) => {
+    try {
+        var result = await TenderModel.findById(req.params.tenderId);
         return res.json({
-            message: 'Tender add vote successfully.'
-        });
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
     }
-    return res.status(400).json({ message: 'Tender Failed Voting' });
+}
+
+exports.getAll = async (req, res) => {
+    try {
+        var result = await TenderModel.getAll();
+        return res.json({
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
+    }
+}
+
+exports.remove = async (req, res) => {
+    try {
+        var result = await TenderModel.remove(req.params.tenderId);
+        return res.json({
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
+    }
+}
+
+exports.addVote = async (req, res) => {
+    try {
+        var result = await TenderModel.addVote(req.params.tenderId);
+        return res.json({
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
+    }
+}
+
+exports.addView = async (req, res) => {
+    try {
+        var result = await TenderModel.addView(req.params.tenderId);
+        return res.json({
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
+    }
+}
+
+exports.filter = async (req, res) => {
+    try {
+        var result = await TenderModel.filter(req.body.filter,
+            req.body.orderBy,
+            req.body.offset,
+            req.body.count);
+        return res.json({
+            message: "success",
+            data: result.data
+        })
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error
+        })
+    }
 }

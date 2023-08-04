@@ -7,24 +7,22 @@ const validateRole = (value) => {
 }
 
 module.exports = {
-    register: Joi.object().keys({
-        name: Joi.string().required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),//.min(8).max(16).external(validatePassword)
-        role: Joi.string().required().external(validateRole)
+    create: Joi.object().keys({
+        seller_id: Joi.number().required(),
+        subject: Joi.string().required(),
+        ctd_id: Joi.string().required(),
+        type: Joi.string().required(),
+        lots: Joi.array().required(),
+        funding: Joi.string().required(),
+        language: Joi.string().required(),
+        deadline: Joi.date().required(),
+        primary_files: Joi.array().required(),
+        secondary_files: Joi.array().required()
     }),
-    // login: Joi.object().keys({
-    //     email: Joi.string().email().required(),
-    //     password: Joi.string().required()
-    // }),
-    // otpGen: Joi.object().keys({
-    //     email: Joi.string().email().required()
-    // }),
-    // edit: Joi.object().keys({
-    //     name: Joi.string().required(),
-    //     email: Joi.string().email().required(),
-    //     oldPassword: Joi.string().required(),//.min(8).max(16).external(validatePassword)
-    //     newPassword: Joi.string().required(),//.min(8).max(16).external(validatePassword)
-    //     role: Joi.string().required().external(validateRole)
-    // })
+    filter: Joi.object().keys({
+        filter: Joi.object().required(),
+        orderBy: Joi.string().required(),
+        offset: Joi.number().required(),
+        count: Joi.number().required()
+    })
 }

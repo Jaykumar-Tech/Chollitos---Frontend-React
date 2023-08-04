@@ -1,4 +1,3 @@
-const AuthService = require('../services/auth.service');
 const jwtConfig = require('../config/jwt.config');
 const mailConfig = require("../config/server.mail");
 const bcryptUtil = require('../utils/bcrypt.util');
@@ -8,80 +7,155 @@ const moment = require("moment")
 const mysql = require("mysql")
 const UserModel = require("../models/user.model");
 
-var otps = [];
+// var otps = [];
 
-exports.otpGen = async (req, res) => {
-    var recvEmail = req.body.email;
-    const transporter = nodemailer.createTransport({
-        host: 'smtp-mail.outlook.com',
-        port: 587,
-        secure: false,
-        auth: {
-            user: mailConfig.mail,
-            pass: mailConfig.password
-        },
-    });
-    var otpPswd = bcryptUtil.generateStrongPassword();
-    try {
-        const mailOptions = {
-            from: mailConfig.mail,
-            to: recvEmail,
-            subject: 'One Time Password From Dac Rapide',
-            text: `Your password is: <${otpPswd}>`,
-        };
+// exports.otpGen = async (req, res) => {
+//     var recvEmail = req.body.email;
+//     const transporter = nodemailer.createTransport({
+//         host: 'smtp-mail.outlook.com',
+//         port: 587,
+//         secure: false,
+//         auth: {
+//             user: mailConfig.mail,
+//             pass: mailConfig.password
+//         },
+//     });
+//     var otpPswd = bcryptUtil.generateStrongPassword();
+//     try {
+//         const mailOptions = {
+//             from: mailConfig.mail,
+//             to: recvEmail,
+//             subject: 'One Time Password From Dac Rapide',
+//             text: `Your password is: <${otpPswd}>`,
+//         };
 
-        const info = await transporter.sendMail(mailOptions);
-        otps.push({
-            email: recvEmail,
-            password: otpPswd
+//         const info = await transporter.sendMail(mailOptions);
+//         otps.push({
+//             email: recvEmail,
+//             password: otpPswd
+//         });
+//         return res.status(200).json({
+//             message: "success"
+//         })
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json({
+//             message: "Your email is not valid"
+//         })
+//     }
+// }
+
+const sendCode = async (email, code, callback) => {
+    if (email.indexOf("@gmail.com") != -1) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            // secure: true,
+            auth: {
+                user: mailConfig.gmail,
+                pass: mailConfig.gmail_password
+            },
         });
-        return res.status(200).json({
-            message: "success"
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            message: "Your email is not valid"
-        })
+        try {
+            const mailOptions = {
+                from: mailConfig.gmail,
+                to: email,
+                subject: 'Verification Code From Dac Rapide',
+                text: `Your Verification Code is: <${code}>`,
+            };
+    
+            const info = await transporter.sendMail(mailOptions);
+            callback(null, { message: "success", data: code })
+            return;
+        } catch (error) {
+            console.log(error);
+            callback(error, null)
+            return;
+        }
+    } else {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp-mail.outlook.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: mailConfig.mail,
+                pass: mailConfig.password
+            },
+        });
+        try {
+            const mailOptions = {
+                from: mailConfig.mail,
+                to: email,
+                subject: 'Verification Code From Dac Rapide',
+                text: `Your Verification Code is: <${code}>`,
+            };
+
+            const info = await transporter.sendMail(mailOptions);
+            callback(null, { message: "success", data: code })
+            return;
+        } catch (error) {
+            console.log(error);
+            callback(error, null)
+            return;
+        }
     }
+
 }
 
 exports.register = async (req, res) => {
     UserModel.findByEmail(req.body.email,
         async (err, row) => {
             if (!err) {
-                return res.status(400).json({
-                    message: 'Email already exists.'
-                });
-            } else {
-                const hashedPassword = await bcryptUtil.createHash(req.body.password);
-                const userData = {
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname,
-                    email: req.body.email,
-                    password: hashedPassword,
-                    role: req.body.role, // "customer, business, admin"
-                    status: true,
-                    created_at: moment().format('YYYY-MM-DD'),
-                    updated_at: moment().format('YYYY-MM-DD')
+                if (row.status) {
+                    return res.status(400).json({
+                        message: 'Email already exists.'
+                    });
+                } else {
+                    await UserModel.remove(row.id, (err, response) => { });
                 }
-                UserModel.create(userData,
-                    (err, row) => {
-                        if (err) {
-                            return res.status(400).json({
-                                error: err,
-                                message: 'Failed Register'
-                            });
-                        } else {
-                            return res.json({
-                                data: row,
-                                message: 'User registered successfully.'
-                            });
-                        }
-                    }
-                )
             }
 
+            const hashedPassword = await bcryptUtil.createHash(req.body.password);
+            const userData = {
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                email: req.body.email,
+                password: hashedPassword,
+                role: req.body.role, // "customer, business, admin"
+                status: false,
+                created_at: moment().format('YYYY-MM-DD'),
+                updated_at: moment().format('YYYY-MM-DD')
+            }
+            UserModel.create(userData,
+                (err, row) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                            message: 'Failed Register'
+                        });
+                    } else {
+                        var code = bcryptUtil.genCode();
+                        sendCode(req.body.email, code, async (err, response) => {
+                            if (err) {
+                                return res.status(400).json({
+                                    message: "Email is Invalid"
+                                })
+                            }
+                            UserModel.saveCode(req.body.email, code, (err, response) => {
+                                if (err) {
+                                    return res.status(400).json({
+                                        message: "Save Code Failed"
+                                    })
+                                }
+                                return res.json({
+                                    message: "Next To Verification Code"
+                                })
+                            })
+                        })
+                    }
+                }
+            )
         }
     )
 }
@@ -89,7 +163,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     UserModel.findByEmail(req.body.email,
         async (err, row) => {
-            if (err) {
+            if (err || !row.status) {
                 return res.status(400).send({
                     message: "Email doesn't exist"
                 });
@@ -134,7 +208,7 @@ exports.getUser = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    await AuthService.logoutUser(req.token, req.user.exp);
+    await UserModel.logoutUser(req.token, req.user.exp);
     return res.json({ message: 'Logged out successfully.' });
 }
 
@@ -222,8 +296,8 @@ exports.edit = async (req, res) => {
     )
 }
 exports.addReview = async (req, res) => {
-    UserModel.addReview(req.body.email, req.body.star, (err, user)=>{
-        if ( err ) {
+    UserModel.addReview(req.body.email, req.body.star, (err, user) => {
+        if (err) {
             return res.status(400).send({
                 message: "Your email doesn't exist"
             })
@@ -235,8 +309,8 @@ exports.addReview = async (req, res) => {
     })
 }
 exports.incBalance = async (req, res) => {
-    UserModel.incBalance(req.body.email, req.body.value, (err, user)=>{
-        if ( err ) {
+    UserModel.incBalance(req.body.email, req.body.balance, (err, user) => {
+        if (err) {
             return res.status(400).send({
                 message: "Your email doesn't exist"
             })
@@ -248,9 +322,9 @@ exports.incBalance = async (req, res) => {
     })
 }
 exports.decBalance = async (req, res) => {
-    UserModel.decBalance(req.body.email, req.body.value, (err, user)=>{
-        if ( err ) {
-            if ( err.balance ) {
+    UserModel.decBalance(req.body.email, req.body.balance, (err, user) => {
+        if (err) {
+            if (err.balance) {
                 return res.status(400).send({
                     message: "You don't have enough balance"
                 })
@@ -264,4 +338,60 @@ exports.decBalance = async (req, res) => {
             message: "success!"
         })
     })
+}
+exports.verifyCode = async (req, res) => {
+    UserModel.verifyCode(req.body.email, req.body.code,
+        (err, response) => {
+            if (err) {
+                return res.status(400).send({
+                    message: "Failed Verification Code"
+                })
+            } else {
+                return res.json({
+                    message: "Your registration is successful"
+                })
+            }
+        })
+}
+exports.resendCode = async (req, res) => {
+    var code = bcryptUtil.genCode();
+    sendCode(req.body.email, code, async (err, response) => {
+        if (err) {
+            return res.status(400).json({
+                message: "Email is Invalid"
+            })
+        } else {
+            UserModel.saveCode(req.body.email, code, (err, response) => {
+                if (err) {
+                    return res.status(400).json({
+                        message: "Code Failed"
+                    })
+                } else {
+                    return res.json({
+                        message: "Resent Code is successful"
+                    })
+                }
+            })
+        }
+    })
+}
+exports.resetPassword = async (req, res) => {
+    UserModel.verifyCode(req.body.email, req.body.code,
+        async (err, response) => {
+            if (err) {
+                return res.status(400).send({
+                    message: "Verification Code doesn't match"
+                })
+            } else {
+                const hashedPassword = await bcryptUtil.createHash(req.body.password);
+                UserModel.resetPassword(req.body.email, hashedPassword, (err, response) => {
+                    if (err) return res.status(400).send({
+                        message: "Reset Password Failed"
+                    })
+                    else return res.json({
+                        message: "Reset Password Success"
+                    })
+                })
+            }
+        })
 }

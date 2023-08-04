@@ -20,9 +20,16 @@ const nodemailer = require('nodemailer');
 
 const userRoute = require('./routes/user.route');
 const databaseRoute = require("./routes/database.route");
+const followRoute = require("./routes/following.route")
+const inviteRoute = require("./routes/invitation.route")
+const tenderRoute = require("./routes/tender.route")
 
 app.use('/api/user', userRoute);
 app.use("/api/database", databaseRoute);
+app.use("/api/follow", followRoute);
+app.use("/api/invite", inviteRoute);
+app.use("/api/tender", tenderRoute);
+
 
 // const oAuth2Client = new google.auth.OAuth2(
 //     '1033820427359-0kpff4t1sn256rbtuu3jr2h1onoh0975.apps.googleusercontent.com',
@@ -87,14 +94,15 @@ app.use("/api/database", databaseRoute);
 
 app.get("/", (req, res) => {
     return res.json({
-        host: process.env.RDS_HOSTNAME,
-        user: process.env.RDS_USERNAME,
-        password: process.env.RDS_PASSWORD,
-        port: process.env.RDS_PORT
-        // host: "localhost",
-        // user: "root",
-        // password: "",
-        // port: 3306
+        message: "Hello, Welcome to Dac Rapide"
+        // host: process.env.RDS_HOSTNAME,
+        // user: process.env.RDS_USERNAME,
+        // password: process.env.RDS_PASSWORD,
+        // port: process.env.RDS_PORT
+        // // host: "localhost",
+        // // user: "root",
+        // // password: "",
+        // // port: 3306
     })
 })
 
