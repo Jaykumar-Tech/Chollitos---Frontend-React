@@ -2,10 +2,13 @@ const TenderModel = require('../models/tender.model');
 
 exports.create = async (req, res) => {
     try {
-        var result = await TenderModel.create(req.body);
+        var result = await TenderModel.create(req.body, req.files);
         return res.json({
             message: "success",
             data: result.data
+            // data: req.body,
+            // files: req.files,
+            // headers: req.headers
         })
     } catch (error) {
         return res.status(400).send({

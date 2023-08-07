@@ -1,5 +1,5 @@
-const { language } = require('googleapis/build/src/apis/language');
 const client = require('./connection');
+const fs = require("fs")
 
 const Tender = function (tender) {
     this.subject = tender.subject;
@@ -21,16 +21,45 @@ const Tender = function (tender) {
     this.primary_files = tender.primary_files;
     this.secondary_files = tender.secondary_files;
 }
-Tender.create = (newTender) => {
-    newTender.lots = JSON.stringify(newTender.lots);
-    newTender.primary_files = JSON.stringify(newTender.primary_files);
-    newTender.secondary_files = JSON.stringify(newTender.secondary_files);
-
+Tender.create = (newTender, files) => {
+    newTender.primary_files = JSON.stringify(files.primary_files.map(file => file.originalname));
+    newTender.secondary_files = JSON.stringify(files.secondary_files.map(file => file.originalname));
+    
     return new Promise((resolve, reject) => {
         client.query("INSERT INTO tender SET ?", newTender, (err, row) => {
             if (err) {
-                reject(err);
+                var res_files = [] ;
+                files.primary_files.forEach(file => {
+                    const oldPath = file.path;
+                    res_files.push(oldPath)
+                    fs.unlinkSync(oldPath)
+                });
+                files.secondary_files.forEach(file => {
+                    const oldPath = file.path;
+                    res_files.push(oldPath)
+                    fs.unlinkSync(oldPath)
+                });
+                reject({err:err,res:res_files});
             } else {
+                var uploadPath = `${__dirname}/../uploads`;
+                // resolve({ data: fs.readdirSync(uploadPath) });
+                if (!fs.existsSync(uploadPath))
+                    fs.mkdirSync(uploadPath)
+                if (!fs.existsSync(`${uploadPath}/${row.insertId}`)) {
+                    fs.mkdirSync(`${uploadPath}/${row.insertId}`)
+                    fs.mkdirSync(`${uploadPath}/${row.insertId}/primary`)
+                    fs.mkdirSync(`${uploadPath}/${row.insertId}/secondary`)
+                }
+                files.primary_files.forEach(file => {
+                    const oldPath = file.path;
+                    const newPath = `${uploadPath}/${row.insertId}/primary/${file.originalname}`;
+                    fs.renameSync(oldPath, newPath);
+                });
+                files.secondary_files.forEach(file => {
+                    const oldPath = file.path;
+                    const newPath = `${uploadPath}/${row.insertId}/secondary/${file.originalname}`;
+                    fs.renameSync(oldPath, newPath);
+                });
                 resolve({ data: row });
             }
         })
@@ -52,14 +81,14 @@ Tender.remove = (id, result) => {
 }
 Tender.filter = (filter, orderBy, offset, count) => {
     var query = "SELECT * FROM tender WHERE ? ORDER BY ?";
-    var params = [filter, orderBy] ;
-    if ( !filter.length ) {
+    var params = [filter, orderBy];
+    if (!filter.length) {
         query = "SELECT * FROM tender ORDER BY ?";
         params = orderBy;
     }
     return new Promise((resolve, reject) => {
-        client.query(query, 
-        params,
+        client.query(query,
+            params,
             (err, rows) => {
                 if (err) {
                     reject(err)
@@ -68,7 +97,7 @@ Tender.filter = (filter, orderBy, offset, count) => {
                     if (res.length == 0) {
                         reject({ message: "not found" })
                     } else {
-                        resolve( { data: res })
+                        resolve({ data: res })
                     }
                 }
             })

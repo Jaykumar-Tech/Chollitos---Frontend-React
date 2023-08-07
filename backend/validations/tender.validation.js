@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const validateRole = (value) => {
-    if ( value !== "customer" && value != "business" ) {
+    if (value !== "customer" && value != "business") {
         throw new Error('You are not valid role')
     }
 }
@@ -12,12 +12,10 @@ module.exports = {
         subject: Joi.string().required(),
         ctd_id: Joi.string().required(),
         type: Joi.string().required(),
-        lots: Joi.array().required(),
+        lots: Joi.string().required(),
         funding: Joi.string().required(),
         language: Joi.string().required(),
-        deadline: Joi.date().required(),
-        primary_files: Joi.array().required(),
-        secondary_files: Joi.array().required()
+        deadline: Joi.date().required()
     }),
     filter: Joi.object().keys({
         filter: Joi.object().required(),
