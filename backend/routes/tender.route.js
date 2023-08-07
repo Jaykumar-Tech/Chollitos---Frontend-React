@@ -23,6 +23,7 @@ router.get('/remove/:tenderId', TenderMiddleware.exist, ErrorHandler(TenderContr
 router.get('/addvote/:tenderId', TenderMiddleware.exist, ErrorHandler(TenderController.addVote));
 router.get('/addview/:tenderId', TenderMiddleware.exist, ErrorHandler(TenderController.addView));
 router.post('/filter', validate(schema.filter), ErrorHandler(TenderController.filter));
+router.get('/download/:downloadId', schema.download, ErrorHandler(TenderController.download));
 
 
 router.all('*', (req, res) => res.status(400).json({ message: 'Bad Request.' }))

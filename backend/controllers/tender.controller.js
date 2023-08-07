@@ -1,4 +1,5 @@
 const TenderModel = require('../models/tender.model');
+const fs = require("fs")
 
 exports.create = async (req, res) => {
     try {
@@ -13,7 +14,7 @@ exports.create = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -28,7 +29,7 @@ exports.get = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -43,7 +44,7 @@ exports.getAll = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -58,7 +59,7 @@ exports.remove = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -73,7 +74,7 @@ exports.addVote = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -88,7 +89,7 @@ exports.addView = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
         })
     }
 }
@@ -106,7 +107,30 @@ exports.filter = async (req, res) => {
     } catch (error) {
         return res.status(400).send({
             message: "failed",
-            data: error
+            data: error.message
+        })
+    }
+}
+
+exports.download = async (req, res) => {
+    try {
+        var downloadId = req.params.downloadId.split("-");
+        var tenderId = parseInt(downloadId[0]);
+        var isPrimary = parseInt(downloadId[1]);
+        var index = parseInt(downloadId[2]);
+        var result = await TenderModel.download(
+            tenderId,
+            isPrimary,
+            index);
+        var filepath = result.data;
+        console.log(filepath)
+
+        const fileStream = fs.createReadStream(filepath);
+        fileStream.pipe(res);
+    } catch (error) {
+        return res.status(400).send({
+            message: "failed",
+            data: error.message
         })
     }
 }

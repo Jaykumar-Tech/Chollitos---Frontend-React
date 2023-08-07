@@ -24,11 +24,11 @@ const Tender = function (tender) {
 Tender.create = (newTender, files) => {
     newTender.primary_files = JSON.stringify(files.primary_files.map(file => file.originalname));
     newTender.secondary_files = JSON.stringify(files.secondary_files.map(file => file.originalname));
-    
+
     return new Promise((resolve, reject) => {
         client.query("INSERT INTO tender SET ?", newTender, (err, row) => {
             if (err) {
-                var res_files = [] ;
+                var res_files = [];
                 files.primary_files.forEach(file => {
                     const oldPath = file.path;
                     res_files.push(oldPath)
@@ -39,7 +39,7 @@ Tender.create = (newTender, files) => {
                     res_files.push(oldPath)
                     fs.unlinkSync(oldPath)
                 });
-                reject({err:err,res:res_files});
+                reject({ err: err, res: res_files });
             } else {
                 var uploadPath = `${__dirname}/../uploads`;
                 // resolve({ data: fs.readdirSync(uploadPath) });
@@ -127,7 +127,7 @@ Tender.getAll = () => {
         });
     });
 };
-Tender.addVote = (id, result) => {
+Tender.addVote = (id) => {
     return new Promise((resolve, reject) => {
         client.query("SELECT * FROM tender WHERE id=?", id,
             (err, tenders) => {
@@ -149,7 +149,7 @@ Tender.addVote = (id, result) => {
             })
     })
 }
-Tender.addView = (id, result) => {
+Tender.addView = (id) => {
     return new Promise((resolve, reject) => {
         client.query("SELECT * FROM tender WHERE id=?", id,
             (err, tenders) => {
@@ -169,6 +169,39 @@ Tender.addView = (id, result) => {
                         })
                 }
             })
+    })
+}
+Tender.download = (tenderId, isPrimary, index) => {
+    return new Promise((resolve, reject) => {
+        client.query("SELECT * FROM tender WHERE id=?", tenderId,
+            (err, tenders) => {
+                if (err) reject(err);
+                else if (tenders.length == 0) reject({ message: "not found" });
+                else {
+                    var primary_files = JSON.parse(tenders[0].primary_files);
+                    var secondary_files = JSON.parse(tenders[0].secondary_files);
+
+                    if (isPrimary && (primary_files.length < index || index < 1)) {
+                        reject({ message: "not found" })
+                    } else if (!isPrimary && (secondary_files.length < index || index < 1)) {
+                        reject({ message: "not found" })
+                    } else {
+                        var name = isPrimary ? primary_files[index - 1] : secondary_files[index - 1];
+                        var filepath = `${__dirname}/../uploads/${tenderId}/${isPrimary ? "primary" : "secondary"}/${name}`;
+
+                        // const options = {
+                        //     headers: {
+                        //         'Content-Type': 'application/pdf',
+                        //         'Content-Disposition': 'attachment; filename="download.pdf"',
+                        //     },
+                        // };
+                        resolve({
+                            data: filepath
+                        })
+                    };
+                }
+            }
+        )
     })
 }
 
