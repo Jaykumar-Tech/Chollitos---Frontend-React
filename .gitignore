@@ -7,3 +7,5 @@
 *.zip
 db.sql
 *.pptx
+
+/backend/.env
