@@ -39,13 +39,19 @@ const validateCode = (value) => {
     } 
 }
 
+function validateLoginType (value) {
+    if ( value === "normal" || value === "google" || value === "facebook" ) ;
+    else throw new Error('Type must be normal or google or facebook')
+}
+
 module.exports = {
     register: Joi.object().keys({
         firstname: Joi.string().required(),
         lastname: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required().min(8).max(16).external(validatePassword),
-        role: Joi.string().required().external(validateRole)
+        role: Joi.string().required().external(validateRole),
+        type: Joi.string().required().external(validateLoginType)
     }),
     login: Joi.object().keys({
         email: Joi.string().email().required(),
