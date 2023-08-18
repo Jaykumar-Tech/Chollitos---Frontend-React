@@ -1,8 +1,8 @@
-BlogModel = require("../models/blog.model");
+CategoryModel = require("../models/category.model");
 
 exports.create = async (req, res) => {
     try {
-        var result = await BlogModel.create(req.body.html) ;
+        var result = await CategoryModel.create(req.body) ;
         return res.json({
             message: "success",
             data: result.insertId
@@ -14,9 +14,9 @@ exports.create = async (req, res) => {
     }
 }
 
-exports.edit = async (req, res) => {
+exports.getChildren = async (req, res) => {
     try {
-        var result = await BlogModel.edit(req.body.id, req.body.html) ;
+        var result = await CategoryModel.getChildren(req.params.id) ;
         return res.json({
             message: "success",
             data: result
@@ -28,9 +28,9 @@ exports.edit = async (req, res) => {
     }
 }
 
-exports.get = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
-        var result = await BlogModel.get(req.params.id) ;
+        var result = await CategoryModel.getAll() ;
         return res.json({
             message: "success",
             data: result

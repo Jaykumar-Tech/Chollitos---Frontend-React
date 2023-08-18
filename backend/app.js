@@ -23,6 +23,10 @@ const followRoute = require("./routes/following.route")
 const inviteRoute = require("./routes/invitation.route")
 const tenderRoute = require("./routes/tender.route")
 const blogRoute = require("./routes/blog.route")
+const storeRoute = require("./routes/store.route")
+const reviewRoute = require("./routes/review.route")
+const notificationRoute = require("./routes/notification.route")
+const categoryRoute = require("./routes/category.route")
 
 app.use('/api/user', userRoute);
 app.use("/api/database", databaseRoute);
@@ -30,6 +34,10 @@ app.use("/api/follow", followRoute);
 app.use("/api/invite", inviteRoute);
 app.use("/api/tender", tenderRoute);
 app.use("/api/blog", blogRoute)
+app.use("/api/store", storeRoute)
+app.use("/api/review", reviewRoute)
+app.use("/api/notification", notificationRoute)
+app.use("/api/category", categoryRoute)
 
 app.get("/", (req, res) => {
     return res.json({

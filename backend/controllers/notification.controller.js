@@ -1,8 +1,8 @@
-BlogModel = require("../models/blog.model");
+NotificationModel = require("../models/notification.model");
 
 exports.create = async (req, res) => {
     try {
-        var result = await BlogModel.create(req.body.html) ;
+        var result = await NotificationModel.create(req.body) ;
         return res.json({
             message: "success",
             data: result.insertId
@@ -14,9 +14,9 @@ exports.create = async (req, res) => {
     }
 }
 
-exports.edit = async (req, res) => {
+exports.setRead = async (req, res) => {
     try {
-        var result = await BlogModel.edit(req.body.id, req.body.html) ;
+        var result = await NotificationModel.setRead(req.params.id) ;
         return res.json({
             message: "success",
             data: result
@@ -28,9 +28,9 @@ exports.edit = async (req, res) => {
     }
 }
 
-exports.get = async (req, res) => {
+exports.getUnread = async (req, res) => {
     try {
-        var result = await BlogModel.get(req.params.id) ;
+        var result = await NotificationModel.getUnread(req.params.user_id) ;
         return res.json({
             message: "success",
             data: result
