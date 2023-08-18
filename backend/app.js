@@ -22,12 +22,14 @@ const databaseRoute = require("./routes/database.route");
 const followRoute = require("./routes/following.route")
 const inviteRoute = require("./routes/invitation.route")
 const tenderRoute = require("./routes/tender.route")
+const blogRoute = require("./routes/blog.route")
 
 app.use('/api/user', userRoute);
 app.use("/api/database", databaseRoute);
 app.use("/api/follow", followRoute);
 app.use("/api/invite", inviteRoute);
 app.use("/api/tender", tenderRoute);
+app.use("/api/blog", blogRoute)
 
 app.get("/", (req, res) => {
     return res.json({

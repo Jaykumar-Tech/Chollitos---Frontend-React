@@ -90,9 +90,7 @@ exports.exist = async (req, res) => {
             email: req.body.email,
             password: "temp",
             role: "customer", // "customer, business, admin"
-            status: false,
-            created_at: moment().format('YYYY-MM-DD'),
-            updated_at: moment().format('YYYY-MM-DD')
+            status: false
         }
         await UserModel.create(userData);
         var code = bcryptUtil.genCode();
@@ -132,9 +130,7 @@ exports.google = async (req, res) => {
                     email: email,
                     password: "temp",
                     role: "customer", // "customer, business, admin"
-                    status: false,
-                    created_at: moment().format('YYYY-MM-DD'),
-                    updated_at: moment().format('YYYY-MM-DD')
+                    status: false
                 }
                 await UserModel.create(userData);
                 return res.json({
@@ -189,9 +185,7 @@ exports.register = async (req, res) => {
             email: email,
             password: hashedPassword,
             role: "customer", // "customer, business, admin"
-            status: true,
-            created_at: moment().format('YYYY-MM-DD'),
-            updated_at: moment().format('YYYY-MM-DD')
+            status: true
         }
         await UserModel.removeByEmail(email, (err, response) => { });
         await UserModel.create(userData)

@@ -12,7 +12,7 @@ const User = function (user) {
 };
 User.create = (newUser) => {
     return new Promise((resolve, reject) => {
-        client.query("INSERT INTO users SET ?", newUser, (err, res) => {
+        client.query("INSERT INTO user SET ?", newUser, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -24,7 +24,7 @@ User.create = (newUser) => {
 };
 User.findById = (id) => {
     return new Promise((resolve, reject) => {
-        client.query(`SELECT * FROM users WHERE id = ${id}`, (err, res) => {
+        client.query(`SELECT * FROM user WHERE id = ${id}`, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -38,7 +38,7 @@ User.findById = (id) => {
 };
 User.findByEmail = (email) => {
     return new Promise((resolve, reject) => {
-        client.query("SELECT * FROM users WHERE email = ?", email, (err, res) => {
+        client.query("SELECT * FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -53,7 +53,7 @@ User.findByEmail = (email) => {
 };
 User.getAll = () => {
     return new Promise((resolve, reject) => {
-        let query = "SELECT * FROM users";
+        let query = "SELECT * FROM user";
         client.query(query, (err, res) => {
             if (err) {
                 reject(err);
@@ -67,7 +67,7 @@ User.getAll = () => {
 User.updateById = (id, user) => {
     return new Promise((resolve, reject) => {
         client.query(
-            "UPDATE users SET firstname = ?, lastname = ?, password = ?, email = ?, role = ?, status = ? WHERE id = ?",
+            "UPDATE user SET firstname = ?, lastname = ?, password = ?, email = ?, role = ?, status = ? WHERE id = ?",
             [user.firstname, user.lastname, user.password, user.email, user.role, user.status, id],
             (err, res) => {
                 if (err) {
@@ -85,7 +85,7 @@ User.updateById = (id, user) => {
 };
 User.remove = (id) => {
     return new Promise((resolve, reject) => {
-        client.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+        client.query("DELETE FROM user WHERE id = ?", id, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -100,7 +100,7 @@ User.remove = (id) => {
 };
 User.removeByEmail = (email) => {
     return new Promise((resolve, reject) => {
-        client.query("DELETE FROM users WHERE email = ?", email, (err, res) => {
+        client.query("DELETE FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -115,7 +115,7 @@ User.removeByEmail = (email) => {
 };
 User.removeAll = () => {
     return new Promise((resolve, reject) => {
-        client.query("DELETE FROM users", (err, res) => {
+        client.query("DELETE FROM user", (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -127,7 +127,7 @@ User.removeAll = () => {
 };
 User.saveCode = (email, code) => {
     return new Promise((resolve, reject) => {
-        client.query("UPDATE users SET code = ? WHERE email = ? ",
+        client.query("UPDATE user SET code = ? WHERE email = ? ",
             [code, email], (err, user) => {
                 if (err) {
                     reject(err);
@@ -141,7 +141,7 @@ User.saveCode = (email, code) => {
 }
 User.verifyCode = (email, code) => {
     return new Promise((resolve, reject) => {
-        client.query("SELECT * FROM users WHERE email = ?", email, (err, res) => {
+        client.query("SELECT * FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -163,7 +163,7 @@ User.verifyCode = (email, code) => {
 }
 User.resetPassword = (email, password, result) => {
     return new Promise((resolve, reject) => {
-        client.query("UPDATE users SET password=? WHERE email=?",
+        client.query("UPDATE user SET password=? WHERE email=?",
             [password, email], (err, row) => {
                 if (err) {
                     reject(err);

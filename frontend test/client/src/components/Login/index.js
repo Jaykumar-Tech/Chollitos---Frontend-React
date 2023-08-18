@@ -71,7 +71,7 @@ const Login = () => {
 		const provider = new GoogleAuthProvider();
 		provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 		provider.setCustomParameters({
-			'login_hint': 'temp@gmail.com'
+			'login_hint': 'gemma@gmail.com'
 		  });
 
 		// Initialize Firebase Authentication and get a reference to the service
