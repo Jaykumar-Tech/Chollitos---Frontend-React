@@ -39,7 +39,7 @@ Blog.get = (id) => {
                 return;
             } 
             if ( rows.length == 0 ) {
-                reject({message: "not found"})
+                reject({message: "Blog Not Found"})
                 return
             }
             resolve(rows[0]);

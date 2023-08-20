@@ -39,7 +39,7 @@ Store.get = (id) => {
                 return;
             } 
             if ( rows.length == 0 ) {
-                reject({message: "not found"})
+                reject({message: "Store Not Found"})
                 return
             }
             resolve(rows[0]);

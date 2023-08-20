@@ -1,28 +1,22 @@
 const client = require("./connection");
-const cacheUtil = require('../utils/cache.util');
 // constructor
-const User = function (user) {
-    this.username = user.username;
-    this.password = user.password;
-    this.email = user.email;
-    this.role = user.role;
-    this.status = user.status;
-    this.created_at = user.created_at;
-    this.updated_at = user.updated_at;
+const Validate = function () {
 };
-User.create = (newUser) => {
+Validate.storeExist = (id) => {
     return new Promise((resolve, reject) => {
-        client.query("INSERT INTO user SET ?", newUser, (err, res) => {
+        client.query(`SELECT * FROM store WHERE id = ${id}`, (err, res) => {
             if (err) {
                 reject(err);
                 return;
-            } else {
-                resolve({ id: res.insertId, ...newUser });
-            }
+            } else if (res.length) {
+                resolve(res[0]);
+                return;
+            } else
+                reject({ message: "not_found" });
         });
     })
 };
-User.findById = (id) => {
+Validate.findById = (id) => {
     return new Promise((resolve, reject) => {
         client.query(`SELECT * FROM user WHERE id = ${id}`, (err, res) => {
             if (err) {
@@ -32,11 +26,11 @@ User.findById = (id) => {
                 resolve(res[0]);
                 return;
             } else
-                reject({ message: "User Not Found" });
+                reject({ message: "not_found" });
         });
     })
 };
-User.findByEmail = (email) => {
+Validate.findByEmail = (email) => {
     return new Promise((resolve, reject) => {
         client.query("SELECT * FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
@@ -51,7 +45,7 @@ User.findByEmail = (email) => {
         });
     })
 };
-User.getAll = () => {
+Validate.getAll = () => {
     return new Promise((resolve, reject) => {
         let query = "SELECT * FROM user";
         client.query(query, (err, res) => {
@@ -64,7 +58,7 @@ User.getAll = () => {
         });
     })
 };
-User.updateById = (id, user) => {
+Validate.updateById = (id, user) => {
     return new Promise((resolve, reject) => {
         client.query(
             "UPDATE user SET firstname = ?, lastname = ?, password = ?, email = ?, role = ?, status = ? WHERE id = ?",
@@ -83,7 +77,7 @@ User.updateById = (id, user) => {
         );
     })
 };
-User.remove = (id) => {
+Validate.remove = (id) => {
     return new Promise((resolve, reject) => {
         client.query("DELETE FROM user WHERE id = ?", id, (err, res) => {
             if (err) {
@@ -98,7 +92,7 @@ User.remove = (id) => {
         });
     })
 };
-User.removeByEmail = (email) => {
+Validate.removeByEmail = (email) => {
     return new Promise((resolve, reject) => {
         client.query("DELETE FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
@@ -113,7 +107,7 @@ User.removeByEmail = (email) => {
         });
     })
 };
-User.removeAll = () => {
+Validate.removeAll = () => {
     return new Promise((resolve, reject) => {
         client.query("DELETE FROM user", (err, res) => {
             if (err) {
@@ -125,7 +119,7 @@ User.removeAll = () => {
         });
     })
 };
-User.saveCode = (email, code) => {
+Validate.saveCode = (email, code) => {
     return new Promise((resolve, reject) => {
         client.query("UPDATE user SET code = ? WHERE email = ? ",
             [code, email], (err, user) => {
@@ -139,7 +133,7 @@ User.saveCode = (email, code) => {
             })
     })
 }
-User.verifyCode = (email, code) => {
+Validate.verifyCode = (email, code) => {
     return new Promise((resolve, reject) => {
         client.query("SELECT * FROM user WHERE email = ?", email, (err, res) => {
             if (err) {
@@ -155,13 +149,13 @@ User.verifyCode = (email, code) => {
                     resolve("verified")
                 }
             } else {
-                // not found User with the id
+                // not found Validate with the id
                 reject({ message: "not_found" });
             }
         });
     })
 }
-User.resetPassword = (email, password, result) => {
+Validate.resetPassword = (email, password, result) => {
     return new Promise((resolve, reject) => {
         client.query("UPDATE user SET password=? WHERE email=?",
             [password, email], (err, row) => {
@@ -175,7 +169,7 @@ User.resetPassword = (email, password, result) => {
             })
     })
 }
-User.logoutUser = (token, exp) => {
+Validate.logoutValidate = (token, exp) => {
     return new Promise((resolve, reject) => {
         const now = new Date();
         const expire = new Date(exp * 1000);
@@ -185,4 +179,4 @@ User.logoutUser = (token, exp) => {
         resolve();
     })
 }
-module.exports = User;
+module.exports = Validate;

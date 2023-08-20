@@ -51,4 +51,22 @@ Category.getAll = () => {
     });
 };
 
+Category.get = (id) => {
+    return new Promise((resolve, reject) => {
+        client.query("SELECT * FROM category WHERE id = ?",
+        [id],
+         (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            } 
+            if ( rows.length == 0 ) {
+                reject({message: "Category Not Found"})
+                return
+            }
+            resolve(rows);
+        });
+    });
+}
+
 module.exports = Category;
