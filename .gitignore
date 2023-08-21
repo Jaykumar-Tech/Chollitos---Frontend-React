@@ -8,4 +8,7 @@
 *.sql
 *.pptx
 *.log
-/backend/resource
+/backend/resource/*
+/deploy
+/frontend_test
+*.bat

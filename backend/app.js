@@ -45,7 +45,7 @@ app.use("/api/resource", resourceRoute)
 
 app.get("/", (req, res) => {
     return res.json({
-        message: "Hello, Welcome to Dac Rapide"
+        message: "Hello, Welcome to Chollo API"
     })
 })
 
