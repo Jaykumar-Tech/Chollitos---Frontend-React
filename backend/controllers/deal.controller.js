@@ -2,7 +2,7 @@ DealModel = require("../models/deal.model");
 
 exports.create = async (req, res) => {
     try {
-        var result = await DealModel.create(req.body) ;
+        var result = await DealModel.create(req.body);
         return res.json({
             message: "success",
             data: result.insertId
@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
 
 exports.edit = async (req, res) => {
     try {
-        var result = await DealModel.edit(req.body.id, req.body) ;
+        var result = await DealModel.edit(req.body.id, req.body);
         return res.json({
             message: "success",
             data: result
@@ -30,10 +30,10 @@ exports.edit = async (req, res) => {
 
 exports.count = async (req, res) => {
     try {
-        var result = await DealModel.count(req.body) ;
+        var result = await DealModel.count(req.body);
         return res.json({
             message: "success",
-            data: result[0].cnt
+            data: result[0].cnt_deal
         })
     } catch (error) {
         return res.status(400).send({
@@ -44,7 +44,7 @@ exports.count = async (req, res) => {
 
 exports.find = async (req, res) => {
     try {
-        var result = await DealModel.find(req.body) ;
+        var result = await DealModel.find(req.body);
         return res.json({
             message: "success",
             data: result
@@ -55,9 +55,10 @@ exports.find = async (req, res) => {
         })
     }
 }
+
 exports.get = async (req, res) => {
     try {
-        var result = await DealModel.get(req.params.id) ;
+        var result = await DealModel.get(req.params.id);
         return res.json({
             message: "success",
             data: result

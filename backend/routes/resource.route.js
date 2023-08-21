@@ -16,9 +16,11 @@ const storage = multer.diskStorage({
         cb(null, file.originalname); // Specify the filename
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage
+});
 
-router.post('/upload', upload.single('file'),  ErrorHandler(ResourceController.upload) );
+router.post('/upload', upload.single('file'),  ErrorHandler(ResourceController.upload));
 router.get('/get/:id', ErrorHandler(ResourceController.get));
 
 router.all('*', (req, res) => res.status(400).json({ message: 'Bad Request.' }))

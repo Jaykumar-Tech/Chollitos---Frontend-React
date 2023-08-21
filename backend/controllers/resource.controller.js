@@ -6,7 +6,7 @@ exports.upload = async (req, res) => {
         const newName = randomUtil.generateLongNumber();
         fs.renameSync(req.file.path, __dirname + "/../resource/" + newName);
         return res.json({
-            url: "http://localhost:4000/api/resource/get/" + newName
+            url: "http://172.20.103.9:4000/api/resource/get/" + newName
         })
     } catch (error) {
         return res.status(400).send({

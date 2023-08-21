@@ -6,6 +6,12 @@ function validateType (value) {
     } 
 }
 
+function validateFeature (value) {
+    if ( ["new", "highlight", "popular", "commented"].indexOf(value) == -1 ) {
+        throw new Error("Feature must be one of new, highlight, popular, commented!")
+    }
+}
+
 module.exports = {
     add: Joi.object().keys({
         user_id: Joi.number().required(),
@@ -37,14 +43,16 @@ module.exports = {
     }),
     find: Joi.object().keys({
         free: Joi.number().required(),
-        start_at: Joi.number().required(),
-        length: Joi.number().required(),
         store_id: Joi.number().required(),
-        category_id: Joi.number().required(),
+        category_id: Joi.array().required(),
+        feature: Joi.string().required().external(validateFeature),
+        start_at: Joi.number().required(),
+        length: Joi.number().required()
     }),
     count: Joi.object().keys({
         free: Joi.number().required(),
         store_id: Joi.number().required(),
-        category_id: Joi.number().required(),
+        category_id: Joi.array().required(),
+        feature: Joi.string().required().external(validateFeature),
     })
 }

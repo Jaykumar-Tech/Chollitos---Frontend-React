@@ -19,23 +19,24 @@ module.exports = async (req, res, next) => {
                 await UserModel.findById(req.body.receiver_id);
             if (keys.indexOf("store_id") >= 0 && req.body.store_id != -1)
                 await StoreModel.get(req.body.store_id);
-            if (keys.indexOf("category_id") >= 0 && req.body.category_id != -1)
-                await CategoryModel.get(req.body.category_id);
+            if (keys.indexOf("category_id") >= 0 && req.body.category_id.length > 0 )
+                for ( id of req.body.category_id )
+                    await CategoryModel.get(id);
             if (keys.indexOf("blog_id") >= 0)
                 await BlogModel.get(req.body.blog_id);
-            if (keys.indexOf("info_html") >= 0)
+            if (keys.indexOf("info_html") >= 0 && req.body.info_html != -1)
                 await BlogModel.get(req.body.info_html);
-            if (keys.indexOf("tip_id") >= 0)
+            if (keys.indexOf("tip_id") >= 0 && req.body.tip_id != -1)
                 await BlogModel.get(req.body.tip_id);
-            if (keys.indexOf("stories_id") >= 0)
+            if (keys.indexOf("stories_id") >= 0 && req.body.stories_id != -1)
                 await BlogModel.get(req.body.stories_id);
-            if (keys.indexOf("about_id") >= 0)
+            if (keys.indexOf("about_id") >= 0 && req.body.about_id != -1)
                 await BlogModel.get(req.body.about_id);
-            if (keys.indexOf("faq_id") >= 0)
+            if (keys.indexOf("faq_id") >= 0 && req.body.faq_id != -1)
                 await BlogModel.get(req.body.faq_id);
-            if (keys.indexOf("howto_id") >= 0)
+            if (keys.indexOf("howto_id") >= 0 && req.body.howto_id != -1)
                 await BlogModel.get(req.body.howto_id);
-            if (keys.indexOf("didyou_id") >= 0)
+            if (keys.indexOf("didyou_id") >= 0 && req.body.didyou_id != -1)
                 await BlogModel.get(req.body.didyou_id);
             if ( keys.indexOf("dest_id") >= 0 ) {
                 if ( req.body.type == "comment" || req.body.type == "message" )
