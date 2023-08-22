@@ -1,10 +1,13 @@
 /backend/node_modules
 /backend/public
 /backend/resource/*
+/backend/dist
+/backend/.cache
+
+/deploy
+/frontend_test
 
 *.zip
 *.pptx
 *.log
-/deploy
-/frontend_test
 *.bat

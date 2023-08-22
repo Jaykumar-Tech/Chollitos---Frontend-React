@@ -9,8 +9,10 @@
 		"start:prod": "cd backend && npm start",
 		"start:dev": "concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
 		"install": "cd backend && npm i && cd ../frontend && npm i && npm run build",
-    "startv": "export NODE_ENV=production && cd backend && npm start"
-  },
+    "startv": "export NODE_ENV=production && cd backend && npm start",
+    "push-code": "git pull origin main && git push origin main",
+    "build": "cd backend && npm run build && cd dist && git add . && git commit -am 'Updated' && git pull origin main && git push origin main"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/daltonbreka/nodejs-mysql-firebase-payment-backend-chollo.git"
