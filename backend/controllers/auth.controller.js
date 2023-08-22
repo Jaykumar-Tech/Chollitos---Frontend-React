@@ -89,9 +89,7 @@ exports.exist = async (req, res) => {
         const userData = {
             username: "temp",
             email: req.body.email,
-            password: "temp",
-            role: "customer", // "customer, business, admin"
-            status: false
+            password: "temp"
         }
         await UserModel.create(userData);
         var code = bcryptUtil.genCode();
@@ -125,13 +123,12 @@ exports.google = async (req, res) => {
                         await UserModel.remove(user.id, (err, response) => { });
                     }
                 } catch (error) { }
+                console.log(decodedToken) ;
 
                 const userData = {
                     username: "temp",
                     email: email,
-                    password: "temp",
-                    role: "customer", // "customer, business, admin"
-                    status: false
+                    password: "temp"
                 }
                 await UserModel.create(userData);
                 return res.json({

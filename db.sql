@@ -11,11 +11,8 @@
  Target Server Version : 100428
  File Encoding         : 65001
 
- Date: 22/08/2023 10:55:30
+ Date: 22/08/2023 14:22:26
 */
-DROP DATABASE IF EXISTS chollo;
-CREATE DATABASE chollo;
-use chollo;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -28,7 +25,7 @@ CREATE TABLE `blog`  (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `html` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of blog
@@ -64,7 +61,7 @@ CREATE TABLE `category`  (
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `parent_id` int(4) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of category
@@ -116,7 +113,7 @@ CREATE TABLE `comment`  (
   `blog_id` int(4) NOT NULL,
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of comment
@@ -169,7 +166,7 @@ CREATE TABLE `deal`  (
   `uploaded_date` date NOT NULL,
   `expires` date NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of deal
@@ -233,7 +230,7 @@ CREATE TABLE `likes`  (
   `dest_id` int(4) NOT NULL,
   `is_like` int(4) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of likes
@@ -272,7 +269,7 @@ CREATE TABLE `notification`  (
   `is_read` int(1) NULL DEFAULT NULL,
   `date` date NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of notification
@@ -289,7 +286,7 @@ CREATE TABLE `review`  (
   `star` int(2) NOT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of review
@@ -311,7 +308,7 @@ CREATE TABLE `store`  (
   `howto_id` int(4) NULL DEFAULT NULL,
   `didyou_id` int(4) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of store
@@ -343,21 +340,15 @@ CREATE TABLE `user`  (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `birthday` date NULL DEFAULT NULL,
-  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'customer',
   `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `status` int(2) NOT NULL,
-  `point` int(6) NOT NULL,
+  `status` int(2) NOT NULL DEFAULT 0,
+  `point` int(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'daltonchua', 'daltonchua@outlook.com', '$2a$10$iSHtRoW0GQjhvxt83sWuJOpC.OEwlMI0Yk5HjIIC7zcelCfO2MK6m', NULL, 'customer', NULL, 1, 0);
-INSERT INTO `user` VALUES (2, 'daltonchua', 'daltonchua2@outlook.com', '$2a$10$iSHtRoW0GQjhvxt83sWuJOpC.OEwlMI0Yk5HjIIC7zcelCfO2MK6m', NULL, 'customer', NULL, 1, 0);
-INSERT INTO `user` VALUES (3, 'daltonchua', 'daltonchua3@outlook.com', '$2a$10$iSHtRoW0GQjhvxt83sWuJOpC.OEwlMI0Yk5HjIIC7zcelCfO2MK6m', NULL, 'vip', NULL, 1, 0);
-INSERT INTO `user` VALUES (4, 'temp', 'daltonbreka@gmail.com', 'temp', NULL, 'customer', NULL, 0, 0);
-INSERT INTO `user` VALUES (5, 'temp', 'gemmathomas317@gmail.com', 'temp', NULL, 'customer', NULL, 0, 0);
-INSERT INTO `user` VALUES (6, 'temp', 'harryhorris12@gmail.com', 'temp', NULL, 'customer', NULL, 0, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
