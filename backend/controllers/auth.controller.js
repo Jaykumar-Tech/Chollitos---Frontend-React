@@ -5,6 +5,7 @@ const jwtUtil = require('../utils/jwt.util');
 const nodemailer = require("nodemailer");
 const moment = require("moment")
 const UserModel = require("../models/user.model");
+const urlConfig = require("../config/url.config")
 
 const { initializeApp } = require('firebase-admin/app');
 var admin = require("firebase-admin");
@@ -57,7 +58,7 @@ const sendCode = async (email, code) => {
                     from: mailConfig.mail,
                     to: email,
                     subject: 'Verification Code From Chollo.es',
-                    html: `Your Verification Code is: <a href='http://localhost:4000/api/user/callback?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`,
+                    html: `Your Verification Code is: <a href='${urlConfig.SERVER_URL}api/user/callback?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`,
                 };
 
                 const info = await transporter.sendMail(mailOptions);

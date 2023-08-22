@@ -1,14 +1,11 @@
-/admin-panel/node_modules
-/admin-panel/build
-
 /backend/node_modules
 /backend/public
+/backend/resource/*
 
 *.zip
 *.sql
 *.pptx
 *.log
-/backend/resource/*
 /deploy
 /frontend_test
 *.bat

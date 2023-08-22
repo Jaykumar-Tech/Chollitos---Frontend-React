@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const moment = require("moment")
 const mysql = require("mysql")
 const UserModel = require("../models/user.model");
+const urlConfig = require("../config/url.config")
 
 const sendCode = async (email, code, callback) => {
     if (email.indexOf("@gmail.com") != -1) {
@@ -45,13 +46,13 @@ const sendCode = async (email, code, callback) => {
                 pass: mailConfig.password
             },
         });
-        console.log(`Your Verification Code is: <a href='http://localhost:4000/api/user/getcode?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`)
+        console.log(`Your Verification Code is: <a href='${urlConfig.SERVER_URL}api/user/getcode?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`)
         try {
             const mailOptions = {
                 from: mailConfig.mail,
                 to: email,
                 subject: 'Verification Code From Chollo.es',
-                html: `Your Verification Code is: <a href='http://localhost:4000/api/user/getcode?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`,
+                html: `Your Verification Code is: <a href='${urlConfig.SERVER_URL}api/user/getcode?code=${code}&&expires=${new Date().getTime()}&&email=${email}'>Verify Email</a>`,
             };
 
             const info = await transporter.sendMail(mailOptions);

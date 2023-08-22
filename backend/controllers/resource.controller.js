@@ -1,12 +1,13 @@
 const randomUtil = require("../utils/random.util");
 const fs = require('fs')
+const urlConfig = require("../config/url.config")
 
 exports.upload = async (req, res) => {
     try {
         const newName = randomUtil.generateLongNumber();
         fs.renameSync(req.file.path, __dirname + "/../resource/" + newName);
         return res.json({
-            url: "http://172.20.103.9:4000/api/resource/get/" + newName
+            url: `${urlConfig.SERVER_URL}api/resource/get/` + newName
         })
     } catch (error) {
         return res.status(400).send({
