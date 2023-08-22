@@ -1,11 +1,7 @@
 const mysql = require("mysql")
 
 const client = mysql.createConnection({
-    // host: process.env.RDS_HOSTNAME,
-    // user: process.env.RDS_USERNAME,
-    // password: process.env.RDS_PASSWORD,
-    // port: process.env.RDS_PORT
-    host: "localhost",
+    host: "172.0.0.1",
     user: "root",
     password: "",
     port: 3306
