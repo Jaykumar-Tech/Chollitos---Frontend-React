@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 function validateType (value) {
-    if ( ["price", "discount_percent", "discount_fixed", "free"].indexOf(value) ==-1 ) {
-        throw new Error("Type must be one of price, discount_percent, discount_fixed and free");
+    if ( ["deal", "discount_percent", "discount_fixed", "free"].indexOf(value) ==-1 ) {
+        throw new Error("Type must be one of deal, discount_percent, discount_fixed and free");
     } 
 }
 
@@ -17,28 +17,30 @@ module.exports = {
         user_id: Joi.number().required(),
         title: Joi.string().required(),
         description: Joi.string().required(),
-        price: Joi.number(),
-        retail_price: Joi.number(),
+        price_new: Joi.number(),
+        price_low: Joi.number(),
+        price_ship: Joi.number(),
         type: Joi.string().required().external(validateType),
-        discount: Joi.number(),
         store_id: Joi.number().required(),
         deal_url: Joi.string().required(),
         image_url: Joi.string().required(),
         category_id: Joi.number().required(),
+        start_date: Joi.date().required(),
         expires: Joi.date()
     }),
     edit: Joi.object().keys({
         id: Joi.number().required(),
         title: Joi.string().required(),
         description: Joi.string().required(),
-        price: Joi.number(),
-        retail_price: Joi.number(),
+        price_new: Joi.number(),
+        price_low: Joi.number(),
+        price_ship: Joi.number(),
         type: Joi.string().required().external(validateType),
-        discount: Joi.number(),
         store_id: Joi.number().required(),
         deal_url: Joi.string().required(),
         image_url: Joi.string().required(),
         category_id: Joi.number().required(),
+        start_date: Joi.date().required(),
         expires: Joi.date()
     }),
     find: Joi.object().keys({

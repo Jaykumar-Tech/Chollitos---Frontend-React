@@ -6,7 +6,6 @@ const Deal = function (deal) {
 
 Deal.create = (data) => {
     data.status = 1;
-    data.uploaded_date = new Date();
     return new Promise((resolve, reject) => {
         client.query("INSERT INTO deal SET ?",
             [data], (err, row) => {
@@ -40,6 +39,7 @@ Deal.find = (data) => {
     var start_at = data.start_at;
     var length = data.length;
     var filter = [];
+    filter.push("start_date <= CURDATE()")
     if (data.free) filter.push("type='free'")
     if (data.store_id != -1) filter.push(`store_id=${data.store_id}`);
     if (data.category_id.length > 0) filter.push(`category_id IN (${data.category_id.join(",")})`);
@@ -56,10 +56,10 @@ Deal.find = (data) => {
             ELSE B.count_like - C.count_dislike
         END
     ) > 0`);
-    if (filter.length > 0) filter = filter.join(" AND ");
-    else filter = "1=1";
+
+    filter = filter.join(" AND ");
     return new Promise((resolve, reject) => {
-        client.query(`SELECT deal.*,  
+        client.query(`SELECT deal.*, user.username as username, user.avatar as avatar, store.name as storename,
         CASE
             WHEN ISNULL(A.count_comment) THEN 0
             ELSE A.count_comment
@@ -87,7 +87,13 @@ Deal.find = (data) => {
         where type="deal" AND is_like=0
         GROUP BY dest_id) C 
         ON deal.id = C.dest_id
-        WHERE ${filter} ORDER BY uploaded_date LIMIT ? OFFSET ?;`,
+        LEFT JOIN
+        user 
+        ON deal.user_id = user.id
+        LEFT JOIN
+        store 
+        ON deal.store_id = store.id
+        WHERE ${filter} ORDER BY start_date DESC LIMIT ? OFFSET ?;`,
             [length, start_at],
             (err, rows) => {
                 if (err) {
@@ -172,6 +178,32 @@ Deal.get = (id) => {
                     return
                 }
                 resolve(rows);
+            });
+    });
+};
+
+Deal.getCode = (id) => {
+    return new Promise((resolve, reject) => {
+        client.query("SELECT * FROM deal WHERE id=?",
+            [id],
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                if (rows.length == 0) {
+                    reject({ message: "Deal Not Found" })
+                    return
+                }
+                let countOfUsed = rows[0].count_of_used + 1;
+                client.query("UPDATE deal SET count_of_used=? WHERE id=?",
+                [countOfUsed, id], (err, row) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    resolve(row)
+                })
             });
     });
 };

@@ -50,7 +50,8 @@ module.exports = {
         lastname: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required().min(8).max(16).external(validatePassword),
-        type: Joi.string().required().external(validateLoginType)
+        type: Joi.string().required().external(validateLoginType),
+        avatar: Joi.string()
     }),
     login: Joi.object().keys({
         email: Joi.string().email().required(),

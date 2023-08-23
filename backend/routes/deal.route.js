@@ -13,6 +13,7 @@ router.post('/edit',      validate(schema.edit),       ErrorHandler(DealControll
 router.post('/find',    correctMiddle,  validate(schema.find),     ErrorHandler(DealController.find));
 router.post('/count',    correctMiddle,   validate(schema.count),     ErrorHandler(DealController.count));
 router.get('/get/:id',     validate(schema.get),      ErrorHandler(DealController.get));
+router.get('/getcode/:id',           ErrorHandler(DealController.getCode));
 
 router.all('*',  (req, res) => res.status(400).json({ message: 'Bad Request.'}))
 
