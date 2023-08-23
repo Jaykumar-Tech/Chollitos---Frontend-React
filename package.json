@@ -10,8 +10,9 @@
 		"start:dev": "concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
 		"install": "cd backend && npm i && cd ../frontend && npm i && npm run build",
     "startv": "export NODE_ENV=production && cd backend && npm start",
-    "push-code": "git pull origin main && git push origin main",
-    "build": "cd backend && npm run build && cd dist && git add . && git commit -am 'Updated' && git pull origin main && git push origin main"
+    "push": "git pull origin main && git push origin main",
+    "build": "cd backend && npm run build && cd dist && git add . && git commit -am 'Updated' && git pull origin main && git push origin main",
+    "test": "cd backend/dist && npm start"
     },
   "repository": {
     "type": "git",

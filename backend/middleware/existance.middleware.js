@@ -6,6 +6,7 @@ const UserModel = require("../models/user.model")
 const BlogModel = require("../models/blog.model");
 const CommentModel = require("../models/comment.model");
 const DealModel = require("../models/deal.model");
+const ActivityModel = require('../models/activity.model')
 
 module.exports = async (req, res, next) => {
     if (req.method == "POST") {
@@ -19,8 +20,8 @@ module.exports = async (req, res, next) => {
                 await UserModel.findById(req.body.receiver_id);
             if (keys.indexOf("store_id") >= 0 && req.body.store_id != -1)
                 await StoreModel.get(req.body.store_id);
-            if (keys.indexOf("category_id") >= 0 && req.body.category_id.length > 0 )
-                for ( id of req.body.category_id )
+            if (keys.indexOf("category_id") >= 0 && req.body.category_id.length > 0)
+                for (id of req.body.category_id)
                     await CategoryModel.get(id);
             if (keys.indexOf("blog_id") >= 0)
                 await BlogModel.get(req.body.blog_id);
@@ -38,13 +39,17 @@ module.exports = async (req, res, next) => {
                 await BlogModel.get(req.body.howto_id);
             if (keys.indexOf("didyou_id") >= 0 && req.body.didyou_id != -1)
                 await BlogModel.get(req.body.didyou_id);
-            if ( keys.indexOf("dest_id") >= 0 ) {
-                if ( req.body.type == "comment" || req.body.type == "message" )
+            if (keys.indexOf("activity_id") >= 0 && req.body.activity_id != -1)
+                await ActivityModel.getName(req.body.activity_id);
+            if (keys.indexOf("dest_id") >= 0) {
+                if (req.body.type == "comment")
                     await CommentModel.get(req.body.dest_id);
-                else if ( req.body.type == "user" ) 
-                    await UserModel.get(req.body.dest_id);
-                else if ( req.body.type == "deal" )
+                else if (req.body.type == "message")
+                    await UserModel.findById(req.body.dest_id);
+                else if (req.body.type == "deal")
                     await DealModel.get(req.body.dest_id);
+                else if (req.body.type == "discussion" && req.body.dest_id != -1) 
+                    throw new Error("The comment of discussion requires dest_id as -1")
             }
             next();
         } catch (error) {

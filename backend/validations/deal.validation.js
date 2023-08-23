@@ -25,7 +25,7 @@ module.exports = {
         deal_url: Joi.string().required(),
         image_url: Joi.string().required(),
         category_id: Joi.number().required(),
-        expires: Joi.date().required(),
+        expires: Joi.date()
     }),
     edit: Joi.object().keys({
         id: Joi.number().required(),
@@ -39,7 +39,7 @@ module.exports = {
         deal_url: Joi.string().required(),
         image_url: Joi.string().required(),
         category_id: Joi.number().required(),
-        expires: Joi.date().required(),
+        expires: Joi.date()
     }),
     find: Joi.object().keys({
         free: Joi.number().required(),

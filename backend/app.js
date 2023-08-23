@@ -29,6 +29,7 @@ const dealRoute = require("./routes/deal.route")
 const likeRoute = require("./routes/like.route")
 const commentRoute = require("./routes/comment.route")
 const resourceRoute = require("./routes/resource.route")
+const activityRoute = require("./routes/activity.route")
 
 app.use(ExistGuard);
 app.use('/api/user', userRoute);
@@ -42,6 +43,8 @@ app.use("/api/deal", dealRoute)
 app.use("/api/like", likeRoute)
 app.use("/api/comment", commentRoute)
 app.use("/api/resource", resourceRoute)
+app.use("/api/activity", activityRoute)
+
 
 app.get("/", (req, res) => {
     return res.json({

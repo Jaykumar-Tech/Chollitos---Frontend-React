@@ -50,7 +50,6 @@ module.exports = {
         lastname: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required().min(8).max(16).external(validatePassword),
-        role: Joi.string().required().external(validateRole),
         type: Joi.string().required().external(validateLoginType)
     }),
     login: Joi.object().keys({
@@ -69,8 +68,7 @@ module.exports = {
         lastname: Joi.string().required(),
         email: Joi.string().email().required(),
         oldPassword: Joi.string().required().min(8).max(16).external(validatePassword),
-        newPassword: Joi.string().required().min(8).max(16).external(validatePassword),
-        role: Joi.string().required().external(validateRole)
+        newPassword: Joi.string().required().min(8).max(16).external(validatePassword)
     }),
     addreview: Joi.object().keys({
         email: Joi.string().email().required(),
