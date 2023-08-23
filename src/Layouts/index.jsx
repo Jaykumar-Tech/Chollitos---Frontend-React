@@ -38,6 +38,12 @@ import "./index.css";
 import Logo from "../Components/Logo";
 import SearchBar from './SearchBar';
 
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import axios from "axios"
+
+
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -58,6 +64,65 @@ export default function Navbar() {
   // const handleSignUpOpenModal = () => {
   //   setIsSignUpOpen(true);
   // };
+
+  const handleSignInGoogle = () => {
+    const firebaseConfig = {
+			apiKey: "AIzaSyC2fD6TDBdbhZYg5097RAkMYs-7fJIPf_g",
+			authDomain: "chollo-es-396117.firebaseapp.com",
+			projectId: "chollo-es-396117",
+			storageBucket: "chollo-es-396117.appspot.com",
+			messagingSenderId: "416034001184",
+			appId: "1:416034001184:web:73027a3783bf8fd7e60745",
+			measurementId: "G-B9XRQE5YX9"
+		};
+
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+		const provider = new GoogleAuthProvider();
+		provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+		provider.setCustomParameters({
+			'login_hint': 'gemma@gmail.com'
+		  });
+
+		// Initialize Firebase Authentication and get a reference to the service
+		const auth = getAuth(app);
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				// This gives you a Google Access Token. You can use it to access the Google API.
+				const credential = GoogleAuthProvider.credentialFromResult(result);
+				console.log(result);
+				// The signed-in user info.
+				const user = result.user;
+				result.user.getIdToken(true).then(function(idToken){
+					axios.post("http://5.75.224.135:4000/api/user/google",{
+						idToken: idToken,
+						email: user.email
+					})
+					.then(response=>{
+						console.log(response) ;
+					})
+					.catch(err=>{
+						console.log(err)
+					})
+				}).catch(function(err){
+					console.log(err);
+				})
+				
+				// IdP data available using getAdditionalUserInfo(result)
+				// ...
+			}).catch((error) => {
+				// Handle Errors here.
+				console.log(error)
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				// The email of the user's account used.
+				const email = error.customData.email;
+				// The AuthCredential type that was used.
+				const credential = GoogleAuthProvider.credentialFromError(error);
+				// ...
+			});
+  }
 
   const handleSignUpCloseModal = () => {
     setIsSignUpOpen(false);
@@ -211,6 +276,7 @@ export default function Navbar() {
               </Button>
               <Button
                 // onClick={onClick}
+                onClick={handleSignInGoogle}
                 bg="red.500"
                 color="white"
                 _hover={{ bg: 'red.600' }}
