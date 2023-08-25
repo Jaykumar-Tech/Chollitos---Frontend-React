@@ -48,7 +48,8 @@ import SearchBar from './SearchBar';
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import axios from "axios"
+import { signInService, signUpService } from "../Services/User";
+import axios from "axios";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -85,73 +86,95 @@ export default function Navbar() {
   //   setIsSignUpOpen(true);
   // };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     setIsSignInLoading(true);
-    axios.post("http://5.75.224.135:4000/api/user/login",
-      {
-        email: email,
-        password: password,
+
+    const response = await signInService(email, password);
+    setIsSignInLoading(false);
+    console.log(JSON.stringify(response));
+
+    if (response.status === 200) {
+      localStorage.setItem('authToken', JSON.stringify(response.data));
+      setAuthToken(response.data);
+      setIsSignInOpen(false);
+    } else {
+      setIsSignInLoading(false);
+      toast({
+        title: 'Error.',
+        description: response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
       })
-      .then(response => {
-        setIsSignInLoading(false);
-        if (response.status === 200) {
-          console.log(JSON.stringify(response.data));
-          localStorage.setItem('authToken', response.data);
-          setAuthToken(response.data);
-          setIsSignInOpen(false);
-        }
-      })
-      .catch(err => {
-        setIsSignInLoading(false);
-        toast({
-          title: 'Error.',
-          description: err.response?.data.message,
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-        console.log(err);
-      })
+    }
   }
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    axios.post("http://5.75.224.135:4000/api/user/register",
-      {
-        email: email,
-        password: password,
-        username: username,
+    // setIsSignUpLoading(true);
+
+    const response = await signUpService(email, password, username);
+    // setIsSignUpLoading(false);
+    console.log(JSON.stringify(response));
+
+    if (response.status === 200) {
+      setIsSignUpOpen(false);
+      toast({
+        title: 'Account created.',
+        description: "We've created your account for you.",
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
       })
-      .then(response => {
-        console.log(JSON.stringify(response))
-        if (response.status === 200) {
-          setIsSignUpOpen(false);
-          toast({
-            title: 'Account created.',
-            description: "We've created your account for you.",
-            position: 'top',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          })
-          setTimeout(() => {
-            handleSignIn(e);
-          }, 100);
-        }
+      setTimeout(() => {
+        handleSignIn(e);
+      }, 100);
+    } else {
+      toast({
+        title: 'Error.',
+        description: response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
       })
-      .catch(err => {
-        console.log(err)
-        toast({
-          title: 'Error.',
-          description: err.response?.data.message,
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-      })
+    }
+    // axios.post("http://5.75.224.135:4000/api/user/register",
+    //   {
+    //     email: email,
+    //     password: password,
+    //     username: username,
+    //   })
+    //   .then(response => {
+    //     if (response.status === 200) {
+    //       setIsSignUpOpen(false);
+    //       toast({
+    //         title: 'Account created.',
+    //         description: "We've created your account for you.",
+    //         position: 'top',
+    //         status: 'success',
+    //         duration: 3000,
+    //         isClosable: true,
+    //       })
+    //       setTimeout(() => {
+    //         handleSignIn(e);
+    //       }, 100);
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //     toast({
+    //       title: 'Error.',
+    //       description: err.response?.data.message,
+    //       position: 'top',
+    //       status: 'error',
+    //       duration: 3000,
+    //       isClosable: true,
+    //     })
+    //   })
   }
 
   const handleSignOut = (e) => {

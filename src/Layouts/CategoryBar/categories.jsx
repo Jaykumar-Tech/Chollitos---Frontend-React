@@ -1,10 +1,11 @@
 import { Button, Flex, Box } from '@chakra-ui/react'
+import { Link } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useEffect, useRef, useState } from 'react';
 
 const themeColor = "#007ea6"
 
-function Category({categories}) {
+function Category({ categories }) {
   const containerRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(true);
 
@@ -34,21 +35,23 @@ function Category({categories}) {
         <Flex ref={containerRef} overflow={'hidden'}>
           {categories.map((category, index) => (
             category.parent_id === -1 &&
-            <Button
-              key={category.id}
-              mr={2}
-              minW={'auto'}
-              fontSize={{ base: '0.8em', md: '0.9em' }}
-              fontWeight={400}
-              bg={'blue.50'}
-              color={themeColor}
-              _hover={{
-                bg: themeColor,
-                color: 'white'
-              }}
-            >
-              {category.name}
-            </Button>
+            <Link to={"/category/" + category.id}>
+              <Button
+                key={category.id}
+                mr={2}
+                minW={'auto'}
+                fontSize={{ base: '0.8em', md: '0.9em' }}
+                fontWeight={400}
+                bg={'blue.50'}
+                color={themeColor}
+                _hover={{
+                  bg: themeColor,
+                  color: 'white'
+                }}
+              >
+                {category.name}
+              </Button>
+            </Link>
           ))}
         </Flex>
         {isOverflow && <ChevronRightIcon onClick={scrollRight} bg={'transparent'} color={themeColor} boxSize={6} />}
