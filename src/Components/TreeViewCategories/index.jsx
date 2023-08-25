@@ -4,13 +4,14 @@ import {
   Box,
   UnorderedList,
   ListItem,
-  textDecoration,
 } from "@chakra-ui/react";
-import { hover } from "@testing-library/user-event/dist/hover";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
-const TreeViewCategories = ({ categories }) => {
+const TreeViewCategories = ({
+  categories,
+  categoryId,
+}) => {
 
   const [treeData, setTreeData] = useState([]);
   const themeColor = '#007ea6';
@@ -21,7 +22,7 @@ const TreeViewCategories = ({ categories }) => {
 
   const buildTree = (parentId) => {
     return categories
-      .filter((category) => category.parent_id === parentId)
+      .filter((category) => category.parent_id == parentId)
       .map((category) => ({
         ...category,
         children: buildTree(category.id),
@@ -39,7 +40,11 @@ const TreeViewCategories = ({ categories }) => {
             <ListItem
               key={category.id}
             >
-              <Text _hover={{ textDecoration: "underline" }}>
+              <Text
+                _hover={{ textDecoration: "underline" }}
+                fontWeight={categoryId == category.id ? 600 : 400}
+                fontSize={'0.95em'}
+              >
                 {category.name}
               </Text>
               {category.children && renderTree(category.children)}
@@ -53,6 +58,7 @@ const TreeViewCategories = ({ categories }) => {
   return (
     <Box p={2}>
       <Text fontWeight={600}>Categories</Text>
+      {JSON.stringify(categories[0])}
       <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
       <Box>{renderTree(treeData)}</Box>
     </Box>
