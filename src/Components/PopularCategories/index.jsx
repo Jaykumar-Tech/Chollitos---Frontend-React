@@ -42,6 +42,7 @@ const PopularCategories = ({ categories }) => {
       >
         <Link
           href="#"
+          to="#"
         >
           All Categories <ArrowForwardIcon />
         </Link>

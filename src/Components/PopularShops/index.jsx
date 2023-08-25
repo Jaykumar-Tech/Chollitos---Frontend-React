@@ -41,6 +41,7 @@ const PopularShops = ({ stores }) => {
       >
         <Link
           href="#"
+          to="#"
         >
           All Shops <ArrowForwardIcon />
         </Link>
