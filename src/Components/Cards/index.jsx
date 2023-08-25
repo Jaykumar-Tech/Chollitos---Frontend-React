@@ -48,7 +48,7 @@ const CustomCard = ({ deal }) => {
           src={deal.image_url}
           alt="image"
           m={'auto'}
-          height={"200px"}
+          // height={"200px"}
           width={"auto"}
         />
         <Box
@@ -57,7 +57,7 @@ const CustomCard = ({ deal }) => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link href="#" title="Projectors">
+          <Link href="#" title="Projectors" to="#">
             Projectors Voucher code
           </Link>
         </Box>
@@ -105,13 +105,13 @@ const CustomCard = ({ deal }) => {
         <Flex alignItems="center" width={'100%'}>
           <Flex alignItems="center">
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Like">
+              <Link href="#" title="Like" to="#">
                 <FaThumbsUp />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Dislike">
+              <Link href="#" title="Dislike" to="#">
                 <FaThumbsDown />
               </Link>
             </Box>
@@ -121,7 +121,7 @@ const CustomCard = ({ deal }) => {
           <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Comments">
+              <Link href="#" title="Comments" to="#">
                 <FaComment />
               </Link>
             </Box>
