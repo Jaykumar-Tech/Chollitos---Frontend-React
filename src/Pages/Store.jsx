@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DoubleTopBar from "../Layouts/CategoryBar";
-import MyBreadcrumb from "../Layouts/BeadCrumb";
+import MyBreadcrumb from "../Layouts/BreadCrumb";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import CustomCard from "../Components/Cards";
 import { Text, useBreakpointValue } from "@chakra-ui/react";
