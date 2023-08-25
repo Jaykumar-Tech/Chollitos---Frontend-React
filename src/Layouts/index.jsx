@@ -102,7 +102,7 @@ export default function Navbar() {
       setIsSignInLoading(false);
       toast({
         title: 'Error.',
-        description: response?.data.message,
+        description: response.response.data.message,
         position: 'top',
         status: 'error',
         duration: 3000,
@@ -135,7 +135,7 @@ export default function Navbar() {
     } else {
       toast({
         title: 'Error.',
-        description: response?.data.message,
+        description: response.response.data.message,
         position: 'top',
         status: 'error',
         duration: 3000,

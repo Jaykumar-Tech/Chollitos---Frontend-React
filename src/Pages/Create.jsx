@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Box,
   ButtonGroup,
@@ -17,6 +17,10 @@ import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from "axios"
+import { getUrlUploaded } from '../Services/Resource';
+import { getStoresService } from '../Services/Store';
+import { getCategoriesService } from '../Services/Category';
+import { createDeal } from '../Services/Deal';
 
 export default function Create() {
 
@@ -27,87 +31,93 @@ export default function Create() {
   const [ship, setShip] = useState(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [categoryId, setCategoryId] = useState(0);
-  const [storeId, setStoreId] = useState(0);
+  const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
+  const [storeId, setStoreId] = useState({ name: "", id: -1 });
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [cats, setCats] = useState([])
+  const [stores, setStores] = useState([])
 
   const toast = useToast();
 
+  useEffect(() => {
+    getStoresService().then(response=>{
+      setStores(response) ;
+    });
+    getCategoriesService().then(response=>{
+      setCats(response) ;
+    });
+  }, [])
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    onDrop: async (acceptedFiles) => {
       setImage(acceptedFiles[0]);
       const formData = new FormData();
       formData.append("file", acceptedFiles[0]);
 
-      axios.post("http://172.20.103.9:4000/api/resource/upload", formData, {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-        .then(response => {
-          setImage(response.data.url);
-          toast({
-            title: 'Upload Success.',
-            description: "We've uploaded your image.",
-            position: 'top',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          })
+      const result = await getUrlUploaded(formData);
+      if (result.status == 200) {
+        setImage(result.data.url);
+        toast({
+          title: 'Upload Success.',
+          description: "We've uploaded your image.",
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
         })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-  });
-
-  const handleCreate = () => {
-    const auth_token = localStorage.getItem('authToken');
-
-    axios.post("http://5.75.224.135:4000/api/deal/add",
-      {
-        category_id: categoryId,
-        store_id: storeId,
-        title: title,
-        description: description,
-        price_new: price,
-        price_low: lowPrice,
-        price_ship: ship,
-        deal_url: url,
-        image_url: image,
-        start_data: startDate,
-        expires: endDate,
-      }, {
-      authorization: auth_token.token_type + " " + auth_token.access_token,
-    })
-      .then(response => {
-        if (response.status === 200) {
-          console.log(JSON.stringify(response));
-          toast({
-            title: 'Deal created.',
-            description: "We've created your deal.",
-            position: 'top',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          })
-        }
-      })
-      .catch(err => {
+      } else {
         toast({
           title: 'Error.',
-          description: err.response?.data.message,
+          description: result.response?.data.message,
           position: 'top',
           status: 'error',
           duration: 3000,
           isClosable: true,
         })
-        console.log(err);
+      }
+    }
+  });
+
+  const handleCreate = async () => {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    var sendData = {
+      title: title,
+      description: description,
+      type: "deal",
+      price_new: price,
+      price_low: lowPrice,
+      price_ship: ship,
+      deal_url: url,
+      image_url: image,
+    };
+    if (categoryId.id != -1) sendData.category_id = categoryId.id;
+    if (storeId != -1) sendData.store_id = storeId.id;
+    if (startDate != "") sendData.start_date = startDate;
+    if (endDate != "") sendData.expires = endDate;
+
+    const response = await createDeal(sendData);
+    if (response.status === 200) {
+      console.log(response);
+      toast({
+        title: 'Deal created.',
+        description: "We've created your deal.",
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
       })
+    } else {
+      toast({
+        title: 'Error.',
+        description: response.response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -167,14 +177,14 @@ export default function Create() {
             <input {...getInputProps()} />
             {image ?
               <div>
-                <img src={URL.createObjectURL(image)} alt="Uploaded" />
+                <img src={image} alt="Uploaded" />
               </div>
               :
               <>
                 <Box>
                   <FaFileImage size={24} />
                 </Box>
-                <Box mt={2} fontWeight="semibold">
+                <Box mt={2} fontWeight="semibold" >
                   {isDragActive ? "Drop the image here" : "Drag and drop an image here"}
                 </Box>
                 <Box mt={2} fontSize="sm" color="gray.500">
@@ -283,12 +293,17 @@ export default function Create() {
             shadow="sm"
             size="sm"
             w="full"
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
+            value={categoryId.name}
+            onChange={(e) => setCategoryId({
+              name: e.target.value,
+              id: parseInt(e.target.options[e.target.selectedIndex].id)
+            })}
           >
-            <option>United States</option>
-            <option>Canada</option>
-            <option>Mexico</option>
+            {cats ?
+              cats.map(v => {
+                return <option id={v.id}>{v.name}</option>
+              }) : null
+            }
           </Select>
         </FormControl>
 
@@ -308,12 +323,18 @@ export default function Create() {
             shadow="sm"
             size="sm"
             w="full"
-            value={storeId}
-            onChange={(e) => setStoreId(e.target.value)}
+            value={storeId.name}
+            onChange={(e) => setStoreId({
+              name: e.target.value,
+              id: parseInt(e.target.options[e.target.selectedIndex].id)
+            })}
           >
-            <option>United States</option>
-            <option>Canada</option>
-            <option>Mexico</option>
+            {
+              stores ?
+                stores.map(v => {
+                  return <option id={v.id}>{v.name}</option>
+                }) : null
+            }
           </Select>
         </FormControl>
 
