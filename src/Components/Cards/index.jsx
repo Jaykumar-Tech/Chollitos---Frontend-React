@@ -48,7 +48,7 @@ const CustomCard = ({ deal }) => {
           src={deal.image_url}
           alt="image"
           m={'auto'}
-          // height={"200px"}
+          height={"170px"}
           width={"auto"}
         />
         <Box
@@ -61,7 +61,7 @@ const CustomCard = ({ deal }) => {
             Projectors Voucher code
           </Link>
         </Box>
-        <Box maxW="full" maxH="3em" overflow="hidden" p={1}>
+        <Box maxW="full" h="3em" overflow="hidden" p={1}>
           <Text
             lineHeight="1.2"
             css={{

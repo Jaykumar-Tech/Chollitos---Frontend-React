@@ -14,6 +14,7 @@ const signInService = async (email, password) => {
     console.log(JSON.stringify(response));
     return response;
   } catch (error) {
+    console.log(error)
     return error;
   }
 };
