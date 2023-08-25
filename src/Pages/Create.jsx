@@ -13,6 +13,7 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone';
+import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from "axios"
@@ -32,23 +33,31 @@ export default function Create() {
   const [endDate, setEndDate] = useState('');
 
   const toast = useToast();
-  const auth_token = localStorage.getItem('authToken');
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: ':image',
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: 'image/*',
     onDrop: (acceptedFiles) => {
+      const auth_token = JSON.parse(localStorage.getItem('authToken'));
       setImage(acceptedFiles[0]);
       const formData = new FormData();
       formData.append("file", acceptedFiles[0]);
 
-      axios.post("http://5.75.224.135:4000/api/resource/upload", {
-        body: formData
-      }, {
-        authorization: auth_token.token_type + " " + auth_token.access_token,
+      axios.post("http://172.20.103.9:4000/api/resource/upload", formData, {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+          'Content-Type': 'multipart/form-data',
+        },
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+        .then(response => {
+          setImage(response.data.url);
+          toast({
+            title: 'Upload Success.',
+            description: "We've uploaded your image.",
+            position: 'top',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          })
         })
         .catch((error) => {
           console.log(error);
@@ -57,6 +66,8 @@ export default function Create() {
   });
 
   const handleCreate = () => {
+    const auth_token = localStorage.getItem('authToken');
+
     axios.post("http://5.75.224.135:4000/api/deal/add",
       {
         category_id: categoryId,
@@ -143,16 +154,34 @@ export default function Create() {
             mt="2%">
             Image
           </FormLabel>
-          <Box>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              <Button mb={2}>Upload Image</Button>
-            </div>
-            {image && (
+          <Box
+            {...getRootProps()}
+            p={4}
+            borderWidth={2}
+            borderStyle="dashed"
+            borderRadius="md"
+            textAlign="center"
+            cursor="pointer"
+            borderColor={isDragActive ? "blue.500" : "gray.200"}
+          >
+            <input {...getInputProps()} />
+            {image ?
               <div>
                 <img src={URL.createObjectURL(image)} alt="Uploaded" />
               </div>
-            )}
+              :
+              <>
+                <Box>
+                  <FaFileImage size={24} />
+                </Box>
+                <Box mt={2} fontWeight="semibold">
+                  {isDragActive ? "Drop the image here" : "Drag and drop an image here"}
+                </Box>
+                <Box mt={2} fontSize="sm" color="gray.500">
+                  Supported formats: JPEG, PNG
+                </Box>
+              </>
+            }
           </Box>
         </FormControl>
 

@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 
 import Home from "../Pages/Home";
 import Create from "../Pages/Create";
+import Category from "../Pages/Category";
 
 function Routes() {
   return (
@@ -10,6 +11,7 @@ function Routes() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/create" component={Create} />
+          <Route path="/category/:categoryId" component={Category} />
         </Switch>
     </Box>
   );
