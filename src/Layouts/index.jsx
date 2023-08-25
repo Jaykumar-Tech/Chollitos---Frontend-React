@@ -72,7 +72,7 @@ export default function Navbar() {
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:4000/api/user/login",
+    axios.post("http://5.75.224.135:4000/api/user/login",
       {
         email: email,
         password: password
@@ -87,7 +87,7 @@ export default function Navbar() {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:4000/api/user/register",
+    axios.post("http://5.75.224.135:4000/api/user/register",
       {
         email: rEmail,
         password: rPassword,
@@ -133,7 +133,7 @@ export default function Navbar() {
         if (isLogin) {
 
           result.user.getIdToken(true).then(function (idToken) {
-            axios.post("http://localhost:4000/api/user/google", {
+            axios.post("http://5.75.224.135:4000/api/user/google", {
               idToken: idToken,
               email: user.email
             })
