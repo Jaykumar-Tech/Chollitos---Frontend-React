@@ -5,7 +5,7 @@ import MyBreadcrumb from "../Layouts/BeadCrumb";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import CustomCard from "../Components/Cards";
 import { Text, useBreakpointValue } from "@chakra-ui/react";
-import Categories from "../Components/Categories";
+import TreeViewCategories from "../Components/TreeViewCategories";
 import { getCategoriesService, } from "../Services/Category";
 import { getStoresService, } from "../Services/Store";
 import { getDealsService, } from "../Services/Deal";
@@ -50,7 +50,7 @@ const Category = () => {
               <Box
                 width={'20%'}
               >
-                <Categories categories={categories}/>
+                <TreeViewCategories categories={categories}/>
               </Box>
             }
             <SimpleGrid
