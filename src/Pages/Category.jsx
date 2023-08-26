@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import DoubleTopBar from "../Layouts/CategoryBar";
 import MyBreadcrumb from "../Layouts/BreadCrumb";
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import CustomCard from "../Components/Cards";
-import { Text, useBreakpointValue } from "@chakra-ui/react";
 import TreeViewCategories from "../Components/TreeViewCategories";
 import { getCategoriesService, } from "../Services/Category";
 import { getStoresService, } from "../Services/Store";
 import { getDealsService, } from "../Services/Deal";
 
 const Category = () => {
-  const { categoryId } = useParams();
+  const { categorySlug } = useParams();
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
@@ -41,9 +40,9 @@ const Category = () => {
 
   return (
     <>
-      <DoubleTopBar categories={categories} />
+      <DoubleTopBar categories={categories} categorySlug={categorySlug}/>
       <Box maxW={'1200px'} m={'auto'}>
-        <MyBreadcrumb />
+        <MyBreadcrumb categories={categories} categorySlug={categorySlug}/>
         <Box id="Home">
           <Flex>
             {appMode === 'lg' &&
@@ -52,7 +51,7 @@ const Category = () => {
               >
                 <TreeViewCategories
                   categories={categories}
-                  categoryId={categoryId}
+                  categorySlug={categorySlug}
                 />
               </Box>
             }

@@ -5,14 +5,22 @@ import { useEffect, useRef, useState } from 'react';
 
 const themeColor = "#007ea6"
 
-function Category({ categories }) {
+function Category({ categories, categorySlug = null }) {
   const containerRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(true);
+  const [category, setCategory] = useState(null);
 
   useEffect(() => {
     const container = containerRef.current;
     setIsOverflow(container.clientWidth < container.scrollWidth);
-  }, [categories]);
+    getCategoryBySlug(categorySlug);
+  }, [categories, categorySlug]);
+
+  const getCategoryBySlug = (slug) => {
+    categories.map((category) => {
+      category.slug == slug && setCategory(category);
+    })
+  }
 
   const scrollLeft = () => {
     containerRef.current.scrollBy({
@@ -33,11 +41,11 @@ function Category({ categories }) {
       <Flex align={'center'} height={'54px'} maxW={'1200px'} m={'auto'}>
         {isOverflow && <ChevronLeftIcon onClick={scrollLeft} bg={'transparent'} color={themeColor} boxSize={6} />}
         <Flex ref={containerRef} overflow={'hidden'}>
-          {categories.map((category, index) => (
-            category.parent_id === -1 &&
-            <Link to={"/category/" + category.id}>
+          {categories.map((item, index) => (
+            (category ? item.parent_id == category.id : item.parent_id == -1) &&
+            <Link to={"/category/" + item.slug}>
               <Button
-                key={category.id}
+                key={item.id}
                 mr={2}
                 minW={'auto'}
                 fontSize={{ base: '0.8em', md: '0.9em' }}
@@ -49,7 +57,7 @@ function Category({ categories }) {
                   color: 'white'
                 }}
               >
-                {category.name}
+                {item.name}
               </Button>
             </Link>
           ))}

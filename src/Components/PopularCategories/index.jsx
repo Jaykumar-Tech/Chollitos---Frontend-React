@@ -10,28 +10,30 @@ const PopularCategories = ({ categories }) => {
   return (
     <Box p={2}>
       <Text fontWeight={600}>Popular categories</Text>
-      <Divider m={'5px 0 10px'} borderColor={'gray.500'}/>
+      <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
       <Text fontSize={'0.9em'}>
         Working discounts, coupons for {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
         {categories.map((category, index) => (
           category.parent_id === -1 &&
-          <Button
-            key={category.id}
-            mr={2}
-            mb={2}
-            height={'2em'}
-            minW={'auto'}
-            fontSize={'0.9em'}
-            fontWeight={400}
-            bg={'gray.200'}
-            _hover={{
-              bg: 'gray.300',
-            }}
-          >
-            {category.name}
-          </Button>
+          <Link to={"/category/" + category.slug}>
+            <Button
+              key={category.id}
+              mr={2}
+              mb={2}
+              height={'2em'}
+              minW={'auto'}
+              fontSize={'0.9em'}
+              fontWeight={400}
+              bg={'gray.200'}
+              _hover={{
+                bg: 'gray.300',
+              }}
+            >
+              {category.name}
+            </Button>
+          </Link>
         ))}
       </Box>
       <Box
