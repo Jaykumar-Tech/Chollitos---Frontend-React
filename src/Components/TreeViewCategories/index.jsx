@@ -8,10 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
-const TreeViewCategories = ({
-  categories,
-  categoryId,
-}) => {
+const TreeViewCategories = ({ categories, categorySlug }) => {
 
   const [treeData, setTreeData] = useState([]);
   const themeColor = '#007ea6';
@@ -36,13 +33,13 @@ const TreeViewCategories = ({
         color={themeColor}
       >
         {categories.map((category) => (
-          <Link to={"/category/" + category.id}>
+          <Link to={"/category/" + category.slug}>
             <ListItem
               key={category.id}
             >
               <Text
                 _hover={{ textDecoration: "underline" }}
-                fontWeight={categoryId == category.id ? 600 : 400}
+                fontWeight={categorySlug == category.slug ? 600 : 400}
                 fontSize={'0.95em'}
               >
                 {category.name}
@@ -58,9 +55,8 @@ const TreeViewCategories = ({
   return (
     <Box p={2}>
       <Text fontWeight={600}>Categories</Text>
-      {JSON.stringify(categories[0])}
       <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
-      <Box>{renderTree(treeData)}</Box>
+      <Box ml={'-16px'}>{renderTree(treeData)}</Box>
     </Box>
   )
 }
