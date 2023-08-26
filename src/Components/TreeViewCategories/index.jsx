@@ -58,7 +58,6 @@ const TreeViewCategories = ({
   return (
     <Box p={2}>
       <Text fontWeight={600}>Categories</Text>
-      {JSON.stringify(categories[0])}
       <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
       <Box>{renderTree(treeData)}</Box>
     </Box>
