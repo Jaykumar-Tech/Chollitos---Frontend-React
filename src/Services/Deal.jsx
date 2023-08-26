@@ -31,7 +31,18 @@ const createDeal = async (data) => {
   }
 }
 
+const getFilterDealsService = async (catIds) => {
+  try {
+    const data = { start_at: 0, length: 10 , category_id: catIds};
+    const response = await api.post('deal/find', data);
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return [] ;
+  }
+}
 export {
   getDealsService,
-  createDeal
+  createDeal,
+  getFilterDealsService
 };

@@ -7,7 +7,7 @@ import CustomCard from "../Components/Cards";
 import TreeViewCategories from "../Components/TreeViewCategories";
 import { getCategoriesService, } from "../Services/Category";
 import { getStoresService, } from "../Services/Store";
-import { getDealsService, } from "../Services/Deal";
+import { getDealsService, getFilterDealsService } from "../Services/Deal";
 
 const Category = () => {
   const { categorySlug } = useParams();
@@ -32,6 +32,11 @@ const Category = () => {
     setDeals(data);
   };
 
+  const filterDeals = async (catIds) => {
+    const data = await getFilterDealsService(catIds) ;
+    setDeals(data) ;
+  }
+
   useEffect(() => {
     getCategories();
     getStores();
@@ -52,6 +57,7 @@ const Category = () => {
                 <TreeViewCategories
                   categories={categories}
                   categorySlug={categorySlug}
+                  filterDeals={filterDeals}
                 />
               </Box>
             }

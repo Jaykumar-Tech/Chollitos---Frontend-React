@@ -8,14 +8,25 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
-const TreeViewCategories = ({ categories, categorySlug }) => {
+const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   const [treeData, setTreeData] = useState([]);
+  const [filterData, setFilter] = useState([]);
   const themeColor = '#007ea6';
 
   useEffect(() => {
     setTreeData(buildTree(-1));
+    buildFilter();
   }, [categories]);
+
+  useEffect(() => {
+    var curId = buildFilter();
+    if ( curId >= 0 ) {
+      console.log(getAllChildren(curId))
+      filterDeals(getAllChildren(curId))
+    }
+
+  }, [categorySlug]);
 
   const buildTree = (parentId) => {
     return categories
@@ -26,13 +37,52 @@ const TreeViewCategories = ({ categories, categorySlug }) => {
       }));
   };
 
+  const getCategoryById = (id) => {
+    return categories.find(v=>(v.id==id))
+  }
+
+  const buildFilter = () => {
+    var curId = categories.find(v=>(v.slug==categorySlug)) ;
+    if ( curId ) {
+      curId = curId.id ;
+      var tId = curId ;
+      var families = [] ;
+      while ( tId != -1 ) {
+        families.push(tId) ;
+        tId = getCategoryById(tId).parent_id ;
+      }
+      families.push(-1) ;
+      setFilter(families)
+      return curId ;
+    } else 
+      return -1 ;
+  }
+
+  function getAllChildren (id) {
+    var res = [] ;
+    var que = [id] ;
+    while ( que.length > 0 ) {
+        var cur = que.shift();
+        var isParent = false ;
+        for ( let i = 0 ; i < categories.length ; i++ ) {
+            if ( categories[i].parent_id == cur ) {
+                que.push(categories[i].id) ;
+                isParent = true ;
+            }
+        }
+        if ( !isParent )
+            res.push(cur) ;
+    }
+    return res ;
+}
+
   const renderTree = (categories) => {
     return (
       <UnorderedList
         listStyleType={'none'}
         color={themeColor}
       >
-        {categories.map((category) => (
+        {categories.map((category) => ( filterData.findIndex(v=>(v==category.parent_id))>=0?
           <Link to={"/category/" + category.slug}>
             <ListItem
               key={category.id}
@@ -46,7 +96,7 @@ const TreeViewCategories = ({ categories, categorySlug }) => {
               </Text>
               {category.children && renderTree(category.children)}
             </ListItem>
-          </Link>
+          </Link>:null
         ))}
       </UnorderedList>
     );
