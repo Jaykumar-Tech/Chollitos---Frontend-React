@@ -1,11 +1,11 @@
-import { Box, Card, CardHeader, CardBody, CardFooter, Image, Text, Flex, Spacer, Button, Divider, Badge } from "@chakra-ui/react";
+import { Box, Card, CardHeader, CardBody, CardFooter, Image, Text, Flex, Spacer, Button, Divider, Badge, Avatar } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 
 const CustomCard = ({ deal }) => {
-  const themeColor = '#007ea6';
+  const themeColor = 'blue.500';
 
   return (
     <Card
@@ -17,13 +17,11 @@ const CustomCard = ({ deal }) => {
       <CardHeader p={2}>
         <Flex color={"gray.400"} fontSize={'0.8em'}>
           <Flex alignItems="center">
-            <Image
+            <Avatar
               src={deal.avatar}
-              alt="Avatar"
-              width="16px"
-              height="16px"
-              borderRadius="full"
+              name={deal.username}
               mr={2}
+              size={'xs'}
             />
             <Text>{deal.username}</Text>
           </Flex>
@@ -44,13 +42,15 @@ const CustomCard = ({ deal }) => {
         </Badge> */}
       </CardHeader>
       <CardBody p={2}>
-        <Image
-          src={deal.image_url}
-          alt="image"
-          m={'auto'}
-          height={"170px"}
-          width={"auto"}
-        />
+        <Link to={"/" + deal.storename + "/" + deal.title + "-" + deal.id}>
+          <Image
+            src={deal.image_url}
+            alt="image"
+            m={'auto'}
+            height={"170px"}
+            width={"auto"}
+          />
+        </Link>
         <Box
           color={themeColor}
           _hover={{ color: 'gray.800' }}
@@ -62,19 +62,21 @@ const CustomCard = ({ deal }) => {
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Text
-            lineHeight="1.2"
-            css={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              fontWeight: 600,
-            }}
-          >
-            {deal.title}
-          </Text>
+          <Link to={"/" + deal.storename + "/" + deal.title + "-" + deal.id}>
+            <Text
+              lineHeight="1.2"
+              css={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontWeight: 600,
+              }}
+            >
+              {deal.title}
+            </Text>
+          </Link>
         </Box>
         <Box>
           <Button

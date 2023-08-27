@@ -12,7 +12,7 @@ function Routes() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/create" component={Create} />
-          <Route path="/deal" component={Deal} />
+          <Route path="/:storename/:dealTitle" component={Deal} />
           <Route path="/category/:categorySlug" component={Category} />
         </Switch>
     </Box>

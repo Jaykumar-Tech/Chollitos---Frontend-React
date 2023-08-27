@@ -3,7 +3,7 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 
 const PopularShops = ({ stores }) => {
-  const themeColor = '#007ea6';
+  const themeColor = 'blue.500';
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
 

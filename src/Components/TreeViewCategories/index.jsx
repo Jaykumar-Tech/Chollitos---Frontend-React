@@ -12,7 +12,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   const [treeData, setTreeData] = useState([]);
   const [filterData, setFilter] = useState([]);
-  const themeColor = '#007ea6';
+  const themeColor = 'blue.500';
 
   useEffect(() => {
     setTreeData(buildTree(-1));
@@ -29,7 +29,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   const buildTree = (parentId) => {
     return categories
-      .filter((category) => category.parent_id == parentId)
+      .filter((category) => category.parent_id === parentId)
       .map((category) => ({
         ...category,
         children: buildTree(category.id),
@@ -37,16 +37,16 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   };
 
   const getCategoryById = (id) => {
-    return categories.find(v => (v.id == id))
+    return categories.find(v => (v.id === id))
   }
 
   const buildFilter = () => {
-    var curId = categories.find(v => (v.slug == categorySlug));
+    var curId = categories.find(v => (v.slug === categorySlug));
     if (curId) {
       curId = curId.id;
       var tId = curId;
       var families = [];
-      while (tId != -1) {
+      while (tId !== -1) {
         families.push(tId);
         tId = getCategoryById(tId).parent_id;
       }
@@ -64,7 +64,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
       var cur = que.shift();
       var isParent = false;
       for (let i = 0; i < categories.length; i++) {
-        if (categories[i].parent_id == cur) {
+        if (categories[i].parent_id === cur) {
           que.push(categories[i].id);
           isParent = true;
         }
@@ -81,14 +81,14 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
         listStyleType={'none'}
         color={themeColor}
       >
-        {categories.map((category) => (filterData.findIndex(v => (v == category.parent_id)) >= 0 ?
+        {categories.map((category) => (filterData.findIndex(v => (v === category.parent_id)) >= 0 ?
           <Link to={"/category/" + category.slug}>
             <ListItem
               key={category.id}
             >
               <Text
                 _hover={{ textDecoration: "underline" }}
-                fontWeight={categorySlug == category.slug ? 600 : 400}
+                fontWeight={categorySlug === category.slug ? 600 : 400}
                 fontSize={'0.95em'}
               >
                 {category.name}

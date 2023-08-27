@@ -1,7 +1,7 @@
 import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
 
 function TabBar() {
-  const themeColor = "#007ea6";
+  const themeColor = "blue.500";
   const tabList = ['All', 'Popular', 'Highlights', 'Commented'];
 
   return (

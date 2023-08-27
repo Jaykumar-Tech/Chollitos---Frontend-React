@@ -63,7 +63,7 @@ export default function Navbar() {
   const [isSignInLoading, setIsSignInLoading] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-  const themeColor = "#007ea6";
+  const themeColor = "blue.500";
   const toast = useToast();
 
   useEffect(() => {
@@ -359,14 +359,6 @@ export default function Navbar() {
             </>
           }
           {authToken ?
-            // <Image
-            //   src={authToken.user?.avatar}
-            //   alt={authToken.user?.name}
-            //   width="45px"
-            //   height="45px"
-            //   borderRadius="full"
-            //   ml={2}
-            // />
             <Menu>
               <MenuButton
                 as={Avatar}
@@ -376,8 +368,6 @@ export default function Navbar() {
                 ml={2}
               />
               <MenuList>
-                {/* <MenuItem>Profile</MenuItem>
-                <MenuItem>Settings</MenuItem> */}
                 <MenuItem onClick={handleSignOut}>Logout</MenuItem>
               </MenuList>
             </Menu>

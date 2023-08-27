@@ -4,7 +4,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 
 export default function SearchBar() {
   const searchMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-  const themeColor = "#007ea6"
+  const themeColor = "blue.500"
 
   return (
     <>

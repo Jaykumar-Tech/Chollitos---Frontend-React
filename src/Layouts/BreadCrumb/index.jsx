@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 
 function MyBreadcrumb(categories, categorySlug) {
-  const themeColor = '#007ea6';
+  const themeColor = 'blue.500';
 
   // const getCategoryBreadcrumb = (category, breadcrumb = []) => {
   //   if (category.parent_id > 0) {
   //     breadcrumb.push(category);
-  //     return getCategoryBreadcrumb(categories.filter((item) => item.id == category.parent_id), breadcrumb);
+  //     return getCategoryBreadcrumb(categories.filter((item) => item.id === category.parent_id), breadcrumb);
   //   }
   //   return breadcrumb.reverse();
   // };
 
-  // const breadcrumb = getCategoryBreadcrumb(categories.filter((item) => item.slug == categorySlug));
+  // const breadcrumb = getCategoryBreadcrumb(categories.filter((item) => item.slug === categorySlug));
 
   return (
     <Breadcrumb

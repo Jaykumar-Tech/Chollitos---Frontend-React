@@ -6,13 +6,18 @@ import {
   Link,
   Button,
   Image,
+  Avatar,
   Text,
-  Badge,
   useBreakpointValue,
   Spacer,
   Divider,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  ButtonGroup,
 } from "@chakra-ui/react";
-import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaReply } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
@@ -20,14 +25,17 @@ import { getCategoriesService, } from "../../Services/Category";
 import { getStoresService, } from "../../Services/Store";
 import { getDealByIdService, } from "../../Services/Deal";
 import { getTimeDiff } from "../../Helpers";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const Deal = () => {
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [deal, setDeal] = useState([]);
+  const [comment, setComment] = useState(null);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-  const themeColor = '#007ea6';
+  const themeColor = 'blue.500';
 
   const getCategories = async () => {
     const data = await getCategoriesService();
@@ -51,6 +59,162 @@ const Deal = () => {
     getDealById(16);
   }, []);
 
+  const handleAddComment = () => {
+    // Implement your logic to add a new comment to the comments state
+    // For example, you can push the new comment to the comments array
+    // and then update the state using setComments
+  };
+
+  const DealHeader = () => {
+    return (
+      <>
+        <Box
+          color={themeColor}
+          _hover={{ color: 'gray.800' }}
+          fontSize={'0.8em'}
+          p={1}
+        >
+          <Link href="#" title="Projectors" to="#">
+            {deal.storename} Discount code
+          </Link>
+        </Box>
+        <Box maxW="full" h="4em" overflow="hidden" p={1}>
+          <Text
+            lineHeight="1.2"
+            css={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              fontWeight: 600,
+              fontSize: "1.5em",
+            }}
+          >
+            {deal.title}
+          </Text>
+        </Box>
+        <Flex mt={2}>
+          <Text
+            flex={0.2}
+            colorScheme="blue"
+            color={themeColor}
+            bg={'blue.50'}
+            h={'2.4em'}
+            p={2}
+            borderRadius={5}
+            fontWeight={600}
+          >
+            {deal.price_new}€
+            {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
+          </Text>
+          <Spacer />
+          <Button
+            as={'a'}
+            href="#"
+            target="_blank"
+            rel="nofollow noopener"
+            colorScheme="blue"
+            display="flex"
+            alignItems="center"
+            w={"50%"}
+            flex={1}
+          >
+            <ExternalLinkIcon mr={1} />
+            Go to {deal.storename}
+          </Button>
+        </Flex>
+        <Flex alignItems="center" width={'100%'} mt={2}>
+          <Flex alignItems="center">
+            <Text
+              p={2}
+              bg={'orange'}
+              color={'white'}
+              borderRadius={5}
+              fontWeight={600}
+            >
+              Deal Score: {deal.cnt_like}
+            </Text>
+            <Spacer mx={'5px'} />
+            <Box _hover={{ color: themeColor }}>
+              <Link href="#" title="Like" to="#">
+                <FaThumbsUp />
+              </Link>
+            </Box>
+            <Spacer mx={'5px'} />
+            <Box _hover={{ color: themeColor }}>
+              <Link href="#" title="Dislike" to="#">
+                <FaThumbsDown />
+              </Link>
+            </Box>
+          </Flex>
+          <Spacer />
+          <Flex alignItems={'center'}>
+            <Box _hover={{ color: themeColor }}>
+              <Link href="#" title="Comments" to="#">
+                <FaComment />
+              </Link>
+            </Box>
+            <Spacer mx={'5px'} />
+            <span>{deal.cnt_comment}</span>
+          </Flex>
+        </Flex>
+      </>
+    )
+  }
+
+  const Comment = (props) => {
+    return (
+      <Box className="comments">
+        <Flex>
+          <Avatar
+            src={deal.avatar}
+            name={deal.username}
+            size={'sm'}
+            m={'10px'}
+          />
+          <Box className="child_comments" flex={1} m={'10px 0'}>
+            <Box>
+              <Flex color={"gray.400"} fontSize={'0.8em'}>
+                <Spacer />
+                <TimeIcon />
+                <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+              </Flex>
+              <Text
+                bg={'gray.100'}
+                p={'15px'}
+                borderRadius={10}
+                shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
+              >
+                {deal.description}
+              </Text>
+              <Flex mt={'10px'} color={'gray.500'}>
+                <Flex _hover={{ color: themeColor }}>
+                  <Link href="#" title="Like" to="#">
+                    <Flex mr={2}>
+                      <Text mr={1}>Like</Text>
+                      <FaThumbsUp />
+                    </Flex>
+                  </Link>
+                  <Text>0</Text>
+                </Flex>
+                <Flex _hover={{ color: themeColor }} ml={5}>
+                  <Link href="#" title="Reply" to="#">
+                    <Flex mr={2}>
+                      <Text mr={1}>Reply</Text>
+                      <FaReply />
+                    </Flex>
+                  </Link>
+                </Flex>
+              </Flex>
+            </Box>
+            {props.children}
+          </Box>
+        </Flex>
+      </Box>
+    )
+  }
+
   return (
     <Box maxW={'1200px'} m={'auto'}>
       <MyBreadcrumb />
@@ -68,7 +232,42 @@ const Deal = () => {
           mb={'10px'}
         >
           <Flex>
-            <Box flex='0.4'>
+            <Spacer />
+            <Menu>
+              <MenuButton
+                size="sm"
+                ml={2}
+                fontSize={'2em'}
+                h={5}
+              >
+                <Flex>
+                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                </Flex>
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={''} >Expired</MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+          {appMode === 'lg' ?
+            <Flex>
+              <Box flex='0.4'>
+                <Image
+                  src={deal.image_url}
+                  alt="image"
+                  m={'auto'}
+                  height={"170px"}
+                  width={"auto"}
+                />
+              </Box>
+              <Box flex='0.6' >
+                <DealHeader />
+              </Box>
+            </Flex>
+            :
+            <>
               <Image
                 src={deal.image_url}
                 alt="image"
@@ -76,108 +275,17 @@ const Deal = () => {
                 height={"170px"}
                 width={"auto"}
               />
-            </Box>
-            <Box flex='0.6' >
-              <Box
-                color={themeColor}
-                _hover={{ color: 'gray.800' }}
-                fontSize={'0.8em'}
-                p={1}
-              >
-                <Link href="#" title="Projectors" to="#">
-                  Projectors Voucher code
-                </Link>
-              </Box>
-              <Box maxW="full" h="4em" overflow="hidden" p={1}>
-                <Text
-                  lineHeight="1.2"
-                  css={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontWeight: 600,
-                    fontSize: "1.5em",
-                  }}
-                >
-                  {deal.title}
-                </Text>
-              </Box>
-              <Flex>
-                <Badge
-                  flex={0.2}
-                  colorScheme="blue"
-                  color={themeColor}
-                >
-                  <span>
-                    {deal.price_new}€
-                    {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
-                  </span>
-                </Badge>
-                <Spacer />
-                <Button
-                  as={'a'}
-                  href="#"
-                  target="_blank"
-                  rel="nofollow noopener"
-                  color={themeColor}
-                  bg={'blue.50'}
-                  _hover={{
-                    color: 'white',
-                    bg: themeColor
-                  }}
-                  display="flex"
-                  alignItems="center"
-                  m={'5px 0'}
-                  w={"50%"}
-                  flex={0.6}
-                >
-                  <ExternalLinkIcon mr={1} />
-                  <span>
-                    {deal.price_new}€
-                    {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
-                  </span>
-                </Button>
-              </Flex>
-              <Flex alignItems="center" width={'100%'}>
-                <Flex alignItems="center">
-                  <Box _hover={{ color: themeColor }}>
-                    <Link href="#" title="Like" to="#">
-                      <FaThumbsUp />
-                    </Link>
-                  </Box>
-                  <Spacer mx={'5px'} />
-                  <Box _hover={{ color: themeColor }}>
-                    <Link href="#" title="Dislike" to="#">
-                      <FaThumbsDown />
-                    </Link>
-                  </Box>
-                  <Spacer mx={'5px'} />
-                  <span>{deal.cnt_like}</span>
-                </Flex>
-                <Spacer />
-                <Flex alignItems={'center'}>
-                  <Box _hover={{ color: themeColor }}>
-                    <Link href="#" title="Comments" to="#">
-                      <FaComment />
-                    </Link>
-                  </Box>
-                  <Spacer mx={'5px'} />
-                  <span>{deal.cnt_comment}</span>
-                </Flex>
-              </Flex>
-            </Box>
-          </Flex>
+              <Spacer h={'10px'} />
+              <DealHeader />
+            </>
+          }
           <Divider m={'20px 0'} />
-          <Flex color={"gray.400"} fontSize={'0.8em'}>
+          <Flex color={"gray.400"} fontSize={'0.8em'} mb={3}>
             <Flex alignItems="center">
-              <Image
+              <Avatar
                 src={deal.avatar}
-                alt="Avatar"
-                width="16px"
-                height="16px"
-                borderRadius="full"
+                name={deal.username}
+                size={'xs'}
                 mr={2}
               />
               <Text>{deal.username}</Text>
@@ -188,9 +296,50 @@ const Deal = () => {
               <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
             </Flex>
           </Flex>
+          <Text>
+            {deal.description}
+          </Text>
+          <Flex
+            bg={themeColor}
+            color={'white'}
+            p={'8px'}
+            m={'30px 0 10px'}
+            borderRadius={5}
+          >
+            <Box m={'4px 5px 0'}>
+              <FaComment />
+            </Box>
+            <Text>What do you think of this {deal.storename} discount code?</Text>
+          </Flex>
+          <ReactQuill
+            name="description"
+            id="description"
+            theme="snow"
+            value={comment}
+            onChange={(content) => setComment(content)}
+          />
+          <ButtonGroup>
+            <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
+              Comment
+            </Button>
+            <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setComment(null) }}>
+              Cancel
+            </Button>
+          </ButtonGroup>
+          <Box id="comments_container">
+            <Comment />
+            <Comment>
+              <Comment>
+                <Comment />
+              </Comment>
+              <Comment />
+            </Comment>
+          </Box>
         </Box>
-        <PopularShops stores={stores} />
-        <PopularCategories categories={categories} />
+        <Box>
+          <PopularShops stores={stores} />
+          <PopularCategories categories={categories} />
+        </Box>
       </Box>
     </Box>
   );

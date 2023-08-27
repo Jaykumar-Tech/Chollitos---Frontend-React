@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useEffect, useRef, useState } from 'react';
 
-const themeColor = "#007ea6"
+const themeColor = "blue.500"
 
 function Category({ categories, categorySlug = null }) {
   const containerRef = useRef(null);
@@ -18,7 +18,7 @@ function Category({ categories, categorySlug = null }) {
 
   const getCategoryBySlug = (slug) => {
     categories.map((category) => {
-      category.slug == slug && setCategory(category);
+      category.slug === slug && setCategory(category);
     })
   }
 
@@ -42,7 +42,7 @@ function Category({ categories, categorySlug = null }) {
         {isOverflow && <ChevronLeftIcon onClick={scrollLeft} bg={'transparent'} color={themeColor} boxSize={6} />}
         <Flex ref={containerRef} overflow={'hidden'}>
           {categories.map((item, index) => (
-            (category ? item.parent_id == category.id : item.parent_id == -1) &&
+            (category ? item.parent_id === category.id : item.parent_id === -1) &&
             <Link to={"/category/" + item.slug}>
               <Button
                 key={item.id}

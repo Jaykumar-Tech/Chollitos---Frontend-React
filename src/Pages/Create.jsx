@@ -60,7 +60,7 @@ export default function Create() {
 
       const result = await getUrlUploadedService(formData);
       setIsloading(false);
-      if (result.status == 200) {
+      if (result.status === 200) {
         setImage(result.data.url);
         toast({
           title: 'Upload Success.',
@@ -95,10 +95,10 @@ export default function Create() {
       deal_url: url,
       image_url: image,
     };
-    if (categoryId.id != -1) sendData.category_id = categoryId.id;
-    if (storeId != -1) sendData.store_id = storeId.id;
-    if (startDate != "") sendData.start_date = startDate;
-    if (endDate != "") sendData.expires = endDate;
+    if (categoryId.id !== -1) sendData.category_id = categoryId.id;
+    if (storeId !== -1) sendData.store_id = storeId.id;
+    if (startDate !== "") sendData.start_date = startDate;
+    if (endDate !== "") sendData.expires = endDate;
 
     const response = await createDealService(sendData);
     if (response.status === 200) {
