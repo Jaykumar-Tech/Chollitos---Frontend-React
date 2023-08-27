@@ -52,9 +52,21 @@ const getDealByIdService = async (dealId) => {
   }
 }
 
+const getCountDealsService = async (catIds) => {
+  try {
+    const data = {category_id: catIds};
+    const response = await api.post('deal/count', data);
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return 0 ;
+  }
+}
+
 export {
   getDealsService,
   createDealService,
   getFilterDealsService,
   getDealByIdService,
+  getCountDealsService
 };
