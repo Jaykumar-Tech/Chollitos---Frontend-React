@@ -33,6 +33,7 @@ const Deal = () => {
   const [stores, setStores] = useState([]);
   const [deal, setDeal] = useState([]);
   const [comment, setComment] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
@@ -188,9 +189,9 @@ const Deal = () => {
               >
                 {deal.description}
               </Text>
-              <Flex mt={'10px'} color={'gray.500'}>
+              <Flex m={'10px 0 20px'} color={'gray.500'}>
                 <Flex _hover={{ color: themeColor }}>
-                  <Link href="#" title="Like" to="#">
+                  <Link title="Like" to="#">
                     <Flex mr={2}>
                       <Text mr={1}>Like</Text>
                       <FaThumbsUp />
@@ -199,7 +200,7 @@ const Deal = () => {
                   <Text>0</Text>
                 </Flex>
                 <Flex _hover={{ color: themeColor }} ml={5}>
-                  <Link href="#" title="Reply" to="#">
+                  <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
                     <Flex mr={2}>
                       <Text mr={1}>Reply</Text>
                       <FaReply />
@@ -207,10 +208,35 @@ const Deal = () => {
                   </Link>
                 </Flex>
               </Flex>
+              {isOpen &&
+                <CommentEditor />
+              }
+
             </Box>
             {props.children}
           </Box>
         </Flex>
+      </Box>
+    )
+  }
+
+  const CommentEditor = () => {
+    return (
+      <Box className="comment_editor">
+        <ReactQuill
+          name="description"
+          theme="snow"
+          value={comment}
+          onChange={(content) => setComment(content)}
+        />
+        <ButtonGroup>
+          <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
+            Comment
+          </Button>
+          <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setComment(null); setIsOpen(false); }}>
+            Cancel
+          </Button>
+        </ButtonGroup>
       </Box>
     )
   }
@@ -311,21 +337,7 @@ const Deal = () => {
             </Box>
             <Text>What do you think of this {deal.storename} discount code?</Text>
           </Flex>
-          <ReactQuill
-            name="description"
-            id="description"
-            theme="snow"
-            value={comment}
-            onChange={(content) => setComment(content)}
-          />
-          <ButtonGroup>
-            <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
-              Comment
-            </Button>
-            <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setComment(null) }}>
-              Cancel
-            </Button>
-          </ButtonGroup>
+          <CommentEditor />
           <Box id="comments_container">
             <Comment />
             <Comment>
