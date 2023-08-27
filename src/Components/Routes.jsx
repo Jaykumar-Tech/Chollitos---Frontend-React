@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 
 import Home from "../Pages/Home";
 import Create from "../Pages/Create";
-import Store from "../Pages/Store";
+import Deal from "../Pages/Deal";
 import Category from "../Pages/Category";
 
 function Routes() {
@@ -12,7 +12,7 @@ function Routes() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/create" component={Create} />
-          <Route path="/store" component={Store} />
+          <Route path="/deal" component={Deal} />
           <Route path="/category/:categorySlug" component={Category} />
         </Switch>
     </Box>

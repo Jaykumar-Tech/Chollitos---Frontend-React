@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 
-const getUrlUploaded = async (formData) => {
+const getUrlUploadedService = async (formData) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     const response = await api.post('resource/upload',
@@ -23,5 +23,5 @@ const getUrlUploaded = async (formData) => {
 }
 
 export {
-  getUrlUploaded,
+  getUrlUploadedService,
 };

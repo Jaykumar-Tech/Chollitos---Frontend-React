@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import DoubleTopBar from "../Layouts/CategoryBar";
-import MyBreadcrumb from "../Layouts/BreadCrumb";
+import DoubleTopBar from "../../Layouts/CategoryBar";
+import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
-import CustomCard from "../Components/Cards";
-import { Text, useBreakpointValue } from "@chakra-ui/react";
-import PopularCategories from "../Components/PopularCategories";
-import PopularShops from "../Components/PopularShops";
-import { getCategoriesService, } from "../Services/Category";
-import { getStoresService, } from "../Services/Store";
-import { getDealsService, } from "../Services/Deal";
+import CustomCard from "../../Components/Cards";
+import { Spinner, useBreakpointValue } from "@chakra-ui/react";
+import PopularCategories from "../../Components/PopularCategories";
+import PopularShops from "../../Components/PopularShops";
+import { getCategoriesService, } from "../../Services/Category";
+import { getStoresService, } from "../../Services/Store";
+import { getDealsService, } from "../../Services/Deal";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
+  const [isloading, setIsloading] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
@@ -28,8 +29,10 @@ const Home = () => {
   };
 
   const getDeals = async () => {
+    setIsloading(true);
     const data = await getDealsService();
     setDeals(data);
+    setIsloading(false);
   };
 
   useEffect(() => {
@@ -42,7 +45,7 @@ const Home = () => {
     <>
       <DoubleTopBar categories={categories} />
       <Box maxW={'1200px'} m={'auto'}>
-        <MyBreadcrumb/>
+        <MyBreadcrumb />
         <Box id="Home">
           <Flex>
             <SimpleGrid
@@ -51,9 +54,27 @@ const Home = () => {
               spacingX={2}
               spacingY={5}
               m={'0 10px'}
+              position={'relative'}
             >
+              {isloading &&
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="xl"
+                  position="absolute"
+                  top="200px"
+                  left="calc(50% - 20px)"
+                  transform="translate(-50%, -50%)"
+                  opacity={1}
+                  zIndex={1}
+                />
+              }
               {deals.map((deal, index) => (
-                <CustomCard deal={deal}/>
+                <Box opacity={isloading ? 0.3 : 1}>
+                  <CustomCard deal={deal} />
+                </Box>
               ))}
             </SimpleGrid>
             {appMode === 'lg' &&

@@ -10,17 +10,18 @@ import {
   Input,
   Select,
   Text,
-  useToast
+  useToast,
+  Image,
+  Spinner,
 } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone';
 import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from "axios"
-import { getUrlUploaded } from '../Services/Resource';
+import { getUrlUploadedService } from '../Services/Resource';
 import { getStoresService } from '../Services/Store';
 import { getCategoriesService } from '../Services/Category';
-import { createDeal } from '../Services/Deal';
+import { createDealService } from '../Services/Deal';
 
 export default function Create() {
 
@@ -35,28 +36,30 @@ export default function Create() {
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [cats, setCats] = useState([])
-  const [stores, setStores] = useState([])
+  const [cats, setCats] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [isloading, setIsloading] = useState(false);
 
   const toast = useToast();
 
   useEffect(() => {
-    getStoresService().then(response=>{
-      setStores(response) ;
+    getStoresService().then(response => {
+      setStores(response);
     });
-    getCategoriesService().then(response=>{
-      setCats(response) ;
+    getCategoriesService().then(response => {
+      setCats(response);
     });
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
     onDrop: async (acceptedFiles) => {
-      setImage(acceptedFiles[0]);
+      setIsloading(true);
       const formData = new FormData();
       formData.append("file", acceptedFiles[0]);
 
-      const result = await getUrlUploaded(formData);
+      const result = await getUrlUploadedService(formData);
+      setIsloading(false);
       if (result.status == 200) {
         setImage(result.data.url);
         toast({
@@ -97,7 +100,7 @@ export default function Create() {
     if (startDate != "") sendData.start_date = startDate;
     if (endDate != "") sendData.expires = endDate;
 
-    const response = await createDeal(sendData);
+    const response = await createDealService(sendData);
     if (response.status === 200) {
       console.log(response);
       toast({
@@ -167,30 +170,48 @@ export default function Create() {
           <Box
             {...getRootProps()}
             p={4}
+            minHeight={'120px'}
             borderWidth={2}
             borderStyle="dashed"
             borderRadius="md"
+            position={'relative'}
             textAlign="center"
             cursor="pointer"
             borderColor={isDragActive ? "blue.500" : "gray.200"}
           >
             <input {...getInputProps()} />
             {image ?
-              <div>
-                <img src={image} alt="Uploaded" />
-              </div>
+              <Image src={image} alt="Uploaded" m={'auto'} />
               :
               <>
                 <Box>
                   <FaFileImage size={24} />
                 </Box>
-                <Box mt={2} fontWeight="semibold" >
-                  {isDragActive ? "Drop the image here" : "Drag and drop an image here"}
-                </Box>
-                <Box mt={2} fontSize="sm" color="gray.500">
-                  Supported formats: JPEG, PNG
-                </Box>
+                {!isloading &&
+                  <>
+                    <Box mt={2} fontWeight="semibold" >
+                      {isDragActive ? "Drop the image here" : "Drag and drop an image here"}
+                    </Box>
+                    <Box mt={2} fontSize="sm" color="gray.500">
+                      Supported formats: JPEG, PNG
+                    </Box>
+                  </>
+                }
               </>
+            }
+            {isloading &&
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="lg"
+                position={'absolute'}
+                top="calc(50%)"
+                left="calc(50% - 20px)"
+                transform="translate(-50%, -50%)"
+                zIndex={1}
+              />
             }
           </Box>
         </FormControl>

@@ -16,7 +16,7 @@ const getDealsService = async () => {
   }
 }
 
-const createDeal = async (data) => {
+const createDealService = async (data) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     const response = await api.post('deal/add', data, {
@@ -41,8 +41,20 @@ const getFilterDealsService = async (catIds) => {
     return [] ;
   }
 }
+
+const getDealByIdService = async (dealId) => {
+  try {
+    const response = await api.get('deal/get/' + dealId);
+    return response.data.data[0];
+  } catch (error) {
+    console.log(error);
+    return [] ;
+  }
+}
+
 export {
   getDealsService,
-  createDeal,
-  getFilterDealsService
+  createDealService,
+  getFilterDealsService,
+  getDealByIdService,
 };

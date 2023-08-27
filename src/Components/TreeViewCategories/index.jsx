@@ -21,8 +21,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   useEffect(() => {
     var curId = buildFilter();
-    if ( curId >= 0 ) {
-      console.log(getAllChildren(curId))
+    if (curId >= 0) {
       filterDeals(getAllChildren(curId))
     }
 
@@ -38,43 +37,43 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   };
 
   const getCategoryById = (id) => {
-    return categories.find(v=>(v.id==id))
+    return categories.find(v => (v.id == id))
   }
 
   const buildFilter = () => {
-    var curId = categories.find(v=>(v.slug==categorySlug)) ;
-    if ( curId ) {
-      curId = curId.id ;
-      var tId = curId ;
-      var families = [] ;
-      while ( tId != -1 ) {
-        families.push(tId) ;
-        tId = getCategoryById(tId).parent_id ;
+    var curId = categories.find(v => (v.slug == categorySlug));
+    if (curId) {
+      curId = curId.id;
+      var tId = curId;
+      var families = [];
+      while (tId != -1) {
+        families.push(tId);
+        tId = getCategoryById(tId).parent_id;
       }
-      families.push(-1) ;
+      families.push(-1);
       setFilter(families)
-      return curId ;
-    } else 
-      return -1 ;
+      return curId;
+    } else
+      return -1;
   }
 
-  function getAllChildren (id) {
-    var res = [] ;
-    var que = [id] ;
-    while ( que.length > 0 ) {
-        var cur = que.shift();
-        var isParent = false ;
-        for ( let i = 0 ; i < categories.length ; i++ ) {
-            if ( categories[i].parent_id == cur ) {
-                que.push(categories[i].id) ;
-                isParent = true ;
-            }
+  function getAllChildren(id) {
+    var res = [];
+    var que = [id];
+    while (que.length > 0) {
+      var cur = que.shift();
+      var isParent = false;
+      for (let i = 0; i < categories.length; i++) {
+        if (categories[i].parent_id == cur) {
+          que.push(categories[i].id);
+          isParent = true;
         }
-        if ( !isParent )
-            res.push(cur) ;
+      }
+      if (!isParent)
+        res.push(cur);
     }
-    return res ;
-}
+    return res;
+  }
 
   const renderTree = (categories) => {
     return (
@@ -82,7 +81,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
         listStyleType={'none'}
         color={themeColor}
       >
-        {categories.map((category) => ( filterData.findIndex(v=>(v==category.parent_id))>=0?
+        {categories.map((category) => (filterData.findIndex(v => (v == category.parent_id)) >= 0 ?
           <Link to={"/category/" + category.slug}>
             <ListItem
               key={category.id}
@@ -96,7 +95,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
               </Text>
               {category.children && renderTree(category.children)}
             </ListItem>
-          </Link>:null
+          </Link> : null
         ))}
       </UnorderedList>
     );
