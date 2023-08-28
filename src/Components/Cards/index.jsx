@@ -7,6 +7,10 @@ import { getTimeDiff } from "../../Helpers";
 const CustomCard = ({ deal }) => {
   const themeColor = 'blue.500';
 
+  const getUrlFromTitle = (title) => {
+    return title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+  }
+
   return (
     <Card
       maxWidth="sm"
@@ -42,7 +46,7 @@ const CustomCard = ({ deal }) => {
         </Badge> */}
       </CardHeader>
       <CardBody p={2}>
-        <Link to={"/store/" + deal.storename + "/" + deal.title + "-" + deal.id}>
+        <Link to={"/store/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
           <Image
             src={deal.image_url}
             alt="image"
@@ -62,7 +66,7 @@ const CustomCard = ({ deal }) => {
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Link to={"/store/" + deal.storename + "/" + deal.title + "-" + deal.id}>
+          <Link to={"/store/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
             <Text
               lineHeight="1.2"
               css={{
