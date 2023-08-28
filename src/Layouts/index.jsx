@@ -7,6 +7,7 @@ import {
   VStack,
   useDisclosure,
   Icon,
+  Image,
   useBreakpointValue,
   Modal,
   ModalOverlay,
@@ -61,6 +62,8 @@ export default function Navbar() {
   const [username, setUsername] = useState("");
   const [authToken, setAuthToken] = useState(null);
   const [isSignInLoading, setIsSignInLoading] = useState(false);
+  const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
@@ -68,7 +71,7 @@ export default function Navbar() {
 
   useEffect(() => {
     // Retrieve the state from localStorage on component mount
-    const storedState = localStorage.getItem('authToken');
+    const storedState = JSON.parse(localStorage.getItem('authToken'));
     if (storedState) {
       setAuthToken(storedState);
     }
@@ -92,14 +95,20 @@ export default function Navbar() {
 
     const response = await signInService(email, password);
     setIsSignInLoading(false);
-    console.log(JSON.stringify(response));
 
     if (response.status === 200) {
       localStorage.setItem('authToken', JSON.stringify(response.data));
       setAuthToken(response.data);
       setIsSignInOpen(false);
+      toast({
+        title: 'Success.',
+        description: 'You are logged in',
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
     } else {
-      setIsSignInLoading(false);
       toast({
         title: 'Error.',
         description: response.response.data.message,
@@ -113,11 +122,10 @@ export default function Navbar() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // setIsSignUpLoading(true);
+    setIsSignUpLoading(true);
 
     const response = await signUpService(email, password, username);
-    // setIsSignUpLoading(false);
-    console.log(JSON.stringify(response));
+    setIsSignUpLoading(false);
 
     if (response.status === 200) {
       setIsSignUpOpen(false);
@@ -209,7 +217,7 @@ export default function Navbar() {
   //     .then((result) => {
   //       // This gives you a Google Access Token. You can use it to access the Google API.
   //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       console.log(JSON.stringify(result));
+
   //       // The signed-in user info.
   //       const user = result.user;
   //       if (isLogin) {
@@ -221,7 +229,6 @@ export default function Navbar() {
   //           })
   //             .then(response => {
   //               console.log("login success")
-  //               console.log(JSON.stringify(response));
   //             })
   //             .catch(err => {
   //               console.log(err)
@@ -361,12 +368,16 @@ export default function Navbar() {
           {authToken ?
             <Menu>
               <MenuButton
-                as={Avatar}
-                size="sm"
-                name={authToken.user?.name}
-                src={authToken.user?.avatar}
+                as={Flex}
+                align={'center'}
                 ml={2}
-              />
+                cursor={'pointer'}>
+                <Avatar
+                  name={authToken.user?.name}
+                  src={authToken.user?.avatar}
+                  style={{ width: "40px", height: "40px" }}
+                />
+              </MenuButton>
               <MenuList>
                 <MenuItem onClick={handleSignOut}>Logout</MenuItem>
               </MenuList>
@@ -405,6 +416,16 @@ export default function Navbar() {
             boxShadow={"lg"}
             p={8}
           >
+            <Image
+              src={window.location.origin + "/logo.png"}
+              alt="logo"
+              bg={themeColor}
+              w={'180px'}
+              h={'180px'}
+              m={'auto'}
+              p={2}
+              mb={5}
+            />
             <Stack spacing={4}>
               {/* <Button
                 // onClick={onClick}
@@ -481,7 +502,18 @@ export default function Navbar() {
             rounded={'lg'}
             bg={useColorModeValue('white', 'gray.700')}
             boxShadow={'lg'}
-            p={8}>
+            p={8}
+          >
+            <Image
+              src={window.location.origin + "/logo.png"}
+              alt="logo"
+              bg={themeColor}
+              w={'180px'}
+              h={'180px'}
+              m={'auto'}
+              p={2}
+              mb={5}
+            />
             <Stack spacing={4}>
               {/* <Button
                 // onClick={onClick}
@@ -538,7 +570,7 @@ export default function Navbar() {
                 <Stack spacing={10} pt={2}>
                   <Button
                     type="submit"
-                    loadingText="Submitting"
+                    isLoading={isSignUpLoading}
                     size="lg"
                     bg={'blue.400'}
                     color={'white'}

@@ -53,7 +53,7 @@ const Home = () => {
               columns={[1, 2, 3, 4]}
               spacingX={2}
               spacingY={5}
-              m={'0 10px'}
+              m={'0 10px 20px'}
               position={'relative'}
             >
               {isloading &&
@@ -72,8 +72,8 @@ const Home = () => {
                 />
               }
               {deals.map((deal, index) => (
-                <Box opacity={isloading ? 0.3 : 1}>
-                  <CustomCard deal={deal} />
+                <Box key={index} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard key={index} deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>

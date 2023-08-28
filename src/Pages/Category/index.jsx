@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-import DoubleTopBar from "../../Layouts/CategoryBar";
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
+import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
@@ -46,11 +46,16 @@ const Category = () => {
     getCategories();
     getStores();
     getDeals();
+    console.log(categorySlug);
   }, []);
 
   return (
     <>
-      <DoubleTopBar categories={categories} categorySlug={categorySlug} />
+      <Box
+        shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
+      >
+        <CategoryBar categories={categories} categorySlug={categorySlug} />
+      </Box>
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb categories={categories} categorySlug={categorySlug} />
         <Box id="Home">
@@ -66,34 +71,36 @@ const Category = () => {
                 />
               </Box>
             }
-            <SimpleGrid
-              flex={1}
-              columns={[1, 2, 3, 4]}
-              spacingX={2}
-              spacingY={5}
-              m={'0 10px'}
-              position={'relative'}
-            >
-              {isloading &&
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                  size="xl"
-                  position="absolute"
-                  top="200px"
-                  left="calc(50% - 20px)"
-                  transform="translate(-50%, -50%)"
-                  zIndex={1}
-                />
-              }
-              {deals.map((deal, index) => (
-                <Box opacity={isloading ? 0.3 : 1}>
-                  <CustomCard deal={deal} />
-                </Box>
-              ))}
-            </SimpleGrid>
+            <Box>
+              <SimpleGrid
+                flex={1}
+                columns={[1, 2, 3, 4]}
+                spacingX={2}
+                spacingY={5}
+                m={'0 10px 20px'}
+                position={'relative'}
+              >
+                {isloading &&
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                    position="absolute"
+                    top="200px"
+                    left="calc(50% - 20px)"
+                    transform="translate(-50%, -50%)"
+                    zIndex={1}
+                  />
+                }
+                {deals.map((deal, index) => (
+                  <Box key={index} opacity={isloading ? 0.3 : 1}>
+                    <CustomCard key={index} deal={deal} />
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Box>
           </Flex>
         </Box>
       </Box>

@@ -46,7 +46,7 @@ const CustomCard = ({ deal }) => {
         </Badge> */}
       </CardHeader>
       <CardBody p={2}>
-        <Link to={"/store/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
+        <Link to={"/shop/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
           <Image
             src={deal.image_url}
             alt="image"
@@ -61,8 +61,8 @@ const CustomCard = ({ deal }) => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link href="#" title="Projectors" to="#">
-            Projectors Voucher code
+          <Link title={deal.storename} to="">
+            {deal.storename} discount code
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>

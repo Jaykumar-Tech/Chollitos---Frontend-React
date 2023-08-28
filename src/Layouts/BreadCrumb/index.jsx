@@ -77,8 +77,8 @@ function MyBreadcrumb({ categories, categorySlug }) {
         </BreadcrumbItem>
         {
           breads.map((v,idx) => (
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" >{v.name} {idx==breads.length-1? dspDeal:""}</BreadcrumbLink>
+            <BreadcrumbItem key={idx}>
+              <BreadcrumbLink key={idx} href="#" >{v.name} {idx==breads.length-1? dspDeal:""}</BreadcrumbLink>
             </BreadcrumbItem>
           ))
         }

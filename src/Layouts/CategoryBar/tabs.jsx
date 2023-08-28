@@ -2,7 +2,7 @@ import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
 
 function TabBar() {
   const themeColor = "blue.500";
-  const tabList = ['All', 'Popular', 'Highlights', 'Commented'];
+  const tabList = ['New', 'Popular', 'Highlights', 'Commented'];
 
   return (
     <Box
@@ -20,11 +20,13 @@ function TabBar() {
                 fontWeight={600}
                 _selected={{
                   color: themeColor,
-                  borderBottom: `solid ${themeColor} 3px`,
+                  borderBottom: `solid 3px`,
+                  borderBlockColor: 'blue.500'
                 }}
                 _hover={{
                   color: themeColor,
-                  borderBottom: `solid ${themeColor} 3px`,
+                  borderBottom: `solid 3px`,
+                  borderBlockColor: 'blue.500'
                 }}
               >
                 {tap}

@@ -15,6 +15,17 @@ const getStoresService = async () => {
   }
 };
 
+const getStoreByIdService = async (id) => {
+  try {
+    const response = await api.get('store/get/' + id);
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export {
   getStoresService,
+  getStoreByIdService,
 };

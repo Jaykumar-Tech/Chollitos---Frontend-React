@@ -17,7 +17,7 @@ const PopularCategories = ({ categories }) => {
       <Box pt={2}>
         {categories.map((category, index) => (
           category.parent_id === -1 &&
-          <Link to={"/category/" + category.slug}>
+          <Link to={"/category/" + category.slug} key={category.id}>
             <Button
               key={category.id}
               mr={2}

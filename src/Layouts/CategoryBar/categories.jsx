@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const themeColor = "blue.500"
 
-function Category({ categories, categorySlug = null }) {
+function CategoryBar({ categories, categorySlug = null }) {
   const containerRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(true);
   const [category, setCategory] = useState(null);
@@ -43,7 +43,7 @@ function Category({ categories, categorySlug = null }) {
         <Flex ref={containerRef} overflow={'hidden'}>
           {categories.map((item, index) => (
             (category ? item.parent_id === category.id : item.parent_id === -1) &&
-            <Link to={"/category/" + item.slug}>
+            <Link to={"/category/" + item.slug} key={item.id}>
               <Button
                 key={item.id}
                 mr={2}
@@ -68,4 +68,4 @@ function Category({ categories, categorySlug = null }) {
   )
 }
 
-export default Category;
+export default CategoryBar;
