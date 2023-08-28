@@ -27,13 +27,15 @@ import { getDealByIdService, } from "../../Services/Deal";
 import { getTimeDiff } from "../../Helpers";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { addLikeDeal, isLikedDeal } from "../../Services/Like";
 
 const Deal = () => {
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
-  const [deal, setDeal] = useState([]);
+  const [deal, setDeal] = useState({});
   const [comment, setComment] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLiked, setLiked] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
@@ -57,14 +59,43 @@ const Deal = () => {
   useEffect(() => {
     getCategories();
     getStores();
-    getDealById(16);
+    getDealById(38);
   }, []);
+
+  useEffect(()=>{
+    if ( Object.keys(deal).indexOf("id") >= 0 ) 
+      checkIsLikedDeal() ;
+  }, [deal])
+
+  const checkIsLikedDeal = async () => {
+    const result = await isLikedDeal({
+      type: "deal",
+      dest_id: deal.id
+    });
+    if ( result.status == 200 ) {
+      setLiked(true)
+    } else {
+    }
+  }
 
   const handleAddComment = () => {
     // Implement your logic to add a new comment to the comments state
     // For example, you can push the new comment to the comments array
     // and then update the state using setComments
   };
+
+  const handleLike = async (isLike) => {
+    if ( isLiked ) return ;
+    const result = await addLikeDeal({
+      type: "deal",
+      dest_id: deal.id,
+      is_like: isLike
+    }) ;
+    if ( result.status == 200 ) {
+      setDeal({...deal, cnt_like: deal.cnt_like+(isLike?1:-1)})
+      setLiked(true)
+    }
+  }
 
   const DealHeader = () => {
     return (
@@ -139,13 +170,13 @@ const Deal = () => {
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Like" to="#">
-                <FaThumbsUp />
+                <FaThumbsUp onClick={()=>handleLike(true)}/>
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Dislike" to="#">
-                <FaThumbsDown />
+                <FaThumbsDown onClick={()=>handleLike(false)} />
               </Link>
             </Box>
           </Flex>
