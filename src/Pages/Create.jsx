@@ -34,7 +34,7 @@ export default function Create() {
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()-1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
   const [cats, setCats] = useState([]);
   const [stores, setStores] = useState([]);
@@ -50,6 +50,10 @@ export default function Create() {
       setCats(response);
     });
   }, [])
+
+  useEffect(()=>{
+    console.log(startDate)
+  },[startDate])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
