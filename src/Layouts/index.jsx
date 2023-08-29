@@ -3,8 +3,8 @@ import {
   Flex,
   Button,
   Spacer,
-  HStack,
-  VStack,
+  // HStack,
+  // VStack,
   useDisclosure,
   Icon,
   Image,
@@ -35,8 +35,8 @@ import { Link } from "react-router-dom";
 import {
   HamburgerIcon,
   CloseIcon,
-  EmailIcon,
-  BellIcon,
+  // EmailIcon,
+  // BellIcon,
   ViewIcon,
   ViewOffIcon,
 } from "@chakra-ui/icons";
@@ -312,7 +312,6 @@ export default function Navbar() {
           ) : (
             <Button
               className="btnRes"
-              // border={`solid white 2px`}
               bg={themeColor}
               color={'white'}
               _hover={{
@@ -352,7 +351,7 @@ export default function Navbar() {
                   )}
                 </Button>
               </Link>
-              <HStack m={'0 10px'}>
+              {/* <HStack m={'0 10px'}>
                 <EmailIcon
                   boxSize={6}
                   color={'white'}
@@ -372,7 +371,7 @@ export default function Navbar() {
               >
                 <span>200</span>
                 <span>Points</span>
-              </VStack>
+              </VStack> */}
             </>
           }
           {authToken ?

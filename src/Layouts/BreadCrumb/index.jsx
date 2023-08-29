@@ -86,7 +86,7 @@ function MyBreadcrumb({ categories, categorySlug }) {
               <BreadcrumbLink
                 as={Link}
                 key={idx}
-                to={"/category/" + v.slug}
+                to={"/categories/" + v.slug}
               >
                 {v.name}
               </BreadcrumbLink>

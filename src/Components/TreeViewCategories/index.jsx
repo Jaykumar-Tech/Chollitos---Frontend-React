@@ -82,14 +82,14 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
         color={themeColor}
       >
         {categories.map((category) => (filterData.findIndex(v => (v === category.parent_id)) >= 0 ?
-          <Link to={"/category/" + category.slug} key={category.id}>
+          <Link to={"/categories/" + category.slug} key={category.id}>
             <ListItem
               key={category.id}
             >
               <Text
                 key={category.id}
                 _hover={{ textDecoration: "underline" }}
-                fontWeight={filterData.find(v => v == category.id) ? 600 : 400}
+                fontWeight={filterData.find(v => v === category.id) ? 600 : 400}
                 fontSize={'0.95em'}
               >
                 {category.name}

@@ -10,13 +10,15 @@ const PopularShops = ({ stores }) => {
   return (
     <Box p={2}>
       <Text fontWeight={600}>Popular shops</Text>
-      <Divider m={'5px 0 10px'} borderColor={'gray.500'}/>
+      <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
       <Text fontSize={'0.9em'}>
         Working codes, discounts and vouchers for {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
         {stores.map((store, index) => (
           <Button
+            as={Link}
+            to={`/shops/${store.name}`}
             key={store.id}
             mr={2}
             mb={2}

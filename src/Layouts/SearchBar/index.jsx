@@ -11,7 +11,7 @@ export default function SearchBar() {
       {searchMode === 'lg' ? (
         <InputGroup
           bg={'white'}
-          maxW={'220px'}
+          maxW={'300px'}
           borderRadius={'5px'}
           ml={'10px'}
           display={{ base: 'none', md: 'block' }}
