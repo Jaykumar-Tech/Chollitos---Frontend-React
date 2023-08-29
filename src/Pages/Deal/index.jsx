@@ -115,7 +115,7 @@ const Deal = () => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link title={deal.storename} href={`/shop/${deal.storename}`}>
+          <Link title={deal.storename} href={`/shops/${deal.storename}`}>
             {deal.storename} discount code
           </Link>
         </Box>
@@ -149,7 +149,7 @@ const Deal = () => {
             {deal.price_new}€
             {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
           </Text>
-          <Spacer />
+          <Spacer flex={0.2}/>
           <Button
             as={'a'}
             href="#"
@@ -362,9 +362,7 @@ const Deal = () => {
               <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
             </Flex>
           </Flex>
-          <Text>
-            {deal.description}
-          </Text>
+          <Text dangerouslySetInnerHTML={{ __html: deal.description }} />
           {/* <Flex
             bg={themeColor}
             color={'white'}

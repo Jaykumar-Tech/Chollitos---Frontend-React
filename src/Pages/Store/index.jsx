@@ -51,7 +51,7 @@ const Store = () => {
         <BreadcrumbItem>
           <BreadcrumbLink
             as={Link}
-            to={"/shop/"}
+            to={"/shops/"}
           >
             shop
           </BreadcrumbLink>

@@ -14,9 +14,9 @@ function Routes() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/create" component={Create} />
-          <Route path="/category/:categorySlug" component={Category} />
-          <Route exact path="/shop/:store_name" component={Store} />
-          <Route path="/shop/:store_name/:dealTitle" component={Deal} />
+          <Route path="/categories/:categorySlug" component={Category} />
+          <Route exact path="/shops/:store_name" component={Store} />
+          <Route path="/shops/:store_name/:dealTitle" component={Deal} />
           <Route component={Page404} />
         </Switch>
     </Box>
