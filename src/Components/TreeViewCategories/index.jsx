@@ -89,7 +89,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
               <Text
                 key={category.id}
                 _hover={{ textDecoration: "underline" }}
-                fontWeight={filterData.find(v => v == category.id) ? 600 : 400}
+                fontWeight={filterData.find(v => v === category.id) ? 600 : 400}
                 fontSize={'0.95em'}
               >
                 {category.name}

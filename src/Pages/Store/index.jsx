@@ -16,7 +16,7 @@ import {
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
 import { useState, useEffect } from "react";
-import { getStoreByIdService, getStoreByNameService } from "../../Services/Store";
+import { getStoreByNameService } from "../../Services/Store";
 import { getTimeDiff } from "../../Helpers";
 import { getDealByFilter } from "../../Services/Deal";
 import { useParams } from 'react-router-dom';
@@ -28,12 +28,6 @@ const Store = () => {
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-
-  const getStoreById = async (id) => {
-    const store = await getStoreByIdService(id);
-    setStore(store);
-    await getDeals(id);
-  }
 
   const getStoreByName = async () => {
     const store = await getStoreByNameService(store_name);
@@ -140,7 +134,7 @@ const Store = () => {
         <Box>
           {
             deals ?
-              deals.filter(v => (v.type != "deal")).map(discount => {
+              deals.filter(v => (v.type !== "deal")).map(discount => {
                 return (
                   <Flex
                     bg={'white'}
@@ -190,7 +184,7 @@ const Store = () => {
         <Box>
           {
             deals ?
-              deals.filter(v => (v.type == "deal")).map(deal => {
+              deals.filter(v => (v.type === "deal")).map(deal => {
                 return (<Flex
                   bg={'white'}
                   p={2}
