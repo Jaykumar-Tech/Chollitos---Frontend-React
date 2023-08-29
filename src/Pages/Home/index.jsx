@@ -33,7 +33,7 @@ const Home = () => {
     setIsloading(true);
     const data = await getDealByFilter({
       start_at: 0,
-      length: 10,
+      length: 100,
       feature: dealFeature
     });
     setDeals(data);

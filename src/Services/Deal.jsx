@@ -7,7 +7,7 @@ const api = axios.create({
 
 const getDealsService = async () => {
   try {
-    const data = { start_at: 0, length: 10 };
+    const data = { start_at: 0, length: 100 };
     const response = await api.post('deal/find', data);
     return response.data.data;
   } catch (error) {
@@ -33,7 +33,7 @@ const createDealService = async (data) => {
 
 const getFilterDealsService = async (catIds) => {
   try {
-    const data = { start_at: 0, length: 10 , category_id: catIds};
+    const data = { start_at: 0, length: 100 , category_id: catIds};
     const response = await api.post('deal/find', data);
     return response.data.data;
   } catch (error) {
