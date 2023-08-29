@@ -42,7 +42,7 @@ const Store = () => {
       type: "all",
       store_id: id,
       start_at: 0,
-      length: 10
+      length: 100
     })
     // console.log(tDeals)
     setDeals(tDeals)
