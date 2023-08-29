@@ -22,6 +22,7 @@ import { getUrlUploadedService } from '../Services/Resource';
 import { getStoresService } from '../Services/Store';
 import { getCategoriesService } from '../Services/Category';
 import { createDealService } from '../Services/Deal';
+import { Helmet } from 'react-helmet';
 
 export default function Create() {
 
@@ -131,6 +132,9 @@ export default function Create() {
 
   return (
     <Box id="Create" maxW={'800px'} m={'auto'}>
+      <Helmet>
+        <title>Share deals</title>
+      </Helmet>
       <Text
         fontSize={'2em'}
         textAlign={'center'}

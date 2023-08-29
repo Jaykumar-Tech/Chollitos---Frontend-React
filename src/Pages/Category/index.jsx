@@ -8,6 +8,7 @@ import TreeViewCategories from "../../Components/TreeViewCategories";
 import { getCategoriesService, } from "../../Services/Category";
 import { getStoresService, } from "../../Services/Store";
 import { getDealsService, getFilterDealsService } from "../../Services/Deal";
+import { Helmet } from "react-helmet";
 
 const Category = () => {
   const { categorySlug } = useParams();
@@ -46,11 +47,13 @@ const Category = () => {
     getCategories();
     getStores();
     getDeals();
-    console.log(categorySlug);
   }, []);
 
   return (
     <>
+      <Helmet>
+        <title>{categorySlug} deals</title>
+      </Helmet>
       <Box
         shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
       >

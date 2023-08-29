@@ -17,6 +17,7 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
+import { Helmet } from "react-helmet";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
@@ -109,6 +110,9 @@ const Deal = () => {
   const DealHeader = () => {
     return (
       <>
+        <Helmet>
+          <title>{deal.title}</title>
+        </Helmet>
         <Box
           color={themeColor}
           _hover={{ color: 'gray.800' }}
@@ -149,7 +153,7 @@ const Deal = () => {
             {deal.price_new}€
             {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
           </Text>
-          <Spacer flex={0.2}/>
+          <Spacer flex={0.2} />
           <Button
             as={'a'}
             href="#"

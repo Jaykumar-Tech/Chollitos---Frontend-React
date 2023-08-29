@@ -9,6 +9,7 @@ import PopularShops from "../../Components/PopularShops";
 import { getCategoriesService, } from "../../Services/Category";
 import { getStoresService, } from "../../Services/Store";
 import { getDealByFilter, getDealsService, } from "../../Services/Deal";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -45,13 +46,16 @@ const Home = () => {
     getStores();
     getDeals();
   }, []);
-  
+
   useEffect(() => {
     getDeals();
   }, [dealFeature]);
 
   return (
     <>
+      <Helmet>
+        <title>Chollitos {dealFeature} deals</title>
+      </Helmet>
       <DoubleTopBar categories={categories} setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb />
