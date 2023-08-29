@@ -1,13 +1,14 @@
 import { Flex, Divider } from "@chakra-ui/react";
 import CategoryBar from "./categories";
 import TabBar from "./tabs";
+import { useEffect } from "react";
 
-function DoubleTopBar({ categories, categorySlug }) {
+function DoubleTopBar({ categories, setFeature }) {
   return (
     <Flex direction="column">
-      <CategoryBar categories={categories} categorySlug={categorySlug} />
+      <CategoryBar categories={categories} />
       <Divider />
-      <TabBar />
+      <TabBar setFeature={setFeature}/>
     </Flex>
   );
 }

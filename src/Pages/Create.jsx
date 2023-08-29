@@ -100,6 +100,8 @@ export default function Create() {
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
+    console.log(sendData)
+
     const response = await createDealService(sendData);
     if (response.status === 200) {
       console.log(response);
