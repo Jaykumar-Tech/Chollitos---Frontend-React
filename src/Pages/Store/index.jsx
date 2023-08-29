@@ -91,7 +91,7 @@ const Store = () => {
       <Box>
         <Button
           as={'a'}
-          href="#discount_codes"
+          to="#discount_codes"
           bg='white'
           _hover={{ bg: 'blue.500' }}
           size='sm'
@@ -101,7 +101,7 @@ const Store = () => {
         </Button>
         <Button
           as={'a'}
-          href="#deals"
+          to="#deals"
           bg='white'
           _hover={{ bg: 'blue.500' }}
           size='sm'
