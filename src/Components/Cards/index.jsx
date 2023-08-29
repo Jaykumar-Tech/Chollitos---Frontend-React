@@ -42,7 +42,7 @@ const CustomCard = ({ deal }) => {
           ml={-2}
           position={'absolute'}
         >
-          Popular
+          Hot
         </Badge> */}
       </CardHeader>
       <CardBody p={2}>
@@ -61,12 +61,12 @@ const CustomCard = ({ deal }) => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link title={deal.storename} to="">
+          <Link title={deal.storename} to={"/shop/" + deal.storename}>
             {deal.storename} discount code
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Link to={"/store/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
+          <Link to={"/shop/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
             <Text
               lineHeight="1.2"
               css={{

@@ -17,26 +17,26 @@ function MyBreadcrumb({ categories, categorySlug }) {
   //   return breadcrumb.reverse();
   // };
 
-  // const breadcrumb = getCategoryBreadcrumb(categories.filter((item) => item.slug == categorySlug));
+  // const breadcrumb = getCategoryBreadcrumb(categories.filter((item) => item.slug === categorySlug));
   useEffect(() => {
     setBreadCrumb();
   }, [categories, categorySlug])
 
   const setBreadCrumb = async () => {
-    if ( categories && categories.length && categorySlug) {
-      var curId = categories.find(v => (v.slug == categorySlug));
+    if (categories && categories.length && categorySlug) {
+      var curId = categories.find(v => (v.slug === categorySlug));
       curId = curId.id;
       var tId = curId;
       var tBreads = [];
-      while (tId != -1) {
+      while (tId !== -1) {
         tBreads.unshift(getCategoryById(tId));
         tId = getCategoryById(tId).parent_id;
       }
       setBreads(tBreads)
 
-      var allChildren = getAllChildren(curId) ;
-      var countDeal = await getCountDealsService(allChildren) ;
-      setDspDeal(` (${countDeal} deal${countDeal>1?"s":""})`);
+      var allChildren = getAllChildren(curId);
+      var countDeal = await getCountDealsService(allChildren);
+      setDspDeal(` (${countDeal} deal${countDeal > 1 ? "s" : ""})`);
       return curId;
     } else {
       setBreads([])
@@ -51,7 +51,7 @@ function MyBreadcrumb({ categories, categorySlug }) {
       var cur = que.shift();
       var isParent = false;
       for (let i = 0; i < categories.length; i++) {
-        if (categories[i].parent_id == cur) {
+        if (categories[i].parent_id === cur) {
           que.push(categories[i].id);
           isParent = true;
         }
@@ -63,30 +63,44 @@ function MyBreadcrumb({ categories, categorySlug }) {
   }
 
   const getCategoryById = (id) => {
-    return categories.find(v => (v.id == id))
+    return categories.find(v => (v.id === id))
   }
 
   return (
-    <>
-      <Breadcrumb
-        separator=">"
-        p={5}
-        fontSize={'0.9em'}>
-        <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/" color={themeColor}><Icon as={MdHome} boxSize={6} mt={1} /></BreadcrumbLink>
-        </BreadcrumbItem>
-        {
-          breads.map((v,idx) => (
+    <Breadcrumb
+      separator=">"
+      p={5}
+      fontSize={'0.9em'}>
+      <BreadcrumbItem>
+        <BreadcrumbLink
+          as={Link} to="/"
+          color={themeColor}
+        >
+          <Icon as={MdHome} boxSize={6} mt={1} />
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      {
+        breads.map((v, idx) => (
+          idx !== breads.length - 1 ?
             <BreadcrumbItem key={idx}>
-              <BreadcrumbLink key={idx} href="#" >{v.name} {idx==breads.length-1? dspDeal:""}</BreadcrumbLink>
+              <BreadcrumbLink
+                as={Link}
+                key={idx}
+                to={"/category/" + v.slug}
+              >
+                {v.name}
+              </BreadcrumbLink>
             </BreadcrumbItem>
-          ))
-        }
-      </Breadcrumb>
-    </>
+            :
+            <BreadcrumbItem key={idx} isCurrentPage>
+              <BreadcrumbLink key={idx}>
+                {v.name + " " + dspDeal}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+        ))
+      }
+    </Breadcrumb>
   );
 }
 
 export default MyBreadcrumb;
-
-//{v.slug==categorySlug?isCurrentPage:""}

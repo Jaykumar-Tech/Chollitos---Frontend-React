@@ -17,7 +17,17 @@ const getCategoriesService = async () => {
 
 const getCategoryBySlugService = async (slug) => {
   try {
-    const response = await api.get('category/getbyslug');
+    const response = await api.get('category/getbyslug/' + slug);
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const getCategoryByIdService = async (id) => {
+  try {
+    const response = await api.get('category/getbyid/' + id);
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -28,4 +38,5 @@ const getCategoryBySlugService = async (slug) => {
 export {
   getCategoriesService,
   getCategoryBySlugService,
+  getCategoryByIdService,
 };

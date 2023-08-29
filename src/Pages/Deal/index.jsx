@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import {
   Box,
@@ -15,9 +16,8 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  ButtonGroup,
 } from "@chakra-ui/react";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaReply } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
@@ -25,17 +25,20 @@ import { getCategoriesService, } from "../../Services/Category";
 import { getStoresService, } from "../../Services/Store";
 import { getDealByIdService, } from "../../Services/Deal";
 import { getTimeDiff } from "../../Helpers";
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { addLikeDeal, isLikedDeal } from "../../Services/Like";
+// import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
+  const { dealTitle } = useParams();
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [deal, setDeal] = useState({});
-  const [comment, setComment] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [isLiked, setLiked] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
+  // const [newComment, setNewComment] = useState(null);
+  // const [comments, setComments] = useState([]);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
@@ -50,21 +53,33 @@ const Deal = () => {
     setStores(data);
   };
 
+  const getDealIdFromParams = (dealTitle) => {
+    const splitTitle = dealTitle.split('-');
+    return splitTitle[splitTitle.length - 1];
+  }
+
   const getDealById = async (dealId) => {
     const data = await getDealByIdService(dealId);
-    console.log(JSON.stringify(data));
     setDeal(data);
   };
 
+  // const getCommentsByDealId = async (dealId) => {
+  //   const data = await getCommentsByDealIdService(dealId);
+  //   console.log(JSON.stringify(data));
+  //   setComments(data);
+  // }
+
   useEffect(() => {
+    const dealId = getDealIdFromParams(dealTitle);
+    getDealById(dealId);
     getCategories();
     getStores();
-    getDealById(38);
+    // getCommentsByDealId(dealId);
   }, []);
 
-  useEffect(()=>{
-    if ( Object.keys(deal).indexOf("id") >= 0 ) 
-      checkIsLikedDeal() ;
+  useEffect(() => {
+    if (Object.keys(deal).indexOf("id") >= 0)
+      checkIsLikedDeal();
   }, [deal])
 
   const checkIsLikedDeal = async () => {
@@ -72,27 +87,21 @@ const Deal = () => {
       type: "deal",
       dest_id: deal.id
     });
-    if ( result.status == 200 ) {
+    if (result.status === 200) {
       setLiked(true)
     } else {
     }
   }
 
-  const handleAddComment = () => {
-    // Implement your logic to add a new comment to the comments state
-    // For example, you can push the new comment to the comments array
-    // and then update the state using setComments
-  };
-
   const handleLike = async (isLike) => {
-    if ( isLiked ) return ;
+    if (isLiked) return;
     const result = await addLikeDeal({
       type: "deal",
       dest_id: deal.id,
       is_like: isLike
-    }) ;
-    if ( result.status == 200 ) {
-      setDeal({...deal, cnt_like: deal.cnt_like+(isLike?1:-1)})
+    });
+    if (result.status === 200) {
+      setDeal({ ...deal, cnt_like: deal.cnt_like + (isLike ? 1 : -1) })
       setLiked(true)
     }
   }
@@ -106,8 +115,8 @@ const Deal = () => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link href="#" title="Projectors" to="#">
-            {deal.storename} Discount code
+          <Link title={deal.storename} href={`/shop/${deal.storename}`}>
+            {deal.storename} discount code
           </Link>
         </Box>
         <Box maxW="full" h="4em" overflow="hidden" p={1}>
@@ -170,18 +179,18 @@ const Deal = () => {
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Like" to="#">
-                <FaThumbsUp onClick={()=>handleLike(true)}/>
+                <FaThumbsUp onClick={() => handleLike(true)} />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Dislike" to="#">
-                <FaThumbsDown onClick={()=>handleLike(false)} />
+                <FaThumbsDown onClick={() => handleLike(false)} />
               </Link>
             </Box>
           </Flex>
-          <Spacer />
-          <Flex alignItems={'center'}>
+          {/* <Spacer /> */}
+          {/* <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Comments" to="#">
                 <FaComment />
@@ -189,92 +198,92 @@ const Deal = () => {
             </Box>
             <Spacer mx={'5px'} />
             <span>{deal.cnt_comment}</span>
-          </Flex>
+          </Flex> */}
         </Flex>
       </>
     )
   }
 
-  const Comment = (props) => {
-    return (
-      <Box className="comments">
-        <Flex>
-          <Avatar
-            src={deal.avatar}
-            name={deal.username}
-            size={'sm'}
-            m={'10px'}
-          />
-          <Box className="child_comments" flex={1} m={'10px 0'}>
-            <Box>
-              <Flex color={"gray.400"} fontSize={'0.8em'}>
-                <Spacer />
-                <TimeIcon />
-                <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
-              </Flex>
-              <Text
-                bg={'gray.100'}
-                p={'15px'}
-                borderRadius={10}
-                shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
-              >
-                {deal.description}
-              </Text>
-              <Flex m={'10px 0 20px'} color={'gray.500'}>
-                <Flex _hover={{ color: themeColor }}>
-                  <Link title="Like" to="#">
-                    <Flex mr={2}>
-                      <Text mr={1}>Like</Text>
-                      <FaThumbsUp />
-                    </Flex>
-                  </Link>
-                  <Text>0</Text>
-                </Flex>
-                <Flex _hover={{ color: themeColor }} ml={5}>
-                  <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
-                    <Flex mr={2}>
-                      <Text mr={1}>Reply</Text>
-                      <FaReply />
-                    </Flex>
-                  </Link>
-                </Flex>
-              </Flex>
-              {isOpen &&
-                <CommentEditor />
-              }
+  // const Comment = ({ props, comment }) => {
+  //   return (
+  //     <Box className="comments">
+  //       <Flex>
+  //         <Avatar
+  //           src={deal.avatar}
+  //           name={deal.username}
+  //           size={'sm'}
+  //           m={'10px'}
+  //         />
+  //         <Box className="child_comments" flex={1} m={'10px 0'}>
+  //           <Box>
+  //             <Flex color={"gray.400"} fontSize={'0.8em'}>
+  //               <Spacer />
+  //               <TimeIcon />
+  //               <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+  //             </Flex>
+  //             <Text
+  //               bg={'gray.100'}
+  //               p={'15px'}
+  //               borderRadius={10}
+  //               shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
+  //             >
+  //               {deal.description}
+  //             </Text>
+  //             <Flex m={'10px 0 20px'} color={'gray.500'}>
+  //               <Flex _hover={{ color: themeColor }}>
+  //                 <Link title="Like" to="#">
+  //                   <Flex mr={2}>
+  //                     <Text mr={1}>Like</Text>
+  //                     <FaThumbsUp />
+  //                   </Flex>
+  //                 </Link>
+  //                 <Text>0</Text>
+  //               </Flex>
+  //               <Flex _hover={{ color: themeColor }} ml={5}>
+  //                 <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
+  //                   <Flex mr={2}>
+  //                     <Text mr={1}>Reply</Text>
+  //                     <FaReply />
+  //                   </Flex>
+  //                 </Link>
+  //               </Flex>
+  //             </Flex>
+  //             {isOpen &&
+  //               <CommentEditor />
+  //             }
 
-            </Box>
-            {props.children}
-          </Box>
-        </Flex>
-      </Box>
-    )
-  }
+  //           </Box>
+  //           {props.children}
+  //         </Box>
+  //       </Flex>
+  //     </Box>
+  //   )
+  // }
 
-  const CommentEditor = () => {
-    return (
-      <Box className="comment_editor">
-        <ReactQuill
-          name="description"
-          theme="snow"
-          value={comment}
-          onChange={(content) => setComment(content)}
-        />
-        <ButtonGroup>
-          <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
-            Comment
-          </Button>
-          <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setComment(null); setIsOpen(false); }}>
-            Cancel
-          </Button>
-        </ButtonGroup>
-      </Box>
-    )
-  }
+  // const CommentEditor = () => {
+  //   return (
+  //     <Box className="comment_editor">
+  //       <ReactQuill
+  //         name="description"
+  //         theme="snow"
+  //         value={newComment}
+  //         onChange={(content) => setNewComment(content)}
+  //       />
+  //       <ButtonGroup>
+  //         <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
+  //           Comment
+  //         </Button>
+  //         <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setNewComment(null); setIsOpen(false); }}>
+  //           Cancel
+  //         </Button>
+  //       </ButtonGroup>
+  //     </Box>
+  //   )
+  // }
 
   return (
     <Box maxW={'1200px'} m={'auto'}>
-      <MyBreadcrumb />
+      <MyBreadcrumb categories={categories} categorySlug={deal?.category_slug} />
       <Box
         id="Home"
         maxW={'960px'}
@@ -356,7 +365,7 @@ const Deal = () => {
           <Text>
             {deal.description}
           </Text>
-          <Flex
+          {/* <Flex
             bg={themeColor}
             color={'white'}
             p={'8px'}
@@ -367,8 +376,8 @@ const Deal = () => {
               <FaComment />
             </Box>
             <Text>What do you think of this {deal.storename} discount code?</Text>
-          </Flex>
-          <CommentEditor />
+          </Flex> */}
+          {/* <CommentEditor />
           <Box id="comments_container">
             <Comment />
             <Comment>
@@ -377,7 +386,7 @@ const Deal = () => {
               </Comment>
               <Comment />
             </Comment>
-          </Box>
+          </Box> */}
         </Box>
         <Box>
           <PopularShops stores={stores} />

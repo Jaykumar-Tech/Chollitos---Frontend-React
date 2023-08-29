@@ -50,7 +50,6 @@ import SearchBar from './SearchBar';
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { signInService, signUpService } from "../Services/User";
-import axios from "axios";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,6 +76,17 @@ export default function Navbar() {
     }
   }, []);
 
+  let timer;
+  const resetTimer = () => {
+    clearTimeout(timer);
+    timer = setTimeout(handleSignOut, 60 * 60 * 1000);
+  };
+
+  const userEvents = ['click', 'mousemove', 'keydown'];
+  userEvents.forEach((event) => {
+    document.addEventListener(event, resetTimer);
+  });
+
   const handleSignInOpenModal = () => {
     setIsSignInOpen(true);
   };
@@ -100,6 +110,7 @@ export default function Navbar() {
       localStorage.setItem('authToken', JSON.stringify(response.data));
       setAuthToken(response.data);
       setIsSignInOpen(false);
+      resetTimer();
       toast({
         title: 'Success.',
         description: 'You are logged in',
@@ -185,8 +196,7 @@ export default function Navbar() {
     //   })
   }
 
-  const handleSignOut = (e) => {
-    e.preventDefault();
+  const handleSignOut = () => {
     localStorage.removeItem('authToken');
     setAuthToken(null);
   }

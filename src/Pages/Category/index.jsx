@@ -71,36 +71,35 @@ const Category = () => {
                 />
               </Box>
             }
-            <Box>
-              <SimpleGrid
-                flex={1}
-                columns={[1, 2, 3, 4]}
-                spacingX={2}
-                spacingY={5}
-                m={'0 10px 20px'}
-                position={'relative'}
-              >
-                {isloading &&
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="blue.500"
-                    size="xl"
-                    position="absolute"
-                    top="200px"
-                    left="calc(50% - 20px)"
-                    transform="translate(-50%, -50%)"
-                    zIndex={1}
-                  />
-                }
-                {deals.map((deal, index) => (
-                  <Box key={index} opacity={isloading ? 0.3 : 1}>
-                    <CustomCard key={index} deal={deal} />
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
+            <SimpleGrid
+              flex={1}
+              columns={[1, 2, 3, 4]}
+              spacingX={2}
+              spacingY={5}
+              m={'0 10px 20px'}
+              position={'relative'}
+              minW={'calc(80% - 20px)'}
+            >
+              {isloading &&
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="xl"
+                  position="absolute"
+                  top="200px"
+                  left="calc(50% - 20px)"
+                  transform="translate(-50%, -50%)"
+                  zIndex={1}
+                />
+              }
+              {deals.map((deal, index) => (
+                <Box key={index} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard key={index} deal={deal} />
+                </Box>
+              ))}
+            </SimpleGrid>
           </Flex>
         </Box>
       </Box>
