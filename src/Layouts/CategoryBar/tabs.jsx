@@ -1,8 +1,9 @@
 import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
 
-function TabBar() {
+function TabBar({setFeature}) {
   const themeColor = "blue.500";
-  const tabList = ['New', 'Popular', 'Highlights', 'Commented'];
+  const tabList = ['New', 'Popular', 'Highlights'];
+  const tabFeatureList = ['new', 'popular', 'highlight'] ;
 
   return (
     <Box
@@ -28,6 +29,7 @@ function TabBar() {
                   borderBottom: `solid 3px`,
                   borderBlockColor: 'blue.500'
                 }}
+                onClick={()=>setFeature(tabFeatureList[index])}
               >
                 {tap}
               </Tab>

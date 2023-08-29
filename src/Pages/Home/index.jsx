@@ -8,13 +8,14 @@ import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { getCategoriesService, } from "../../Services/Category";
 import { getStoresService, } from "../../Services/Store";
-import { getDealsService, } from "../../Services/Deal";
+import { getDealByFilter, getDealsService, } from "../../Services/Deal";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
+  const [dealFeature, setDealFeature] = useState("new");
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
@@ -30,7 +31,11 @@ const Home = () => {
 
   const getDeals = async () => {
     setIsloading(true);
-    const data = await getDealsService();
+    const data = await getDealByFilter({
+      start_at: 0,
+      length: 10,
+      feature: dealFeature
+    });
     setDeals(data);
     setIsloading(false);
   };
@@ -40,10 +45,14 @@ const Home = () => {
     getStores();
     getDeals();
   }, []);
+  
+  useEffect(() => {
+    getDeals();
+  }, [dealFeature]);
 
   return (
     <>
-      <DoubleTopBar categories={categories} />
+      <DoubleTopBar categories={categories} setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb />
         <Box id="Home">
