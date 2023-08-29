@@ -169,12 +169,12 @@ const Deal = () => {
           <Flex alignItems="center">
             <Text
               p={2}
-              bg={'orange'}
+              bg={deal.cnt_like > 1 ? 'red.500' : 'orange'}
               color={'white'}
               borderRadius={5}
               fontWeight={600}
             >
-              Deal Score: {deal.cnt_like}
+              Deal Score: {deal.cnt_like ?? 0}
             </Text>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>

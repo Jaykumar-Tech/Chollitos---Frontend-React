@@ -1,6 +1,6 @@
 import { Box, Card, CardHeader, CardBody, CardFooter, Image, Text, Flex, Spacer, Button, Divider, Badge, Avatar } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 
@@ -35,15 +35,28 @@ const CustomCard = ({ deal }) => {
             <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
           </Flex>
         </Flex>
-        {/* <Badge
-          colorScheme="pink"
-          color={'red'}
-          mt={4}
-          ml={-2}
-          position={'absolute'}
-        >
-          Hot
-        </Badge> */}
+        {deal.cnt_like > 1 &&
+          <Badge
+            colorScheme="pink"
+            color={'red'}
+            mt={5}
+            ml={-2}
+            position={'absolute'}
+          >
+            Hot
+          </Badge>
+        }
+        {new Date(deal.expires) < new Date &&
+          <Badge
+            colorScheme="gray"
+            color={'gray'}
+            mt={5}
+            ml={-2}
+            position={'absolute'}
+          >
+            Expired
+          </Badge>
+        }
       </CardHeader>
       <CardBody p={2}>
         <Link to={"/shops/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
@@ -122,9 +135,14 @@ const CustomCard = ({ deal }) => {
               </Link>
             </Box>
             <Spacer mx={'5px'} />
-            <span>{deal.cnt_like}</span>
+            <span>{deal.cnt_like ?? 0}</span>
+            {deal.cnt_like > 1 &&
+              <Box color="red" ml={1}>
+                <FaFire />
+              </Box>
+            }
           </Flex>
-          <Spacer />
+          {/* <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Comments" to="#">
@@ -133,7 +151,7 @@ const CustomCard = ({ deal }) => {
             </Box>
             <Spacer mx={'5px'} />
             <span>{deal.cnt_comment}</span>
-          </Flex>
+          </Flex> */}
         </Flex>
       </CardFooter>
     </Card>
