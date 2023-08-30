@@ -161,7 +161,7 @@ export default function Navbar() {
         isClosable: true,
       })
     }
-    // axios.post("http://5.75.224.135:4000/api/user/register",
+    // axios.post("/api/user/register",
     //   {
     //     email: email,
     //     password: password,
@@ -233,7 +233,7 @@ export default function Navbar() {
   //       if (isLogin) {
 
   //         result.user.getIdToken(true).then(function (idToken) {
-  //           axios.post("http://5.75.224.135:4000/api/user/google", {
+  //           axios.post("/api/user/google", {
   //             idToken: idToken,
   //             email: user.email
   //           })
