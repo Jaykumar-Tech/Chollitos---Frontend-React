@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import React, { useState, useContext } from "react";
+import { GlobalContext } from "../../Components/GlobalContext";
 import {
   Box,
   ButtonGroup,
@@ -18,13 +19,13 @@ import { useDropzone } from 'react-dropzone';
 import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { getUrlUploadedService } from '../Services/Resource';
-import { getStoresService } from '../Services/Store';
-import { getCategoriesService } from '../Services/Category';
-import { createDealService } from '../Services/Deal';
+import { getUrlUploadedService } from '../../Services/Resource';
+import { createDealService } from '../../Services/Deal';
 import { Helmet } from 'react-helmet';
 
-export default function Create() {
+export default function CreateDiscount() {
+  const { globalProps } = useContext(GlobalContext);
+  const { categories, stores } = globalProps;
 
   const [url, setUrl] = useState('');
   const [image, setImage] = useState(null);
@@ -37,24 +38,8 @@ export default function Create() {
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
   const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()-1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
-  const [cats, setCats] = useState([]);
-  const [stores, setStores] = useState([]);
   const [isloading, setIsloading] = useState(false);
-
   const toast = useToast();
-
-  useEffect(() => {
-    getStoresService().then(response => {
-      setStores(response);
-    });
-    getCategoriesService().then(response => {
-      setCats(response);
-    });
-  }, [])
-
-  useEffect(()=>{
-    console.log(startDate)
-  },[startDate])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
@@ -105,11 +90,8 @@ export default function Create() {
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
-    console.log(sendData)
-
     const response = await createDealService(sendData);
     if (response.status === 200) {
-      console.log(response);
       toast({
         title: 'Deal created.',
         description: "We've created your deal.",
@@ -141,7 +123,7 @@ export default function Create() {
         fontWeight={600}
         p={5}
       >
-        Deal Information
+        Discount Information
       </Text>
       <Box
         bg={'white'}
@@ -330,8 +312,8 @@ export default function Create() {
               id: parseInt(e.target.options[e.target.selectedIndex].id)
             })}
           >
-            {cats ?
-              cats.map(v => {
+            {categories ?
+              categories.map(v => {
                 return <option id={v.id}>{v.name}</option>
               }) : null
             }

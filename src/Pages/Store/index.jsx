@@ -44,7 +44,6 @@ const Store = () => {
       start_at: 0,
       length: 100
     })
-    // console.log(tDeals)
     setDeals(tDeals)
   }
 

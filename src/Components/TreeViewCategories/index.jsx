@@ -20,7 +20,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   }, [categories]);
 
   useEffect(() => {
-    var curId = buildFilter();
+    const curId = buildFilter();
     if (curId >= 0) {
       filterDeals(getAllChildren(curId))
     }
