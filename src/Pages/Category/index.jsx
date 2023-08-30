@@ -39,7 +39,7 @@ const Category = () => {
   return (
     <>
       <Helmet>
-        <title>{categorySlug} deals</title>
+        <title>Chollitos - {categorySlug} deals</title>
       </Helmet>
       <Box
         shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}

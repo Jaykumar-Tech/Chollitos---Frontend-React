@@ -43,7 +43,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos {dealFeature} deals </title>
+        <title>Chollitos - {dealFeature} deals </title>
       </Helmet>
       <DoubleTopBar categories={categories} setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>

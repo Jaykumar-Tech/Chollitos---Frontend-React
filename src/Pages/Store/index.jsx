@@ -54,7 +54,7 @@ const Store = () => {
   return (
     <Box maxW={'960px'} m={'auto'} p={2}>
       <Helmet>
-        <title>{store_name} discount codes</title>
+        <title>Chollitos - {store_name} discount codes</title>
       </Helmet>
       <Breadcrumb
         separator=">"
