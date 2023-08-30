@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import {
@@ -17,13 +18,12 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
+import { Helmet } from "react-helmet";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
-import { getCategoriesService, } from "../../Services/Category";
-import { getStoresService, } from "../../Services/Store";
-import { getDealByIdService, } from "../../Services/Deal";
+import { getDealByIdService } from "../../Services/Deal";
 import { getTimeDiff } from "../../Helpers";
 // import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -31,9 +31,9 @@ import { addLikeDeal, isLikedDeal } from "../../Services/Like";
 // import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { categories, stores } = globalProps;
   const { dealTitle } = useParams();
-  const [categories, setCategories] = useState([]);
-  const [stores, setStores] = useState([]);
   const [deal, setDeal] = useState({});
   const [isLiked, setLiked] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
@@ -42,16 +42,6 @@ const Deal = () => {
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
-
-  const getCategories = async () => {
-    const data = await getCategoriesService();
-    setCategories(data);
-  };
-
-  const getStores = async () => {
-    const data = await getStoresService();
-    setStores(data);
-  };
 
   const getDealIdFromParams = (dealTitle) => {
     const splitTitle = dealTitle.split('-');
@@ -72,8 +62,6 @@ const Deal = () => {
   useEffect(() => {
     const dealId = getDealIdFromParams(dealTitle);
     getDealById(dealId);
-    getCategories();
-    getStores();
     // getCommentsByDealId(dealId);
   }, []);
 
@@ -109,6 +97,9 @@ const Deal = () => {
   const DealHeader = () => {
     return (
       <>
+        <Helmet>
+          <title>{deal.title}</title>
+        </Helmet>
         <Box
           color={themeColor}
           _hover={{ color: 'gray.800' }}
@@ -149,7 +140,7 @@ const Deal = () => {
             {deal.price_new}€
             {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
           </Text>
-          <Spacer flex={0.2}/>
+          <Spacer flex={0.2} />
           <Button
             as={'a'}
             href="#"

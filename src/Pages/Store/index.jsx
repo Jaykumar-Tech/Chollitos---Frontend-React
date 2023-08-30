@@ -20,6 +20,7 @@ import { getStoreByNameService } from "../../Services/Store";
 import { getTimeDiff } from "../../Helpers";
 import { getDealByFilter } from "../../Services/Deal";
 import { useParams } from 'react-router-dom';
+import { Helmet } from "react-helmet";
 
 const Store = () => {
   const { store_name } = useParams();
@@ -43,7 +44,6 @@ const Store = () => {
       start_at: 0,
       length: 100
     })
-    // console.log(tDeals)
     setDeals(tDeals)
   }
 
@@ -53,6 +53,9 @@ const Store = () => {
 
   return (
     <Box maxW={'960px'} m={'auto'} p={2}>
+      <Helmet>
+        <title>{store_name} discount codes</title>
+      </Helmet>
       <Breadcrumb
         separator=">"
         p={5}

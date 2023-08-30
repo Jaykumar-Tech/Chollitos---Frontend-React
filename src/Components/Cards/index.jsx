@@ -3,12 +3,26 @@ import { Link } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
+import { addLikeDeal } from "../../Services/Like";
+import { useEffect, useState } from "react";
 
 const CustomCard = ({ deal }) => {
+  const [cntLike, setCntLike] = useState(deal.cnt_like) ;
   const themeColor = 'blue.500';
 
   const getUrlFromTitle = (title) => {
     return title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+  }
+
+  const handleLike = async (isLike) => {
+    const result = await addLikeDeal({
+      type: "deal",
+      dest_id: deal.id,
+      is_like: isLike
+    });
+    if (result.status === 200) {
+      setCntLike(cntLike + (isLike ? 1 : -1));
+    }
   }
 
   return (
@@ -35,7 +49,7 @@ const CustomCard = ({ deal }) => {
             <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
           </Flex>
         </Flex>
-        {deal.cnt_like > 1 &&
+        {cntLike > 1 &&
           <Badge
             colorScheme="pink"
             color={'red'}
@@ -125,18 +139,18 @@ const CustomCard = ({ deal }) => {
           <Flex alignItems="center">
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Like" to="#">
-                <FaThumbsUp />
+                <FaThumbsUp onClick={() => handleLike(true)} />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
               <Link href="#" title="Dislike" to="#">
-                <FaThumbsDown />
+                <FaThumbsDown onClick={() => handleLike(false)} />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
-            <span>{deal.cnt_like ?? 0}</span>
-            {deal.cnt_like > 1 &&
+            <span>{cntLike ?? 0}</span>
+            {cntLike > 1 &&
               <Box color="red" ml={1}>
                 <FaFire />
               </Box>

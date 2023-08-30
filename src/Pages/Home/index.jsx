@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "../../Components/GlobalContext";
 import DoubleTopBar from "../../Layouts/CategoryBar";
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
@@ -6,29 +7,19 @@ import CustomCard from "../../Components/Cards";
 import { Spinner, useBreakpointValue } from "@chakra-ui/react";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
-import { getCategoriesService, } from "../../Services/Category";
-import { getStoresService, } from "../../Services/Store";
-import { getDealByFilter, getDealsService, } from "../../Services/Deal";
+import { getDealByFilter, } from "../../Services/Deal";
+import { Helmet } from "react-helmet";
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
-  const [categories, setCategories] = useState([]);
-  const [stores, setStores] = useState([]);
+  const { t, i18n  } = useTranslation();
+  const { globalProps } = useContext(GlobalContext);
+  const { categories, stores } = globalProps;
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
-
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-
-  const getCategories = async () => {
-    const data = await getCategoriesService();
-    setCategories(data);
-  };
-
-  const getStores = async () => {
-    const data = await getStoresService();
-    setStores(data);
-  };
-
+  
   const getDeals = async () => {
     setIsloading(true);
     const data = await getDealByFilter({
@@ -41,17 +32,19 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getCategories();
-    getStores();
-    getDeals();
-  }, []);
-  
-  useEffect(() => {
     getDeals();
   }, [dealFeature]);
 
+  useEffect(()=>{
+    i18n.changeLanguage('fr');
+    console.log(t('hello'))
+  }, [])
+
   return (
     <>
+      <Helmet>
+        <title>Chollitos {dealFeature} deals </title>
+      </Helmet>
       <DoubleTopBar categories={categories} setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb />
@@ -81,8 +74,8 @@ const Home = () => {
                 />
               }
               {deals.map((deal, index) => (
-                <Box key={index} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard key={index} deal={deal} />
+                <Box key={"box"+deal.id} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard key={"card"+deal.id} deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>

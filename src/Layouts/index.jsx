@@ -5,7 +5,6 @@ import {
   Spacer,
   // HStack,
   // VStack,
-  useDisclosure,
   Icon,
   Image,
   useBreakpointValue,
@@ -33,8 +32,6 @@ import {
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  HamburgerIcon,
-  CloseIcon,
   // EmailIcon,
   // BellIcon,
   ViewIcon,
@@ -45,6 +42,7 @@ import { FaUser, FaPlus } from "react-icons/fa";
 import "./index.css";
 import Logo from "../Components/Logo";
 import SearchBar from './SearchBar';
+import MenuBar from "./MenuBar";
 
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
@@ -52,7 +50,6 @@ import SearchBar from './SearchBar';
 import { signInService, signUpService } from "../Services/User";
 
 export default function Navbar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -161,7 +158,7 @@ export default function Navbar() {
         isClosable: true,
       })
     }
-    // axios.post("/api/user/register",
+    // axios.post("https://chollitos.net/api/user/register",
     //   {
     //     email: email,
     //     password: password,
@@ -233,7 +230,7 @@ export default function Navbar() {
   //       if (isLogin) {
 
   //         result.user.getIdToken(true).then(function (idToken) {
-  //           axios.post("/api/user/google", {
+  //           axios.post("https://chollitos.net/api/user/google", {
   //             idToken: idToken,
   //             email: user.email
   //           })
@@ -295,35 +292,7 @@ export default function Navbar() {
         >
           <Logo />
 
-          {appMode === 'lg' ? (
-            <Button
-              className="btnRes"
-              border={`solid white 2px`}
-              bg={themeColor}
-              fontWeight={'normal'}
-              color={'white'}
-              _hover={{
-                color: themeColor,
-                bg: 'white',
-              }}
-            >
-              {'Menu'}
-            </Button>
-          ) : (
-            <Button
-              className="btnRes"
-              bg={themeColor}
-              color={'white'}
-              _hover={{
-                color: themeColor,
-                bg: 'white',
-              }}
-              ml={'10px'}
-              onClick={isOpen ? onClose : onOpen}
-            >
-              {isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            </Button>
-          )}
+          <MenuBar appMode={appMode} />
 
           < Spacer />
 
@@ -331,9 +300,9 @@ export default function Navbar() {
 
           {authToken &&
             <>
-              <Link to="/create">
-                <Button
-                  className="btnRes"
+              <Menu>
+                <MenuButton
+                  as={Button}
                   border={`solid white 2px`}
                   bg={themeColor}
                   fontWeight={'normal'}
@@ -349,8 +318,16 @@ export default function Navbar() {
                   ) : (
                     <Icon as={FaPlus} boxSize={3} />
                   )}
-                </Button>
-              </Link>
+                </MenuButton>
+                <MenuList>
+                  <Link to="/create/deal">
+                    <MenuItem>Deal</MenuItem>
+                  </Link>
+                  <Link to="/create/discount">
+                    <MenuItem>Discount</MenuItem>
+                  </Link>
+                </MenuList>
+              </Menu>
               {/* <HStack m={'0 10px'}>
                 <EmailIcon
                   boxSize={6}

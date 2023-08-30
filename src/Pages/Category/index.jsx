@@ -1,32 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
-import { getCategoriesService, } from "../../Services/Category";
-import { getStoresService, } from "../../Services/Store";
 import { getDealsService, getFilterDealsService } from "../../Services/Deal";
+import { Helmet } from "react-helmet";
 
 const Category = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { categories } = globalProps;
   const { categorySlug } = useParams();
-  const [categories, setCategories] = useState([]);
-  const [stores, setStores] = useState([]);
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-
-  const getCategories = async () => {
-    const data = await getCategoriesService();
-    setCategories(data);
-  };
-
-  const getStores = async () => {
-    const data = await getStoresService();
-    setStores(data);
-  };
 
   const getDeals = async () => {
     setIsloading(true);
@@ -43,14 +33,14 @@ const Category = () => {
   }
 
   useEffect(() => {
-    getCategories();
-    getStores();
     getDeals();
-    console.log(categorySlug);
   }, []);
 
   return (
     <>
+      <Helmet>
+        <title>{categorySlug} deals</title>
+      </Helmet>
       <Box
         shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
       >
@@ -95,8 +85,8 @@ const Category = () => {
                 />
               }
               {deals.map((deal, index) => (
-                <Box key={index} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard key={index} deal={deal} />
+                <Box key={"box"+deal.id} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard key={"card" + deal.id} deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>
