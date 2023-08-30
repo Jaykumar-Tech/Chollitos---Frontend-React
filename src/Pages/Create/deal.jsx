@@ -115,7 +115,7 @@ export default function CreateDeal() {
   return (
     <Box id="Create" maxW={'800px'} m={'auto'}>
       <Helmet>
-        <title>Share deals</title>
+        <title>Chollitos - Share deals</title>
       </Helmet>
       <Text
         fontSize={'2em'}
@@ -123,7 +123,7 @@ export default function CreateDeal() {
         fontWeight={600}
         p={5}
       >
-        Deal Information
+        Deal Info
       </Text>
       <Box
         bg={'white'}
@@ -373,7 +373,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="end_date"
             mt="2%">
-            End Date
+            Expire Date
           </FormLabel>
           <Input
             type="date"

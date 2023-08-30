@@ -14,6 +14,10 @@ import {
   useToast,
   Image,
   Spinner,
+  Tabs,
+  TabList,
+  Tab,
+  Checkbox,
 } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone';
 import { FaFileImage } from "react-icons/fa";
@@ -29,14 +33,15 @@ export default function CreateDiscount() {
 
   const [url, setUrl] = useState('');
   const [image, setImage] = useState(null);
-  const [price, setPrice] = useState(0);
-  const [lowPrice, setLowPrice] = useState(0);
-  const [ship, setShip] = useState(0);
+  const [type, setType] = useState(0);
+  const [price, setPrice] = useState(null);
+  const [lowPrice, setLowPrice] = useState(null);
+  const [ship, setShip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()-1).padStart(2, '0')}`);
+  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
@@ -115,7 +120,7 @@ export default function CreateDiscount() {
   return (
     <Box id="Create" maxW={'800px'} m={'auto'}>
       <Helmet>
-        <title>Share deals</title>
+        <title>Chollitos - Share discounts</title>
       </Helmet>
       <Text
         fontSize={'2em'}
@@ -123,7 +128,7 @@ export default function CreateDiscount() {
         fontWeight={600}
         p={5}
       >
-        Discount Information
+        Discount Info
       </Text>
       <Box
         bg={'white'}
@@ -211,51 +216,112 @@ export default function CreateDiscount() {
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
             fontWeight={600}
-            htmlFor="price_new"
+            htmlFor="url"
             mt="2%">
-            Price (new)
+            Discount Code
           </FormLabel>
           <Input
             type="text"
-            name="price_new"
-            id="price_new"
+            name="url"
+            id="url"
             size="sm"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
           />
         </FormControl>
 
-        <FormControl as={GridItem} colSpan={6}>
-          <FormLabel
-            fontWeight={600}
-            htmlFor="lowest_price"
-            mt="2%">
-            Lowest price
-          </FormLabel>
-          <Input
-            type="text"
-            name="lowest_price"
-            id="lowest_price"
-            size="sm"
-            value={lowPrice}
-            onChange={(e) => setLowPrice(e.target.value)}
-          />
-        </FormControl>
+        <FormLabel
+          fontWeight={600}
+          htmlFor="url"
+          mt="2%">
+          Discount Type
+        </FormLabel>
+        <Tabs>
+          <TabList
+            as={Flex}
+            border={'solid 1px'}
+            borderColor={'blue.500'}
+            borderRadius={5}
+            justifyContent={'center'}
+          >
+            <Tab
+              isSelected={type === 0}
+              onClick={() => setType(0)}
+              flex={1}
+              fontSize={'0.9em'}
+              fontWeight={600}
+              borderWidth={0}
+              borderRadius={5}
+              _selected={{ bg: 'blue.500', color: 'white' }}
+            >
+              Percentage (%)
+            </Tab>
+            <Tab
+              isSelected={type === 1}
+              onClick={() => setType(1)}
+              flex={1}
+              fontSize={'0.9em'}
+              fontWeight={600}
+              borderWidth={0}
+              borderRadius={5}
+              _selected={{ bg: 'blue.500', color: 'white' }}
+            >
+              Eruo (€)
+            </Tab>
+            <Tab
+              isSelected={type === 2}
+              onClick={() => setType(2)}
+              flex={1}
+              fontSize={'0.9em'}
+              fontWeight={600}
+              borderWidth={0}
+              borderRadius={5}
+              _selected={{ bg: 'blue.500', color: 'white' }}
+            >
+              Free Shipment
+            </Tab>
+          </TabList>
+        </Tabs>
 
-        <FormControl as={GridItem} colSpan={6}>
-          <FormLabel
-            fontWeight={600}
-            htmlFor="price_shipment"
-            mt="2%">
-            Price of shipment
-          </FormLabel>
-          <Input
-            type="text"
-            name="price_shipment"
-            id="price_shipment"
-            size="sm"
-          />
-        </FormControl>
+        {type !== 2 &&
+          <FormControl as={GridItem} colSpan={6}>
+            <FormLabel
+              fontWeight={600}
+              htmlFor="price_new"
+              mt="2%">
+              Price (new)
+            </FormLabel>
+            <Input
+              type="text"
+              name="price_new"
+              id="price_new"
+              size="sm"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </FormControl>
+        }
+
+        {type !== 2 && !ship &&
+          <FormControl as={GridItem} colSpan={6}>
+            <FormLabel
+              fontWeight={600}
+              htmlFor="price_shipment"
+              mt="2%">
+              Price of shipment
+            </FormLabel>
+            <Input
+              type="text"
+              name="price_shipment"
+              id="price_shipment"
+              size="sm"
+            />
+          </FormControl>
+        }
+
+        <Checkbox m={'10px 0'} onChange={() => setShip(!ship)}>
+          Free Shipment
+        </Checkbox>
 
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
@@ -373,7 +439,7 @@ export default function CreateDiscount() {
             fontWeight={600}
             htmlFor="end_date"
             mt="2%">
-            End Date
+            Expire Date
           </FormLabel>
           <Input
             type="date"

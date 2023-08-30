@@ -13,7 +13,7 @@ const Page404 = () => {
   return (
     <>
       <Helmet>
-        <title>Page not found</title>
+        <title>Chollitos - Page not found</title>
       </Helmet>
       <Flex
         align="center"

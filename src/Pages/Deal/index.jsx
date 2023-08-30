@@ -98,7 +98,7 @@ const Deal = () => {
     return (
       <>
         <Helmet>
-          <title>{deal.title}</title>
+          <title>{'Chollitos - ' + deal.title}</title>
         </Helmet>
         <Box
           color={themeColor}
