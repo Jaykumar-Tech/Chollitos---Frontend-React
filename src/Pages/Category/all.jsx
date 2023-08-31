@@ -14,9 +14,12 @@ import {
   Flex,
 } from "@chakra-ui/react"
 import { MdHome } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 import { Helmet } from "react-helmet";
 
 const AllCategories = () => {
+  const {t} = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories } = globalProps;
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,11 +52,11 @@ const AllCategories = () => {
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
           <BreadcrumbLink>
-            All Categories
+            {t(_t("All Categories"))}
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Input placeholder="Search" value={searchTerm} onChange={handleSearch} bg={'white'} />
+      <Input placeholder={t(_t("Search"))} value={searchTerm} onChange={handleSearch} bg={'white'} />
       <SimpleGrid
         columns={[1, 2, 3, 4]}
         spacing={4}

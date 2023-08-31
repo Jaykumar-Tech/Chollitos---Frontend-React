@@ -48,8 +48,11 @@ import MenuBar from "./MenuBar";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { signInService, signUpService } from "../Services/User";
+import { useTranslation } from "react-i18next";
+import { _t } from "../Utils/_t";
 
 export default function Navbar() {
+  const {t} = useTranslation()
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -108,8 +111,8 @@ export default function Navbar() {
       setIsSignInOpen(false);
       resetTimer();
       toast({
-        title: 'Success.',
-        description: 'You are logged in',
+        title: t(_t('Success.')),
+        description: t(_t('You are logged in')),
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -117,7 +120,7 @@ export default function Navbar() {
       })
     } else {
       toast({
-        title: 'Error.',
+        title: t(_t('Error.')),
         description: response.response.data.message,
         position: 'top',
         status: 'error',
@@ -137,8 +140,8 @@ export default function Navbar() {
     if (response.status === 200) {
       setIsSignUpOpen(false);
       toast({
-        title: 'Account created.',
-        description: "We've created your account for you.",
+        title: t(_t('Account created.')),
+        description: t(_t("We've created your account for you.")),
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -149,7 +152,7 @@ export default function Navbar() {
       }, 100);
     } else {
       toast({
-        title: 'Error.',
+        title:  t(_t('Error.')),
         description: response.response.data.message,
         position: 'top',
         status: 'error',
@@ -313,17 +316,17 @@ export default function Navbar() {
                   ml={'10px'}
                 >
                   {appMode === 'lg' ? (
-                    'Share Deal'
+                    t(_t('Share Deal'))
                   ) : (
                     <Icon as={FaPlus} boxSize={3} />
                   )}
                 </MenuButton>
                 <MenuList>
                   <Link to="/create/deal">
-                    <MenuItem>Deal</MenuItem>
+                    <MenuItem>{t(_t("Deal"))}</MenuItem>
                   </Link>
                   <Link to="/create/discount">
-                    <MenuItem>Discount</MenuItem>
+                    <MenuItem>{t(_t("Discount"))}</MenuItem>
                   </Link>
                 </MenuList>
               </Menu>
@@ -364,7 +367,7 @@ export default function Navbar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={handleSignOut}>Logout</MenuItem>
+                <MenuItem onClick={handleSignOut}>{t(_t("Logout"))}</MenuItem>
               </MenuList>
             </Menu>
             :
@@ -453,8 +456,8 @@ export default function Navbar() {
                     align={"start"}
                     justify={"space-between"}
                   >
-                    <Checkbox>Remember me</Checkbox>
-                    <Text color={"blue.400"}>Forgot password?</Text>
+                    <Checkbox>{t(_t("Remember me"))}</Checkbox>
+                    <Text color={"blue.400"}>{t(_t("Forgot password?"))}</Text>
                   </Stack>
                   <Button
                     isLoading={isSignInLoading}
@@ -465,13 +468,14 @@ export default function Navbar() {
                     }}
                     type="submit"
                   >
-                    Sign in
+                    {t(_t("Sign in"))}
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6} alignItems={'center'}>
-                <Text>Don't have an account?</Text>
-                <Text color={'blue.400'} onClick={toSignUp}>Signup</Text>
+              <Stack pt={6}>
+                <Text align={'center'}>
+                {t(_t("Don't have an account?"))} <Text color={'blue.400'} onClick={toSignUp}>{t(_t("Signup"))}</Text>
+                </Text>
               </Stack>
             </Stack>
           </Box>
@@ -480,7 +484,7 @@ export default function Navbar() {
       <Modal isOpen={isSignUpOpen} onClose={handleSignUpCloseModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Sign up</ModalHeader>
+          <ModalHeader>{t(_t("Sign up"))}</ModalHeader>
           <ModalCloseButton />
           <Box
             rounded={'lg'}
@@ -523,20 +527,20 @@ export default function Navbar() {
               <form onSubmit={handleSignUp}>
                 <Box>
                   <FormControl id="name" isRequired>
-                    <FormLabel>User Name</FormLabel>
+                    <FormLabel>{t(_t("User Name"))}</FormLabel>
                     <Input type="text"
                       value={username}
                       onChange={e => setUsername(e.target.value)} />
                   </FormControl>
                 </Box>
                 <FormControl id="email" isRequired>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
                 <FormControl id="password" isRequired>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t(_t("Password"))}</FormLabel>
                   <InputGroup>
                     <Input type={showPassword ? 'text' : 'password'}
                       value={password}
@@ -561,13 +565,14 @@ export default function Navbar() {
                     _hover={{
                       bg: 'blue.500',
                     }}>
-                    Sign up
+                    {t(_t("Sign up"))}
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6} alignItems='center'>
-                <Text>Already have an account?</Text>
-                <Text color={'blue.400'} onClick={toSignIn}>Signin</Text>
+              <Stack pt={6}>
+                <Text align={'center'}>
+                  {t(_t("Already have an account?"))} <Text color={'blue.400'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
+                </Text>
               </Stack>
             </Stack>
           </Box>

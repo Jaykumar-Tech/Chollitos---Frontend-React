@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { getCountDealsService } from "../../Services/Deal";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 function MyBreadcrumb({ categories, categorySlug }) {
+  const {t} = useTranslation();
   const [breads, setBreads] = useState([]);
   const [dspDeal, setDspDeal] = useState("");
   const themeColor = 'blue.500';
@@ -36,7 +39,7 @@ function MyBreadcrumb({ categories, categorySlug }) {
 
       var allChildren = getAllChildren(curId);
       var countDeal = await getCountDealsService(allChildren);
-      setDspDeal(` (${countDeal} deal${countDeal > 1 ? "s" : ""})`);
+      setDspDeal(` (${countDeal} ${t(_t("deal"))}${countDeal > 1 ? "s" : ""})`);
       return curId;
     } else {
       setBreads([])

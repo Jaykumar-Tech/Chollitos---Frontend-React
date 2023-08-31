@@ -22,8 +22,11 @@ import 'react-quill/dist/quill.snow.css';
 import { getUrlUploadedService } from '../../Services/Resource';
 import { createDealService } from '../../Services/Deal';
 import { Helmet } from 'react-helmet';
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 export default function CreateDeal() {
+  const {t} = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
 
@@ -53,8 +56,8 @@ export default function CreateDeal() {
       if (result.status === 200) {
         setImage(result.data.url);
         toast({
-          title: 'Upload Success.',
-          description: "We've uploaded your image.",
+          title: t(_t('Upload Success.')),
+          description: t(_t("We've uploaded your image.")),
           position: 'top',
           status: 'success',
           duration: 3000,
@@ -62,7 +65,7 @@ export default function CreateDeal() {
         })
       } else {
         toast({
-          title: 'Error.',
+          title: t(_t('Error.')),
           description: result.response?.data.message,
           position: 'top',
           status: 'error',
@@ -93,8 +96,8 @@ export default function CreateDeal() {
     const response = await createDealService(sendData);
     if (response.status === 200) {
       toast({
-        title: 'Deal created.',
-        description: "We've created your deal.",
+        title: t(_t('Deal created.')),
+        description: t(_t("We've created your deal.")),
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -102,7 +105,7 @@ export default function CreateDeal() {
       })
     } else {
       toast({
-        title: 'Error.',
+        title: t(_t('Error.')),
         description: response.response?.data.message,
         position: 'top',
         status: 'error',
@@ -115,7 +118,7 @@ export default function CreateDeal() {
   return (
     <Box id="Create" maxW={'800px'} m={'auto'}>
       <Helmet>
-        <title>Chollitos - Share deals</title>
+        <title>{t(_t("Chollitos"))} - {t(_t("Share deals"))}</title>
       </Helmet>
       <Text
         fontSize={'2em'}
@@ -123,7 +126,7 @@ export default function CreateDeal() {
         fontWeight={600}
         p={5}
       >
-        Deal Info
+        {t(_t("Deal Info"))}
       </Text>
       <Box
         bg={'white'}
@@ -140,7 +143,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="url"
             mt="2%">
-            URL
+            {t(_t("URL"))}
           </FormLabel>
           <Input
             type="text"
@@ -157,7 +160,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="image"
             mt="2%">
-            Image
+            {t(_t("Image"))}
           </FormLabel>
           <Box
             {...getRootProps()}
@@ -182,10 +185,10 @@ export default function CreateDeal() {
                 {!isloading &&
                   <>
                     <Box mt={2} fontWeight="semibold" >
-                      {isDragActive ? "Drop the image here" : "Drag and drop an image here"}
+                      {isDragActive ? t(_t("Drop the image here")) : t(_t("Drag and drop an image here"))}
                     </Box>
                     <Box mt={2} fontSize="sm" color="gray.500">
-                      Supported formats: JPEG, PNG
+                      {t(_t("Supported formats: JPEG, PNG"))}
                     </Box>
                   </>
                 }
@@ -213,7 +216,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="price_new"
             mt="2%">
-            Price (new)
+            {t(_t("Price (new)"))}
           </FormLabel>
           <Input
             type="text"
@@ -230,7 +233,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="lowest_price"
             mt="2%">
-            Lowest price
+            {t(_t("Lowest price"))}
           </FormLabel>
           <Input
             type="text"
@@ -247,7 +250,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="price_shipment"
             mt="2%">
-            Price of shipment
+            {t(_t("Price of shipment"))}
           </FormLabel>
           <Input
             type="text"
@@ -262,7 +265,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="title"
             mt="2%">
-            Title
+            {t(_t("Title"))}
           </FormLabel>
           <Input
             type="text"
@@ -279,7 +282,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="description"
             mt="2%">
-            Description
+            {t(_t("Description"))}
           </FormLabel>
           <ReactQuill
             name="description"
@@ -296,13 +299,13 @@ export default function CreateDeal() {
             htmlFor="category"
             mt="2%"
           >
-            Categories
+            {t(_t("Categories"))}
           </FormLabel>
           <Select
             id="category"
             name="category"
             autoComplete="category"
-            placeholder="Select Category"
+            placeholder={t(_t("Select Category"))}
             shadow="sm"
             size="sm"
             w="full"
@@ -326,13 +329,13 @@ export default function CreateDeal() {
             fontWeight={600}
             mt="2%"
           >
-            Stores
+            {t(_t("Stores"))}
           </FormLabel>
           <Select
             id="store"
             name="store"
             autoComplete="store"
-            placeholder="Select Store"
+            placeholder={t(_t("Select Store"))}
             shadow="sm"
             size="sm"
             w="full"
@@ -356,7 +359,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="start_date"
             mt="2%">
-            Start Date
+            {t(_t("Start Date"))}
           </FormLabel>
           <Input
             type="date"
@@ -373,7 +376,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="end_date"
             mt="2%">
-            Expire Date
+            {t(_t("Expire Date"))}
           </FormLabel>
           <Input
             type="date"
@@ -394,7 +397,7 @@ export default function CreateDeal() {
               mr="5%"
               onClick={() => window.history.back()}
             >
-              Back
+              {t(_t("Back"))}
             </Button>
             <Button
               w="6rem"
@@ -402,7 +405,7 @@ export default function CreateDeal() {
               variant="solid"
               onClick={handleCreate}
             >
-              Create
+              {t(_t("Create"))}
             </Button>
           </Flex>
         </ButtonGroup>

@@ -17,10 +17,13 @@ import {
 import { HamburgerIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaMoneyBill, FaFolderOpen, FaCrown } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 function MenuBar({ appMode }) {
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -67,7 +70,7 @@ function MenuBar({ appMode }) {
         <DrawerContent
           color={appMode === 'lg' ? 'white' : 'blue.400'}
           bg={appMode === 'lg' ? 'blue.400' : 'white'}
-          width = {"min(100vw - (100vw - 100%), 1200px)"}
+          width={"min(100vw - (100vw - 100%), 1200px)"}
           minW={"min(100vw - (100vw - 100%), 1200px)"}
           marginX={'auto'}
           marginTop={appMode === 'lg' ? "54px" : "0px"}
@@ -259,5 +262,4 @@ function MenuBar({ appMode }) {
     </Box>
   );
 }
-
 export default MenuBar;

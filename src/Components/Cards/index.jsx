@@ -18,9 +18,12 @@ import { FaThumbsUp, FaThumbsDown, /*FaComment,*/ FaFire } from "react-icons/fa"
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 const CustomCard = ({ deal }) => {
+  const { t } = useTranslation();
   const [cntLike, setCntLike] = useState(deal.cnt_like);
   const themeColor = 'blue.500';
 
@@ -71,7 +74,7 @@ const CustomCard = ({ deal }) => {
             ml={-2}
             position={'absolute'}
           >
-            Hot
+            {t(_t("HOT"))}
           </Badge>
         }
         {deal.vip > 0 &&
@@ -82,7 +85,7 @@ const CustomCard = ({ deal }) => {
             ml={-2}
             position={'absolute'}
           >
-            VIP
+            {t(_t("VIP"))}
           </Badge>
         }
         {new Date(deal.expires) < new Date() &&
@@ -93,7 +96,7 @@ const CustomCard = ({ deal }) => {
             ml={-2}
             position={'absolute'}
           >
-            Expired
+            {t(_t("Expired"))}
           </Badge>
         }
       </CardHeader>
@@ -114,7 +117,7 @@ const CustomCard = ({ deal }) => {
           p={1}
         >
           <Link to={"/shop/" + deal.storename}>
-            {deal.storename} discount code
+            {deal.storename} {t(_t("discount code"))}
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>

@@ -6,6 +6,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enTranslation from './Lang/en.json';
 import esTranslation from './Lang/es.json';
+import { _t } from './Utils/_t';
 
 i18n
   .use(initReactI18next)

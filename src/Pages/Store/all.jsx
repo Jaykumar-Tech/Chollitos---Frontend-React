@@ -14,9 +14,12 @@ import {
   Flex,
 } from "@chakra-ui/react"
 import { MdHome } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 import { Helmet } from "react-helmet";
 
 const AllShops = () => {
+  const {t} = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { stores } = globalProps;
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,7 +52,7 @@ const AllShops = () => {
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
           <BreadcrumbLink>
-            All Shops
+            {(("All Shops"))}
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>

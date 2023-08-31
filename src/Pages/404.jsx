@@ -1,9 +1,11 @@
 import { Flex, Heading, Text, Button } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { _t } from "../Utils/_t";
 
 const Page404 = () => {
-
+  const {t} = useTranslation()
   const history = useHistory();
 
   const handleGoBack = () => {
@@ -13,7 +15,7 @@ const Page404 = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos - Page not found</title>
+        <title>{t(_t("Chollitos"))} - {t(_t("Page not found"))}</title>
       </Helmet>
       <Flex
         align="center"
@@ -25,9 +27,9 @@ const Page404 = () => {
         <Heading as="h1" size="4xl" mb={4}>
           404
         </Heading>
-        <Text fontSize="xl">Page Not Found</Text>
+        <Text fontSize="xl">{t(_t("Page Not Found"))}</Text>
         <Button onClick={handleGoBack} colorScheme="blue" mt={5}>
-          Back
+          {t(_t("Back"))}
         </Button>
       </Flex>
     </>
