@@ -6,7 +6,9 @@ import CreateDeal from "../Pages/Create/deal";
 import CreateDiscount from "../Pages/Create/discount";
 import Deal from "../Pages/Deal";
 import Store from "../Pages/Store";
+import AllShops from "../Pages/Store/all";
 import Category from "../Pages/Category";
+import AllCategories from "../Pages/Category/all";
 import Page404 from "../Pages/404";
 
 function Routes() {
@@ -16,9 +18,9 @@ function Routes() {
         <Route exact path="/" component={Home} />
         <Route exact path="/create/deal" component={CreateDeal} />
         <Route exact path="/create/discount" component={CreateDiscount} />
-        <Route exact path="/categories" component={''} />
+        <Route exact path="/categories" component={AllCategories} />
         <Route path="/category/:categorySlug" component={Category} />
-        <Route exact path="/shops" component={''} />
+        <Route exact path="/shops" component={AllShops} />
         <Route path="/shop/:store_name" component={Store} />
         <Route path="/:store_name/:dealTitle" component={Deal} />
         <Route component={Page404} />

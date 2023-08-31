@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import {
   Box,
   Flex,
-  Link,
   Button,
   Image,
   Avatar,
@@ -319,7 +319,7 @@ const Deal = () => {
                   width={"auto"}
                 />
               </Box>
-              <Box flex='0.6' >
+              <Box flex='0.6' ml={5}>
                 <DealHeader />
               </Box>
             </Flex>

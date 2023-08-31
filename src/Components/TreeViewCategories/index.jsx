@@ -16,16 +16,11 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   useEffect(() => {
     setTreeData(buildTree(-1));
-    buildFilter();
-  }, [categories]);
-
-  useEffect(() => {
     const curId = buildFilter();
     if (curId >= 0) {
       filterDeals(getAllChildren(curId))
     }
-
-  }, [categorySlug]);
+  }, [categories, categorySlug]);
 
   const buildTree = (parentId) => {
     return categories
@@ -77,26 +72,20 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
   const renderTree = (categories) => {
     return (
-      <UnorderedList
-        listStyleType={'none'}
-        color={themeColor}
-      >
-        {categories.map((category) => (filterData.findIndex(v => (v === category.parent_id)) >= 0 ?
-          <Link to={"/category/" + category.slug} key={category.id}>
-            <ListItem
-              key={category.id}
-            >
+      <UnorderedList listStyleType={'none'} color={themeColor}>
+        {categories.filter(category => filterData.includes(category.parent_id)).map((category) => (
+          <ListItem key={category.id}>
+            <Link to={"/category/" + category.slug}>
               <Text
-                key={category.id}
                 _hover={{ textDecoration: "underline" }}
-                fontWeight={filterData.find(v => v === category.id) ? 600 : 400}
+                fontWeight={filterData.includes(category.id) ? 600 : 400}
                 fontSize={'0.95em'}
               >
-                {category.name}
+                <span>{category.name}</span>
               </Text>
-              {category.children && renderTree(category.children)}
-            </ListItem>
-          </Link> : null
+            </Link>
+            {category.children && renderTree(category.children)}
+          </ListItem>
         ))}
       </UnorderedList>
     );
