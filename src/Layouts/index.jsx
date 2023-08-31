@@ -291,7 +291,7 @@ export default function Navbar() {
         >
           <Logo />
 
-          <MenuBar appMode={appMode} />
+          <MenuBar appMode={appMode}/>
 
           < Spacer />
 
