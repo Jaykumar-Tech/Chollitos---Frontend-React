@@ -63,7 +63,6 @@ export default function Navbar() {
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
 
-
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
   const toast = useToast();

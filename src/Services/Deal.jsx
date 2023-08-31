@@ -65,6 +65,9 @@ const getCountDealsService = async (catIds) => {
 
 const getDealByFilter = async ( data ) => {
   try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    if ( !data.vip && auth_token && auth_token.user.role=="vip") data.vip=2;
+    else if ( !data.vip ) data.vip = 0 ;
     const response = await api.post('deal/find', data);
     return response.data.data;
   } catch (error) {

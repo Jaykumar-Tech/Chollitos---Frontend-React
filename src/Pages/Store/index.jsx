@@ -3,7 +3,6 @@ import {
   Flex,
   Heading,
   Image,
-  Link,
   Text,
   Button,
   Breadcrumb,
@@ -13,6 +12,7 @@ import {
   VStack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
 import { useState, useEffect } from "react";
@@ -36,7 +36,6 @@ const Store = () => {
   const getStoreByName = async () => {
     const store = await getStoreByNameService(store_name);
     setStore(store);
-    console.log(store)
     await getDeals(store.id);
   }
 
@@ -51,7 +50,11 @@ const Store = () => {
   }
 
   useEffect(() => {
-    getStoreByName();
+    const fetchData = async () => {
+      await getStoreByName();
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -106,8 +109,10 @@ const Store = () => {
           <Heading fontSize={'1.5em'}>{store?.name} {t(_t("discount code"))}</Heading>
           <Text>{t(_t("View the newest"))} {store?.name} {t(_t("discount codes in"))} {month} {currentDate.getFullYear()}</Text>
           <Box fontSize={'sm'}>
-            <Text fontSize={'sm'} color={'gray.500'}> {t(_t("Last updated"))}: {getTimeDiff(store?.updated_at)} {t(_t("ago"))}</Text>
-            <Link href={`https://${store?.url}`} color={'blue.500'} isExternal>{store?.url}</Link>
+            <Text fontSize={'sm'} color={'gray.500'}> Last updated: {getTimeDiff(store?.updated_at)} ago</Text>
+            <a href={`https://${store?.url}`} target={"_blank"} rel={"noopener noreferrer"} style={{ color: 'blue' }}>
+              {store?.url}
+            </a>
           </Box>
         </Box>
       </Flex>
@@ -140,9 +145,10 @@ const Store = () => {
         <Box>
           {
             deals ?
-              deals.filter(v => (v.type !== "deal")).map(discount => {
+              deals.filter(v => (v.type !== "deal")).map((discount, index) => {
                 return (
                   <Flex
+                    key={index}
                     bg={'white'}
                     p={2}
                     mb={'10px'}
@@ -153,7 +159,7 @@ const Store = () => {
                       <Text
                         fontSize={'1.5em'}
                         fontWeight={600}
-                        color={(discount.expires && new Date(discount.expires) < new Date()) ? "gray.400": "green.500"}
+                        color={(discount.expires && new Date(discount.expires) < new Date()) ? "gray.400" : "green.500"}
                       >
                         {Math.floor(discount.price_new)}%
                       </Text>
@@ -190,8 +196,9 @@ const Store = () => {
         <Box>
           {
             deals ?
-              deals.filter(v => (v.type === "deal")).map(deal => {
+              deals.filter(v => (v.type === "deal")).map((deal, index) => {
                 return (<Flex
+                  key={index}
                   bg={'white'}
                   p={2}
                   mb={'10px'}
@@ -224,7 +231,6 @@ const Store = () => {
                 </Flex>)
               }) : null
           }
-
         </Box>
       </Box>
     </Box>

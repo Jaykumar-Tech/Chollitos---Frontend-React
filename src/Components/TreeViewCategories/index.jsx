@@ -17,14 +17,6 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   const [filterData, setFilter] = useState([]);
   const themeColor = 'blue.500';
 
-  useEffect(() => {
-    setTreeData(buildTree(-1));
-    const curId = buildFilter();
-    if (curId >= 0) {
-      filterDeals(getAllChildren(curId))
-    }
-  }, [categories, categorySlug]);
-
   const buildTree = (parentId) => {
     return categories
       .filter((category) => category.parent_id === parentId)
@@ -72,6 +64,16 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
     }
     return res;
   }
+
+  useEffect(() => {
+    const treeData = buildTree(-1);
+    setTreeData(treeData);
+
+    const curId = buildFilter();
+    if (curId >= 0) {
+      filterDeals(getAllChildren(curId));
+    }
+  }, [categories, categorySlug]);
 
   const renderTree = (categories) => {
     return (

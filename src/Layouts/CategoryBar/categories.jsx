@@ -41,7 +41,7 @@ function CategoryBar({ categories, categorySlug = null }) {
       <Flex align={'center'} height={'54px'} maxW={'1200px'} m={'auto'}>
         {isOverflow && <ChevronLeftIcon onClick={scrollLeft} bg={'transparent'} color={themeColor} boxSize={6} />}
         <Flex ref={containerRef} overflow={'hidden'}>
-          {categories.map((item, index) => (
+          {categories.map((item) => (
             (category ? item.parent_id === category.id : item.parent_id === -1) &&
             <Link to={"/category/" + item.slug} key={item.id}>
               <Button

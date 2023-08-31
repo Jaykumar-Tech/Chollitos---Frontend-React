@@ -16,6 +16,7 @@ import {
 import { MdHome } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { Helmet } from "react-helmet";
 
 const AllShops = () => {
   const {t} = useTranslation()
@@ -33,6 +34,9 @@ const AllShops = () => {
 
   return (
     <Box maxWidth="1200px" m={'auto'} p={'10px'}>
+      <Helmet>
+        <title>Chollitos - all shops</title>
+      </Helmet>
       <Breadcrumb
         separator=">"
         p={5}
@@ -60,8 +64,8 @@ const AllShops = () => {
         m={'20px 0 10px'}
         bg={'white'}
       >
-        {filteredItems.map((item) => (
-          <Link to={"/shop/" + item.name}>
+        {filteredItems.map((item, index) => (
+          <Link to={"/shop/" + item.name} key={index}>
             <Flex
               key={item.id}
               p={4}

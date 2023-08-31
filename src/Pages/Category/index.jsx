@@ -33,7 +33,11 @@ const Category = () => {
   }
 
   useEffect(() => {
-    getDeals();
+    const fetchData = async () => {
+      await getDeals();
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -84,9 +88,9 @@ const Category = () => {
                   zIndex={1}
                 />
               }
-              {deals.map((deal, index) => (
-                <Box key={"box"+deal.id} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard key={"card" + deal.id} deal={deal} />
+              {deals.map((deal) => (
+                <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>

@@ -14,7 +14,7 @@ function TabBar({ setFeature }) {
     if (index < 3) setFeature(tabFeatureList[index]);
     else {
       const auth_token = JSON.parse(localStorage.getItem('authToken'));
-      if (auth_token && auth_token.user.role != "vip") {
+      if (auth_token && auth_token.user.role !== "vip") {
         toast({
           title: 'Error.',
           description: t(_t("You don't have a access to VIP")),

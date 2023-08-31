@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { getCategoriesService, } from "../Services/Category";
-import { getStoresService, } from "../Services/Store";
+import { getCategoriesService } from "../Services/Category";
+import { getStoresService } from "../Services/Store";
 
 export const GlobalContext = createContext();
 
@@ -19,8 +19,12 @@ export const GlobalProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getCategories();
-    getStores();
+    const fetchData = async () => {
+      await getCategories();
+      await getStores();
+    };
+  
+    fetchData();
   }, []);
 
   const globalProps = {
