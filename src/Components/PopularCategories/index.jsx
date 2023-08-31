@@ -17,7 +17,7 @@ const PopularCategories = ({ categories }) => {
       <Box pt={2}>
         {categories.map((category, index) => (
           category.parent_id === -1 &&
-          <Link to={"/categories/" + category.slug} key={category.id}>
+          <Link to={"/category/" + category.slug} key={category.id}>
             <Button
               key={category.id}
               mr={2}
@@ -42,10 +42,7 @@ const PopularCategories = ({ categories }) => {
         color={themeColor}
         _hover={{ color: 'gray.800' }}
       >
-        <Link
-          href="#"
-          to="#"
-        >
+        <Link to="/categories">
           All Categories <ArrowForwardIcon />
         </Link>
       </Box>

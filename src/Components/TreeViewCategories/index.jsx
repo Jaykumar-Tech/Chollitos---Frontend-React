@@ -82,7 +82,7 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
         color={themeColor}
       >
         {categories.map((category) => (filterData.findIndex(v => (v === category.parent_id)) >= 0 ?
-          <Link to={"/categories/" + category.slug} key={category.id}>
+          <Link to={"/category/" + category.slug} key={category.id}>
             <ListItem
               key={category.id}
             >

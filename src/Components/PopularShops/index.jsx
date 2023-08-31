@@ -41,10 +41,7 @@ const PopularShops = ({ stores }) => {
         color={themeColor}
         _hover={{ color: 'gray.800' }}
       >
-        <Link
-          href="#"
-          to="#"
-        >
+        <Link to="/shops">
           All Shops <ArrowForwardIcon />
         </Link>
       </Box>

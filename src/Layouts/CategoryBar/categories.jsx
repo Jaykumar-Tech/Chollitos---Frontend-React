@@ -43,7 +43,7 @@ function CategoryBar({ categories, categorySlug = null }) {
         <Flex ref={containerRef} overflow={'hidden'}>
           {categories.map((item, index) => (
             (category ? item.parent_id === category.id : item.parent_id === -1) &&
-            <Link to={"/categories/" + item.slug} key={item.id}>
+            <Link to={"/category/" + item.slug} key={item.id}>
               <Button
                 key={item.id}
                 mr={2}

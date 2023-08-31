@@ -5,7 +5,7 @@ import Navbar from './Layouts';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enTranslation from './Lang/en.json';
-import frTranslation from './Lang/fr.json';
+import esTranslation from './Lang/es.json';
 
 i18n
   .use(initReactI18next)
@@ -14,8 +14,8 @@ i18n
       en: {
         translation: enTranslation,
       },
-      fr: {
-        translation: frTranslation,
+      es: {
+        translation: esTranslation,
       },
     },
     lng: 'en', // Default language

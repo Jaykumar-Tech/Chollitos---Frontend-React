@@ -1,13 +1,27 @@
-import { Box, Card, CardHeader, CardBody, CardFooter, Image, Text, Flex, Spacer, Button, Divider, Badge, Avatar } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Image,
+  Text,
+  Flex,
+  Spacer,
+  Button,
+  Divider,
+  Badge,
+  Avatar
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
-import { addLikeDeal } from "../../Services/Like";
+import { addLikeDealService } from "../../Services/Like";
 import { useEffect, useState } from "react";
 
 const CustomCard = ({ deal }) => {
-  const [cntLike, setCntLike] = useState(deal.cnt_like) ;
+  const [cntLike, setCntLike] = useState(deal.cnt_like);
   const themeColor = 'blue.500';
 
   const getUrlFromTitle = (title) => {
@@ -15,7 +29,7 @@ const CustomCard = ({ deal }) => {
   }
 
   const handleLike = async (isLike) => {
-    const result = await addLikeDeal({
+    const result = await addLikeDealService({
       type: "deal",
       dest_id: deal.id,
       is_like: isLike
@@ -73,7 +87,7 @@ const CustomCard = ({ deal }) => {
         }
       </CardHeader>
       <CardBody p={2}>
-        <Link to={"/shops/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
+        <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}>
           <Image
             src={deal.image_url}
             alt="image"
@@ -88,12 +102,12 @@ const CustomCard = ({ deal }) => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link title={deal.storename} to={"/shops/" + deal.storename}>
+          <Link to={"/shop/" + deal.storename}>
             {deal.storename} discount code
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Link to={"/shops/" + deal.storename + "/" + getUrlFromTitle(deal.title) + "-" + deal.id}>
+          <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}>
             <Text
               lineHeight="1.2"
               css={{
@@ -112,7 +126,7 @@ const CustomCard = ({ deal }) => {
         <Box>
           <Button
             as={'a'}
-            href="#"
+            href={deal.deal_url}
             target="_blank"
             rel="nofollow noopener"
             color={themeColor}
@@ -138,13 +152,13 @@ const CustomCard = ({ deal }) => {
         <Flex alignItems="center" width={'100%'}>
           <Flex alignItems="center">
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Like" to="#">
+              <Link title="Like" to="#">
                 <FaThumbsUp onClick={() => handleLike(true)} />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Dislike" to="#">
+              <Link title="Dislike" to="#">
                 <FaThumbsDown onClick={() => handleLike(false)} />
               </Link>
             </Box>
@@ -159,7 +173,7 @@ const CustomCard = ({ deal }) => {
           {/* <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Comments" to="#">
+              <Link title="Comments" to="#">
                 <FaComment />
               </Link>
             </Box>

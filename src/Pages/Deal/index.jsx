@@ -27,7 +27,7 @@ import { getDealByIdService } from "../../Services/Deal";
 import { getTimeDiff } from "../../Helpers";
 // import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { addLikeDeal, isLikedDeal } from "../../Services/Like";
+import { addLikeDealService, isLikedDealService } from "../../Services/Like";
 // import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
@@ -71,7 +71,7 @@ const Deal = () => {
   }, [deal])
 
   const checkIsLikedDeal = async () => {
-    const result = await isLikedDeal({
+    const result = await isLikedDealService({
       type: "deal",
       dest_id: deal.id
     });
@@ -83,7 +83,7 @@ const Deal = () => {
 
   const handleLike = async (isLike) => {
     if (isLiked) return;
-    const result = await addLikeDeal({
+    const result = await addLikeDealService({
       type: "deal",
       dest_id: deal.id,
       is_like: isLike
@@ -106,7 +106,7 @@ const Deal = () => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link title={deal.storename} href={`/shops/${deal.storename}`}>
+          <Link to={"/shop/" + deal.storename}>
             {deal.storename} discount code
           </Link>
         </Box>
@@ -143,7 +143,7 @@ const Deal = () => {
           <Spacer flex={0.2} />
           <Button
             as={'a'}
-            href="#"
+            href={deal.deal_url}
             target="_blank"
             rel="nofollow noopener"
             colorScheme="blue"
@@ -169,13 +169,13 @@ const Deal = () => {
             </Text>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Like" to="#">
+              <Link title="Like" to="#">
                 <FaThumbsUp onClick={() => handleLike(true)} />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Dislike" to="#">
+              <Link title="Dislike" to="#">
                 <FaThumbsDown onClick={() => handleLike(false)} />
               </Link>
             </Box>
@@ -183,7 +183,7 @@ const Deal = () => {
           {/* <Spacer /> */}
           {/* <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link href="#" title="Comments" to="#">
+              <Link title="Comments" to="#">
                 <FaComment />
               </Link>
             </Box>

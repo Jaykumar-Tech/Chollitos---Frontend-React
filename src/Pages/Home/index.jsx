@@ -12,14 +12,14 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
 
 const Home = () => {
-  const { t, i18n  } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-  
+
   const getDeals = async () => {
     setIsloading(true);
     const data = await getDealByFilter({
@@ -31,14 +31,13 @@ const Home = () => {
     setIsloading(false);
   };
 
+  // useEffect(() => {
+  //   i18n.changeLanguage('es');
+  // }, []);
+
   useEffect(() => {
     getDeals();
   }, [dealFeature]);
-
-  useEffect(()=>{
-    i18n.changeLanguage('fr');
-    console.log(t('hello'))
-  }, [])
 
   return (
     <>
@@ -74,8 +73,8 @@ const Home = () => {
                 />
               }
               {deals.map((deal, index) => (
-                <Box key={"box"+deal.id} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard key={"card"+deal.id} deal={deal} />
+                <Box key={"box" + deal.id} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard key={"card" + deal.id} deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>

@@ -5,7 +5,7 @@ const api = axios.create({
     // baseURL: process.env.API_BASE_URL,
 });
 
-const addLikeDeal = async (data) => {
+const addLikeDealService = async (data) => {
     console.log(data)
     try {
         const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -21,7 +21,7 @@ const addLikeDeal = async (data) => {
     }
 }
 
-const isLikedDeal = async (data) => {
+const isLikedDealService = async (data) => {
     try {
         const auth_token = JSON.parse(localStorage.getItem('authToken'));
         const response = await api.post('like/find', data, {
@@ -37,6 +37,6 @@ const isLikedDeal = async (data) => {
 }
 
 export {
-    addLikeDeal,
-    isLikedDeal
+    addLikeDealService,
+    isLikedDealService,
 };
