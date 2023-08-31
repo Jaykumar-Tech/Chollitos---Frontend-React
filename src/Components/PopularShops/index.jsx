@@ -1,4 +1,4 @@
-import { Divider, Text, Button, Flex, Box } from "@chakra-ui/react";
+import { Divider, Text, Button, Box } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 
@@ -18,8 +18,8 @@ const PopularShops = ({ stores }) => {
         {stores.map((store, index) => (
           <Button
             as={Link}
-            to={`/shops/${store.name}`}
-            key={store.id}
+            to={`/shop/${store.name}`}
+            key={index}
             mr={2}
             mb={2}
             height={'2em'}

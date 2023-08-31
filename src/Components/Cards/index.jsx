@@ -14,11 +14,11 @@ import {
   Avatar
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, /*FaComment,*/ FaFire } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const CustomCard = ({ deal }) => {
   const [cntLike, setCntLike] = useState(deal.cnt_like);
@@ -74,7 +74,7 @@ const CustomCard = ({ deal }) => {
             Hot
           </Badge>
         }
-        { deal.vip > 0 &&
+        {deal.vip > 0 &&
           <Badge
             colorScheme="green"
             color={'green'}
@@ -85,7 +85,7 @@ const CustomCard = ({ deal }) => {
             VIP
           </Badge>
         }
-        {new Date(deal.expires) < new Date &&
+        {new Date(deal.expires) < new Date() &&
           <Badge
             colorScheme="gray"
             color={'gray'}

@@ -1,4 +1,4 @@
-import { Divider, Text, Button, Flex, Box } from "@chakra-ui/react";
+import { Divider, Text, Button, Box } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 

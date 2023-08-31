@@ -14,7 +14,7 @@ function Logo() {
       cursor={'pointer'}
       display={{ base: "none", md: 'inline-flex' }}
     >
-      <Image src={window.location.origin + "/logo.png"} title="logo.png" />
+      <Image src={"/logo.png"} title="logo.png" />
     </Box>
   );
 

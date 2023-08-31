@@ -14,6 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react"
 import { MdHome } from "react-icons/md";
+import { Helmet } from "react-helmet";
 
 const AllCategories = () => {
   const { globalProps } = useContext(GlobalContext);
@@ -30,6 +31,9 @@ const AllCategories = () => {
 
   return (
     <Box maxWidth="1200px" m={'auto'} p={'10px'}>
+      <Helmet>
+        <title>Chollitos - all categories</title>
+      </Helmet>
       <Breadcrumb
         separator=">"
         p={5}
@@ -57,8 +61,8 @@ const AllCategories = () => {
         m={'20px 0 10px'}
         bg={'white'}
       >
-        {filteredItems.map((item) => (
-          <Link to={"/category/" + item.slug}>
+        {filteredItems.map((item, index) => (
+          <Link to={"/category/" + item.slug} key={index}>
             <Flex
               key={item.id}
               p={4}

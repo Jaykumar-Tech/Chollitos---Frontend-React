@@ -9,7 +9,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   IconButton,
-  Divider,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 

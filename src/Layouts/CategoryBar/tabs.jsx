@@ -1,5 +1,4 @@
 import { Tab, TabList, Tabs, Box, useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
 
 function TabBar({ setFeature }) {
   const themeColor = "blue.500";
@@ -11,7 +10,7 @@ function TabBar({ setFeature }) {
     if (index < 3) setFeature(tabFeatureList[index]);
     else {
       const auth_token = JSON.parse(localStorage.getItem('authToken'));
-      if (auth_token && auth_token.user.role != "vip") {
+      if (auth_token && auth_token.user.role !== "vip") {
         toast({
           title: 'Error.',
           description: "You don't have a access to VIP",

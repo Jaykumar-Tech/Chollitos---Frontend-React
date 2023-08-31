@@ -60,7 +60,6 @@ export default function Navbar() {
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
 
-
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
   const toast = useToast();
@@ -470,10 +469,9 @@ export default function Navbar() {
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6}>
-                <Text align={'center'}>
-                  Don't have an account? <Text color={'blue.400'} onClick={toSignUp}>Signup</Text>
-                </Text>
+              <Stack pt={6} alignItems={'center'}>
+                <Text>Don't have an account?</Text>
+                <Text color={'blue.400'} onClick={toSignUp}>Signup</Text>
               </Stack>
             </Stack>
           </Box>
@@ -567,10 +565,9 @@ export default function Navbar() {
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6}>
-                <Text align={'center'}>
-                  Already have an account? <Text color={'blue.400'} onClick={toSignIn}>Signin</Text>
-                </Text>
+              <Stack pt={6} alignItems='center'>
+                <Text>Already have an account?</Text>
+                <Text color={'blue.400'} onClick={toSignIn}>Signin</Text>
               </Stack>
             </Stack>
           </Box>

@@ -26,7 +26,7 @@ const Home = () => {
       feature: dealFeature,
       vip: 0
     }
-    if ( dealFeature == "vip" ) {
+    if (dealFeature === "vip") {
       filter = {
         feature: "new",
         vip: 1
@@ -41,12 +41,17 @@ const Home = () => {
     setIsloading(false);
   };
 
-  // useEffect(() => {
-  //   i18n.changeLanguage('es');
-  // }, []);
+  useEffect(() => {
+    i18n.changeLanguage('en');
+    console.log(t('enTranslate'));
+  }, []);
 
   useEffect(() => {
-    getDeals();
+    const fetchData = async () => {
+      await getDeals();
+    };
+
+    fetchData();
   }, [dealFeature]);
 
   return (
@@ -83,8 +88,8 @@ const Home = () => {
                 />
               }
               {deals.map((deal, index) => (
-                <Box key={"box" + deal.id} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard key={"card" + deal.id} deal={deal} />
+                <Box key={index} opacity={isloading ? 0.3 : 1}>
+                  <CustomCard deal={deal} />
                 </Box>
               ))}
             </SimpleGrid>
