@@ -1,8 +1,11 @@
 import React from "react";
 import { Input, Button, InputGroup, InputRightElement, useBreakpointValue } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 export default function SearchBar() {
+  const {t} = useTranslation()
   const searchMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500"
 
@@ -16,7 +19,7 @@ export default function SearchBar() {
           ml={'10px'}
           display={{ base: 'none', md: 'block' }}
         >
-          <Input placeholder="Search..." />
+          <Input placeholder={t(_t("Search"))+"..."} />
           <InputRightElement children={<SearchIcon />} />
         </InputGroup>
       ) : (

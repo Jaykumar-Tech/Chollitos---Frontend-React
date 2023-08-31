@@ -21,8 +21,11 @@ import { getTimeDiff } from "../../Helpers";
 import { getDealByFilter } from "../../Services/Deal";
 import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 const Store = () => {
+  const {t} = useTranslation()
   const { store_name } = useParams();
   const [store, setStore] = useState(null);
   const [deals, setDeals] = useState(null)
@@ -54,7 +57,7 @@ const Store = () => {
   return (
     <Box maxW={'960px'} m={'auto'} p={2}>
       <Helmet>
-        <title>Chollitos - {store_name} discount codes</title>
+        <title>{t(_t("Chollitos"))} - {store_name} {t(_t("discount codes"))}</title>
       </Helmet>
       <Breadcrumb
         separator=">"
@@ -73,7 +76,7 @@ const Store = () => {
             as={Link}
             to={"/shops/"}
           >
-            shop
+            {t(_t("shop"))}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
@@ -100,10 +103,10 @@ const Store = () => {
           />
         </Flex>
         <Box ml={5} flex={1}>
-          <Heading fontSize={'1.5em'}>{store?.name} discount code</Heading>
-          <Text>View the newest {store?.name} discount codes in {month} {currentDate.getFullYear()}</Text>
+          <Heading fontSize={'1.5em'}>{store?.name} {t(_t("discount code"))}</Heading>
+          <Text>{t(_t("View the newest"))} {store?.name} {t(_t("discount codes in"))} {month} {currentDate.getFullYear()}</Text>
           <Box fontSize={'sm'}>
-            <Text fontSize={'sm'} color={'gray.500'}> Last updated: {getTimeDiff(store?.updated_at)} ago</Text>
+            <Text fontSize={'sm'} color={'gray.500'}> {t(_t("Last updated"))}: {getTimeDiff(store?.updated_at)} {t(_t("ago"))}</Text>
             <Link href={`https://${store?.url}`} color={'blue.500'} isExternal>{store?.url}</Link>
           </Box>
         </Box>
@@ -117,7 +120,7 @@ const Store = () => {
           size='sm'
           m={'20px 0 10px'}
         >
-          discount codes: {store?.cnt_discount ?? 0}
+          {t(_t("discount codes"))}: {store?.cnt_discount ?? 0}
         </Button>
         <Button
           as={'a'}
@@ -127,12 +130,12 @@ const Store = () => {
           size='sm'
           m={'20px 10px 10px'}
         >
-          deals: {store?.cnt_deal ?? 0}
+          {t(_t("deals"))}: {store?.cnt_deal ?? 0}
         </Button>
       </Box>
       <Box id="discount_codes" m={'50px 0 10px'}>
         <Text fontSize={'1.2em'} fontWeight={600} m={'20px 0'}>
-          {store?.name + ' discount codes (' + (store?.cnt_discount ?? 0) + ')'}
+          {store?.name + ' '+ t(_t("discount codes"))+ ' (' + (store?.cnt_discount ?? 0) + ')'}
         </Text>
         <Box>
           {
@@ -154,21 +157,21 @@ const Store = () => {
                       >
                         {Math.floor(discount.price_new)}%
                       </Text>
-                      <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>DISCOUNT</Text>
+                      <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>{t(_t("DISCOUNT"))}</Text>
                     </VStack>
                     <VStack p={'10px'} flex={1}>
                       {
                         (discount.expires && new Date(discount.expires) < new Date()) ?
-                          <Text fontSize={'0.8em'} color={'gray.400'}>DISCOUNT EXPIRED</Text> : null
+                          <Text fontSize={'0.8em'} color={'gray.400'}>{t(_t("DISCOUNT EXPIRED"))}</Text> : null
                       }
-                      <Text fontWeight={600}>Get {Math.floor(discount.price_new)}% off orders at {store?.name}</Text>
+                      <Text fontWeight={600}>Get {Math.floor(discount.price_new)}% {t(_t("off orders at"))} {store?.name}</Text>
                       <Text fontSize={'0.8em'} color={'gray.400'}>{discount.count_of_used} USED</Text>
                     </VStack>
                     {/* <Spacer /> */}
                     <VStack p={'10px'} justifyContent={'center'}>
                       {appMode === 'lg' ?
                         <Button colorScheme="blue" p={'0 100px'}>
-                          Show code
+                          {t(_t("Show code"))}
                         </Button>
                         :
                         <Button colorScheme="blue" borderRadius={'50%'} w={'40px'} h={'40px'}>
@@ -182,7 +185,7 @@ const Store = () => {
       </Box>
       <Box id="deals" m={'50px 0 10px'}>
         <Text fontSize={'1.2em'} fontWeight={600} m={'20px 0'}>
-          {store?.name + ' deals (' + (store?.cnt_deal ?? 0) + ')'}
+          {store?.name + ' ' + t(_t("deals")) + ' (' + (store?.cnt_deal ?? 0) + ')'}
         </Text>
         <Box>
           {
@@ -203,15 +206,15 @@ const Store = () => {
                     >
                       {Math.floor(deal.price_new)}%
                     </Text>
-                    <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>SALE</Text>
+                    <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>{t(_t("SALE"))}</Text>
                   </VStack>
                   <VStack p={'10px'} flex={1} justifyContent={'center'}>
-                    <Text fontWeight={600}>Extra {Math.floor(deal.price_new)}% off on all products at {store?.name}</Text>
+                    <Text fontWeight={600}>Extra {Math.floor(deal.price_new)}% {t(_t("off on all products at"))} {store?.name}</Text>
                   </VStack>
                   <VStack p={'10px'} justifyContent={'center'}>
                     {appMode === 'lg' ?
                       <Button colorScheme="blue" p={'0 100px'}>
-                        Go to Sale
+                        {t(_t("Go to Sale"))}
                       </Button>
                       :
                       <Button colorScheme="blue" borderRadius={'50%'} w={'40px'} h={'40px'}>

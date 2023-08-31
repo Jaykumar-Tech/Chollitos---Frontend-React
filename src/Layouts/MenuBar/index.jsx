@@ -12,8 +12,11 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 function MenuBar({ appMode }) {
+  const {t} = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {

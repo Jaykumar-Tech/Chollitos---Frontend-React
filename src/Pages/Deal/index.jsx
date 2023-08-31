@@ -28,9 +28,12 @@ import { getTimeDiff } from "../../Helpers";
 // import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { addLikeDealService, isLikedDealService } from "../../Services/Like";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 // import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
+  const {t} = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
   const { dealTitle } = useParams();
@@ -98,7 +101,7 @@ const Deal = () => {
     return (
       <>
         <Helmet>
-          <title>{'Chollitos - ' + deal.title}</title>
+          <title>{t(_t("Chollitos")) + " - "  + deal.title}</title>
         </Helmet>
         <Box
           color={themeColor}
@@ -107,7 +110,7 @@ const Deal = () => {
           p={1}
         >
           <Link to={"/shop/" + deal.storename}>
-            {deal.storename} discount code
+            {deal.storename} {t(_t("discount code"))}
           </Link>
         </Box>
         <Box maxW="full" h="4em" overflow="hidden" p={1}>
@@ -153,7 +156,7 @@ const Deal = () => {
             flex={1}
           >
             <ExternalLinkIcon mr={1} />
-            Go to {deal.storename}
+            {t(_t("Go to"))} {deal.storename}
           </Button>
         </Flex>
         <Flex alignItems="center" width={'100%'} mt={2}>
@@ -165,7 +168,7 @@ const Deal = () => {
               borderRadius={5}
               fontWeight={600}
             >
-              Deal Score: {deal.cnt_like ?? 0}
+              {t(_t("Deal Score"))}: {deal.cnt_like ?? 0}
             </Text>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
@@ -304,7 +307,7 @@ const Deal = () => {
                 </Flex>
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={''} >Expired</MenuItem>
+                <MenuItem onClick={''} >{t(_t("Expired"))}</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
