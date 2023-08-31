@@ -74,6 +74,17 @@ const CustomCard = ({ deal }) => {
             Hot
           </Badge>
         }
+        { deal.vip > 0 &&
+          <Badge
+            colorScheme="green"
+            color={'green'}
+            mt={5}
+            ml={-2}
+            position={'absolute'}
+          >
+            VIP
+          </Badge>
+        }
         {new Date(deal.expires) < new Date &&
           <Badge
             colorScheme="gray"
