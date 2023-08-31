@@ -36,6 +36,7 @@ export default function CreateDiscount() {
   const [type, setType] = useState(0);
   const [price, setPrice] = useState(null);
   const [lowPrice, setLowPrice] = useState(null);
+  const [shipPrice, setShipPrice] = useState(null);
   const [ship, setShip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -45,6 +46,7 @@ export default function CreateDiscount() {
   const [endDate, setEndDate] = useState('');
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
+  const typeStr = ["discount_percent", "discount_fixed", "free"];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
@@ -83,13 +85,15 @@ export default function CreateDiscount() {
     var sendData = {
       title: title,
       description: description,
-      type: "deal",
-      price_new: price,
-      price_low: lowPrice,
-      price_ship: ship,
       deal_url: url,
       image_url: image,
     };
+    if (type < 2) {
+      sendData.type = typeStr[type];
+      sendData.price_new = price;
+      if (!ship) sendData.price_ship = 0;
+      else sendData.price_ship = shipPrice;
+    }
     if (categoryId.id !== -1) sendData.category_id = categoryId.id;
     if (storeId !== -1) sendData.store_id = storeId.id;
     if (startDate !== "") sendData.start_date = startDate;
@@ -98,8 +102,8 @@ export default function CreateDiscount() {
     const response = await createDealService(sendData);
     if (response.status === 200) {
       toast({
-        title: 'Deal created.',
-        description: "We've created your deal.",
+        title: 'Discount created.',
+        description: "We've created your discount.",
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -315,6 +319,8 @@ export default function CreateDiscount() {
               name="price_shipment"
               id="price_shipment"
               size="sm"
+              value={shipPrice}
+              onChange={(e) => setShipPrice(e.target.value)}
             />
           </FormControl>
         }

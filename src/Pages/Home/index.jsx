@@ -22,10 +22,20 @@ const Home = () => {
 
   const getDeals = async () => {
     setIsloading(true);
+    var filter = {
+      feature: dealFeature,
+      vip: 0
+    }
+    if ( dealFeature == "vip" ) {
+      filter = {
+        feature: "new",
+        vip: 1
+      }
+    }
     const data = await getDealByFilter({
       start_at: 0,
       length: 100,
-      feature: dealFeature
+      ...filter
     });
     setDeals(data);
     setIsloading(false);

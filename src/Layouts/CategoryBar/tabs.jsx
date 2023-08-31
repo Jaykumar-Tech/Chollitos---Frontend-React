@@ -1,9 +1,31 @@
-import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
+import { Tab, TabList, Tabs, Box, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 
-function TabBar({setFeature}) {
+function TabBar({ setFeature }) {
   const themeColor = "blue.500";
-  const tabList = ['New', 'Popular', 'Highlights'];
-  const tabFeatureList = ['new', 'popular', 'highlight'] ;
+  const tabList = ['New', 'Popular', 'Highlights', 'VIP(v@v.com,vip)'];
+  const tabFeatureList = ['new', 'popular', 'highlight', 'vip'];
+  const toast = useToast();
+
+  const setFeatureInTab = (index) => {
+    if (index < 3) setFeature(tabFeatureList[index]);
+    else {
+      const auth_token = JSON.parse(localStorage.getItem('authToken'));
+      if (auth_token && auth_token.user.role != "vip") {
+        toast({
+          title: 'Error.',
+          description: "You don't have a access to VIP",
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+      else if (auth_token) {
+        setFeature(tabFeatureList[index]);
+      }
+    }
+  }
 
   return (
     <Box
@@ -29,7 +51,7 @@ function TabBar({setFeature}) {
                   borderBottom: `solid 3px`,
                   borderBlockColor: 'blue.500'
                 }}
-                onClick={()=>setFeature(tabFeatureList[index])}
+                onClick={() => setFeatureInTab(index)}
               >
                 {tap}
               </Tab>
