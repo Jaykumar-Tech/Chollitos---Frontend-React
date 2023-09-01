@@ -48,6 +48,7 @@ export default function CreateDiscount() {
   const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
   const [isloading, setIsloading] = useState(false);
+  const [code, setCode] = useState("")
   const toast = useToast();
   const typeStr = ["discount_percent", "discount_fixed", "free"];
 
@@ -90,6 +91,7 @@ export default function CreateDiscount() {
       description: description,
       deal_url: url,
       image_url: image,
+      code : code
     };
     if (type < 2) {
       sendData.type = typeStr[type];
@@ -232,8 +234,8 @@ export default function CreateDiscount() {
             name="url"
             id="url"
             size="sm"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
           />
         </FormControl>
 

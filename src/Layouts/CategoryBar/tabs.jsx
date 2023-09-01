@@ -5,8 +5,8 @@ import { _t } from "../../Utils/_t";
 function TabBar({ setFeature }) {
   const {t} = useTranslation();
   const themeColor = "blue.500";
-  const tabList = [t(_t('New')), t(_t('Popular')), t(_t('Highlights')), t(_t('VIP'))];
-  const tabFeatureList = ['new', 'popular', 'highlight', 'vip'];
+  const tabList = [t(_t('New')), t(_t('Popular')), t(_t('Highlights'))];
+  const tabFeatureList = ['new', 'popular', 'highlight'];
   const toast = useToast();
 
   const setFeatureInTab = (index) => {

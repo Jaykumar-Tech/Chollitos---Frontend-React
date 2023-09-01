@@ -13,6 +13,7 @@ import {
   Divider,
   Text,
   Grid,
+  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -25,10 +26,32 @@ function MenuBar({ appMode }) {
   const { categories, stores } = globalProps;
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const {toast} = useToast();
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleFreeDeal = () => {
+
+  }
+
+  const handleVipDeal = () => {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+      if (auth_token && auth_token.user.role !== "vip") {
+        toast({
+          title: 'Error.',
+          description: t(_t("You don't have a access to VIP")),
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+      else if (auth_token) {
+        // setFeature("vip");
+      }
+  }
 
   return (
     <Box>
@@ -81,7 +104,7 @@ function MenuBar({ appMode }) {
             {appMode === 'lg' ?
               <Box maxW={'1200px'} m={'auto'}>
                 <Flex>
-                  <Box px={2} flex={1}>
+                  <Box px={2} flex={1} borderRight={'1px'}>
                     <Flex p={'15px 0'}>
                       <FaFolderOpen style={{ marginTop: '5px' }} />
                       <Text fontWeight={600} ml={2}>Categories</Text>
@@ -117,7 +140,7 @@ function MenuBar({ appMode }) {
                     </Box>
                   </Box>
 
-                  <Box px={2} flex={1}>
+                  <Box px={2} flex={1} borderRight={'1px'} pl={10}>
                     <Flex p={'15px 0'}>
                       <FaShoppingCart style={{ marginTop: '5px' }} />
                       <Text fontWeight={600} ml={2}>Shops</Text>
@@ -152,17 +175,17 @@ function MenuBar({ appMode }) {
                     </Box>
                   </Box>
 
-                  <Box px={2} flex={0.7}>
-                    <Flex p={'15px 0'}>
+                  <Box px={2} flex={0.7} borderRight={'1px'} pl={10}>
+                    <Flex p={'15px 0'} cursor={"pointer"} onClick={handleFreeDeal}>
                       <FaMoneyBill style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2}>Free</Text>
+                      <Text fontWeight={600} ml={2} >Free</Text>
                     </Flex>
                   </Box>
 
-                  <Box px={2} flex={0.7}>
-                    <Flex p={'15px 0'}>
+                  <Box px={2} flex={0.7} pl={10}>
+                    <Flex p={'15px 0'} cursor={"pointer"} onClick={handleVipDeal}>
                       <FaCrown style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2}>VIP</Text>
+                      <Text fontWeight={600} ml={2} >VIP</Text>
                     </Flex>
                   </Box>
                 </Flex>
