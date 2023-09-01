@@ -9,6 +9,8 @@ import Store from "../Pages/Store";
 import AllShops from "../Pages/Store/all";
 import Category from "../Pages/Category";
 import AllCategories from "../Pages/Category/all";
+import Free from "../Pages/Free";
+import Vip from "../Pages/Vip";
 import Page404 from "../Pages/404";
 
 function Routes() {
@@ -23,6 +25,8 @@ function Routes() {
         <Route exact path="/shops" component={AllShops} />
         <Route path="/shop/:store_name" component={Store} />
         <Route path="/:store_name/:dealTitle" component={Deal} />
+        <Route exact path="/free" component={Free} />
+        <Route exact path="/vip" component={Vip} />
         <Route component={Page404} />
       </Switch>
     </Box>

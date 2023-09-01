@@ -176,7 +176,7 @@ const Store = () => {
                     {/* <Spacer /> */}
                     <VStack p={'10px'} justifyContent={'center'}>
                       {appMode === 'lg' ?
-                        <Button colorScheme="blue" p={'0 100px'}>
+                        <Button colorScheme="blue" p={'0 100px'} >
                           {t(_t("Show code"))}
                         </Button>
                         :

@@ -142,8 +142,12 @@ export default function SearchBar({ appMode }) {
                 m={'20px 10px 20px'}
                 position={'relative'}
               >
-                {deals && deals.map((deal) => (
-                  <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`} key={deal.id}>
+                {deals.map((deal) => (
+                  <Link
+                    key={deal.id}
+                    to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                    onClick={() => { setIsOpen(false) }}
+                  >
                     <Flex fontSize={'0.9em'}>
                       <Text mx={1} color={'red'} fontWeight={600}>{deal.cnt_like ?? 0}</Text>
                       <Text mx={1} _hover={{ textDecoration: 'underline' }} >
@@ -153,7 +157,6 @@ export default function SearchBar({ appMode }) {
                             marginLeft: '10px',
                             fontWeight: 600,
                             color: '#3182ce',
-                            textDecoration: 'none',
                           }}
                         >
                           {deal.price_low > 0 ? deal.price_low + '€' : 'FREE'}

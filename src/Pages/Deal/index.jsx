@@ -145,8 +145,17 @@ const Deal = () => {
             borderRadius={5}
             fontWeight={600}
           >
-            {deal.price_new}€
-            {deal.price_low && <strike style={{ fontSize: '0.8em' }} >{deal.price_low}€</strike>}
+            <span>
+              {
+                (deal.type=='free' || (deal.price_low<0.001 && deal.type== 'deal'))  ?
+                "FREE": 
+                deal.type=='deal'?<span>{deal.price_low}€
+                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>:
+                deal.type=='discount_percent'?
+                <span>-{deal.price_new}%</span>:
+                <span>-{deal.price_new}€</span>
+              }
+            </span>
           </Text>
           <Spacer flex={0.2} />
           <Button

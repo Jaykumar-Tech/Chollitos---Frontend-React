@@ -13,7 +13,6 @@ import {
   Divider,
   Text,
   Grid,
-  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -26,32 +25,10 @@ function MenuBar({ appMode }) {
   const { categories, stores } = globalProps;
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const {toast} = useToast();
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-
-  const handleFreeDeal = () => {
-
-  }
-
-  const handleVipDeal = () => {
-    const auth_token = JSON.parse(localStorage.getItem('authToken'));
-      if (auth_token && auth_token.user.role !== "vip") {
-        toast({
-          title: 'Error.',
-          description: t(_t("You don't have a access to VIP")),
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-      }
-      else if (auth_token) {
-        // setFeature("vip");
-      }
-  }
 
   return (
     <Box>
@@ -176,34 +153,41 @@ function MenuBar({ appMode }) {
                   </Box>
 
                   <Box px={2} flex={0.7} borderRight={'1px'} pl={10}>
-                    <Flex p={'15px 0'} cursor={"pointer"} onClick={handleFreeDeal}>
-                      <FaMoneyBill style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2} >Free</Text>
-                    </Flex>
+                    <Link to="/free" onClick={() => setIsOpen(false)}>
+                      <Flex p={'15px 0'} cursor={"pointer"}>
+                        <FaMoneyBill style={{ marginTop: '5px' }} />
+                        <Text fontWeight={600} ml={2} >Free</Text>
+                      </Flex>
+                    </Link>
                   </Box>
 
                   <Box px={2} flex={0.7} pl={10}>
-                    <Flex p={'15px 0'} cursor={"pointer"} onClick={handleVipDeal}>
-                      <FaCrown style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2} >VIP</Text>
-                    </Flex>
+                    <Link to="/vip" onClick={() => setIsOpen(false)}>
+                      <Flex p={'15px 0'} cursor={"pointer"}>
+                        <FaCrown style={{ marginTop: '5px' }} />
+                        <Text fontWeight={600} ml={2} >VIP</Text>
+                      </Flex>
+                    </Link>
                   </Box>
                 </Flex>
               </Box>
               :
               <Box>
-                <Flex p={'15px 0'}>
-                  <FaMoneyBill style={{ marginTop: '5px' }} />
-                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>Free</Text>
-                </Flex>
+                <Link to="/free" onClick={() => setIsOpen(false)}>
+                  <Flex p={'15px 0'}>
+                    <FaMoneyBill style={{ marginTop: '5px' }} />
+                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>Free</Text>
+                  </Flex>
+                </Link>
 
                 <Divider borderColor={'gray.500'} />
 
-                <Flex p={'15px 0'}>
-                  <FaCrown style={{ marginTop: '5px' }} />
-                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>VIP</Text>
-                </Flex>
-
+                <Link to="/vip" onClick={() => setIsOpen(false)}>
+                  <Flex p={'15px 0'}>
+                    <FaCrown style={{ marginTop: '5px' }} />
+                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>VIP</Text>
+                  </Flex>
+                </Link>
                 <Divider borderColor={'gray.500'} />
 
                 <Flex p={'15px 0'}>
