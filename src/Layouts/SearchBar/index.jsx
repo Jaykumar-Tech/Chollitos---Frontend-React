@@ -30,9 +30,14 @@ export default function SearchBar({ appMode }) {
   const [keyword, setKeyword] = useState('');
 
   const getDeals = async () => {
-    const data = await getDealByFilter({
+    var filter = {
       start_at: 0,
       length: 100,
+    }
+    if (keyword.length > 0)
+      filter.search = keyword;
+    const data = await getDealByFilter({
+      ...filter
     });
     setDeals(data);
   };
@@ -45,13 +50,19 @@ export default function SearchBar({ appMode }) {
     fetchData();
   }, []);
 
-  const handleSearch = () => {
-    alert(keyword);
+  const handleSearch = async () => {
+    await getDeals();
   }
 
   const getUrlFromTitle = (title) => {
     return title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
   }
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <>
@@ -105,6 +116,7 @@ export default function SearchBar({ appMode }) {
                   placeholder={t(_t("Search Deals")) + "..."}
                   onChange={(e) => { setKeyword(e.target.value) }}
                   value={keyword}
+                  onKeyDown={handleKeyPress}
                 />
                 <InputRightElement
                   w={appMode === 'lg' ? '100px' : '40px'}
@@ -130,7 +142,7 @@ export default function SearchBar({ appMode }) {
                 m={'20px 10px 20px'}
                 position={'relative'}
               >
-                {deals.map((deal) => (
+                {deals && deals.map((deal) => (
                   <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`} key={deal.id}>
                     <Flex fontSize={'0.9em'}>
                       <Text mx={1} color={'red'} fontWeight={600}>{deal.cnt_like ?? 0}</Text>
@@ -149,7 +161,8 @@ export default function SearchBar({ appMode }) {
                       </Text>
                     </Flex>
                   </Link>
-                ))}
+                ))
+                }
               </SimpleGrid>
             </Box>
           </DrawerBody>

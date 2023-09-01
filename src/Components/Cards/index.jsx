@@ -156,9 +156,13 @@ const CustomCard = ({ deal }) => {
             <ExternalLinkIcon mr={1} />
             <span>
               {
-                (deal.type=='free' || (deal.price_low<0.001) ) ?
-                "FREE": <span>{deal.price_low}€
-                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>
+                (deal.type=='free' || (deal.price_low<0.001 && deal.type== 'deal'))  ?
+                "FREE": 
+                deal.type=='deal'?<span>{deal.price_low}€
+                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>:
+                deal.type=='discount_percent'?
+                <span>-{deal.price_new}%</span>:
+                <span>-{deal.price_new}€</span>
               }
             </span>
           </Button>
