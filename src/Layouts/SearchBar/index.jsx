@@ -142,7 +142,7 @@ export default function SearchBar({ appMode }) {
                 m={'20px 10px 20px'}
                 position={'relative'}
               >
-                {deals.map((deal) => (
+                {deals && deals.map((deal) => (
                   <Link
                     key={deal.id}
                     to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}
@@ -159,7 +159,15 @@ export default function SearchBar({ appMode }) {
                             color: '#3182ce',
                           }}
                         >
-                          {deal.price_low > 0 ? deal.price_low + '€' : 'FREE'}
+                          {
+                            (deal.type == 'free' || (deal.price_low < 0.001 && deal.type == 'deal')) ?
+                              "FREE" :
+                              deal.type == 'deal' ? <span>{deal.price_low}€
+                                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
+                                deal.type == 'discount_percent' ?
+                                  <span>-{deal.price_new}%</span> :
+                                  <span>-{deal.price_new}€</span>
+                          }
                         </span>
                       </Text>
                     </Flex>
