@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon } from "@chakra-ui/react";
+import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon, useToast } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import TabBar from "../../Layouts/CategoryBar/tabs";
@@ -8,29 +8,22 @@ import { Spinner } from "@chakra-ui/react";
 import { getDealByFilter } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
+import { _t } from "../../Utils/_t";
 
 const Vip = () => {
   const { t, i18n } = useTranslation();
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
+  const {toast} = useToast();
 
   const getDeals = async () => {
     setIsloading(true);
-    var filter = {
-      feature: dealFeature,
-      vip: 0
-    }
-    if (dealFeature === "vip") {
-      filter = {
-        feature: "new",
-        vip: 1
-      }
-    }
     const data = await getDealByFilter({
       start_at: 0,
       length: 100,
-      ...filter
+      vip: 1,
+      feature: dealFeature
     });
     setDeals(data);
     setIsloading(false);
@@ -52,7 +45,7 @@ const Vip = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos - {dealFeature} deals </title>
+        <title>{t(_t("Chollitos"))} - {t(_t("VIP"))} {t(_t("deals"))} </title>
       </Helmet>
       <TabBar setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>
@@ -70,7 +63,7 @@ const Vip = () => {
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
             <BreadcrumbLink>
-              VIP
+              {t(_t("VIP"))}
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
@@ -98,8 +91,8 @@ const Vip = () => {
                 zIndex={1}
               />
             }
-            {deals.map((deal, index) => (
-              <Box key={index} opacity={isloading ? 0.3 : 1}>
+            {deals && deals.map((deal, index) => (
+              <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
                 <CustomCard deal={deal} />
               </Box>
             ))}

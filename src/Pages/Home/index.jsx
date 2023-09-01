@@ -22,20 +22,10 @@ const Home = () => {
 
   const getDeals = async () => {
     setIsloading(true);
-    var filter = {
-      feature: dealFeature,
-      vip: 0
-    }
-    if (dealFeature === "vip") {
-      filter = {
-        feature: "new",
-        vip: 1
-      }
-    }
     const data = await getDealByFilter({
       start_at: 0,
       length: 100,
-      ...filter
+      feature: dealFeature
     });
     setDeals(data);
     setIsloading(false);
@@ -87,8 +77,8 @@ const Home = () => {
                   zIndex={1}
                 />
               }
-              {deals.map((deal, index) => (
-                <Box key={index} opacity={isloading ? 0.3 : 1}>
+              {deals && deals.map((deal, index) => (
+                <Box key={"home_deal"+deal.id} opacity={isloading ? 0.3 : 1}>
                   <CustomCard deal={deal} />
                 </Box>
               ))}

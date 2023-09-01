@@ -13,22 +13,47 @@ import {
   Divider,
   Text,
   Grid,
+  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaMoneyBill, FaFolderOpen, FaCrown } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 function MenuBar({ appMode }) {
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const toast = useToast();
+  const history = useHistory();
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  
+  const handleVip = () => {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+      if (auth_token && auth_token.user.role !== "vip") {
+        toast({
+          title: 'Error.',
+          description: t(_t("You don't have a access to VIP")),
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+      else if (auth_token) {
+        setIsOpen(false);
+        history.push('/vip');
+      }
+  }
+
 
   return (
     <Box>
@@ -161,13 +186,13 @@ function MenuBar({ appMode }) {
                     </Link>
                   </Box>
 
-                  <Box px={2} flex={0.7} pl={10}>
-                    <Link to="/vip" onClick={() => setIsOpen(false)}>
+                  <Box px={2} flex={0.7} pl={10} onClick={handleVip}>
+                    {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
                       <Flex p={'15px 0'} cursor={"pointer"}>
                         <FaCrown style={{ marginTop: '5px' }} />
                         <Text fontWeight={600} ml={2} >VIP</Text>
                       </Flex>
-                    </Link>
+                    {/* </Link> */}
                   </Box>
                 </Flex>
               </Box>
@@ -182,12 +207,12 @@ function MenuBar({ appMode }) {
 
                 <Divider borderColor={'gray.500'} />
 
-                <Link to="/vip" onClick={() => setIsOpen(false)}>
-                  <Flex p={'15px 0'}>
+                {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
+                  <Flex p={'15px 0'} onClick={handleVip}>
                     <FaCrown style={{ marginTop: '5px' }} />
                     <Text fontWeight={600} fontSize={'1.1em'} ml={2}>VIP</Text>
                   </Flex>
-                </Link>
+                {/* </Link> */}
                 <Divider borderColor={'gray.500'} />
 
                 <Flex p={'15px 0'}>

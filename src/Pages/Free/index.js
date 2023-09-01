@@ -8,6 +8,7 @@ import { Spinner } from "@chakra-ui/react";
 import { getDealByFilter } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
+import { _t } from "../../Utils/_t";
 
 const Free = () => {
   const { t, i18n } = useTranslation();
@@ -17,20 +18,11 @@ const Free = () => {
 
   const getDeals = async () => {
     setIsloading(true);
-    var filter = {
-      feature: dealFeature,
-      vip: 0
-    }
-    if (dealFeature === "vip") {
-      filter = {
-        feature: "new",
-        vip: 1
-      }
-    }
     const data = await getDealByFilter({
       start_at: 0,
       length: 100,
-      ...filter
+      type: "free",
+      feature: dealFeature
     });
     setDeals(data);
     setIsloading(false);
@@ -52,7 +44,7 @@ const Free = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos - {dealFeature} deals </title>
+        <title>{t(_t("Chollitos"))} - {t(_t("free"))} {t(_t("deals"))} </title>
       </Helmet>
       <TabBar setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>
@@ -70,7 +62,7 @@ const Free = () => {
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
             <BreadcrumbLink>
-              Free
+              {t(_t("Free"))}
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
@@ -98,8 +90,8 @@ const Free = () => {
                 zIndex={1}
               />
             }
-            {deals.map((deal, index) => (
-              <Box key={index} opacity={isloading ? 0.3 : 1}>
+            {deals && deals.map((deal, index) => (
+              <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
                 <CustomCard deal={deal} />
               </Box>
             ))}
