@@ -45,7 +45,7 @@ const getFilterDealsService = async (catIds) => {
 const getDealByIdService = async (dealId) => {
   try {
     const response = await api.get('deal/get/' + dealId);
-    return response.data.data[0];
+    return response.data.data;
   } catch (error) {
     console.log(error);
     return [] ;
