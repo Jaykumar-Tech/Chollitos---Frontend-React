@@ -38,4 +38,21 @@ const getTimeDiff = (date) => {
   return minutesDiff + ' minute';
 }
 
-export { getTimeDiff };
+const isMoreThanAMonth = (date) => {
+  const givenDate = new Date(date);
+  const today = new Date();
+  const timeDiff = today.getTime() - givenDate.getTime();
+
+  const monthsDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
+
+  if (monthsDiff >= 1) {
+    return true;
+  };
+
+  return false;
+}                              
+
+export { 
+  getTimeDiff, 
+  isMoreThanAMonth,
+};

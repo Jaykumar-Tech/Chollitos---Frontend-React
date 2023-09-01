@@ -18,7 +18,7 @@ const PopularShops = ({ stores }) => {
         {t(_t("Working codes, discounts and vouchers for"))} {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
-        {stores.map((store, index) => (
+        {stores.slice(0,10).map((store, index) => (
           <Button
             as={Link}
             to={`/shop/${store.name}`}

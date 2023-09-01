@@ -1,6 +1,7 @@
 {
     "Menu": "Menu",
     "Search": "Search",
+    "Search_Deals": "Search Deals",
     "Share_Deal": "Share Deal",
     "New": "New",
     "Popular": "Popular",
@@ -93,15 +94,5 @@
     "off_on_all_products_at": "off on all products at",
     "Go_to_Sale": "Go to Sale",
     "Page_not_found": "Page not found",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
     "": ""
 }

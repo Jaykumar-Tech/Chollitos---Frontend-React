@@ -52,7 +52,7 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
 export default function Navbar() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -152,7 +152,7 @@ export default function Navbar() {
       }, 100);
     } else {
       toast({
-        title:  t(_t('Error.')),
+        title: t(_t('Error.')),
         description: response.response.data.message,
         position: 'top',
         status: 'error',
@@ -294,11 +294,11 @@ export default function Navbar() {
         >
           <Logo />
 
-          <MenuBar appMode={appMode}/>
+          <MenuBar appMode={appMode} />
 
           < Spacer />
 
-          <SearchBar />
+          <SearchBar appMode={appMode} />
 
           {authToken &&
             <>
@@ -472,10 +472,11 @@ export default function Navbar() {
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6}>
-                <Text align={'center'}>
-                {t(_t("Don't have an account?"))} <Text color={'blue.400'} onClick={toSignUp}>{t(_t("Signup"))}</Text>
+              <Stack pt={6} alignItems={'center'}>
+                <Text>
+                  {t(_t("Don't have an account?"))}
                 </Text>
+                <Text color={'blue.400'} onClick={toSignUp}>{t(_t("Signup"))}</Text>
               </Stack>
             </Stack>
           </Box>
@@ -569,10 +570,11 @@ export default function Navbar() {
                   </Button>
                 </Stack>
               </form>
-              <Stack pt={6}>
-                <Text align={'center'}>
-                  {t(_t("Already have an account?"))} <Text color={'blue.400'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
+              <Stack pt={6} alignItems={'center'}>
+                <Text>
+                  {t(_t("Already have an account?"))}
                 </Text>
+                <Text color={'blue.400'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
               </Stack>
             </Stack>
           </Box>

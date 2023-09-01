@@ -4,6 +4,7 @@ import {
   Box,
   UnorderedList,
   ListItem,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
@@ -12,10 +13,11 @@ import { _t } from "../../Utils/_t";
 import { useTranslation } from "react-i18next";
 
 const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
-  const  {t} = useTranslation();
+  const { t } = useTranslation();
   const [treeData, setTreeData] = useState([]);
   const [filterData, setFilter] = useState([]);
   const themeColor = 'blue.500';
+  const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
   const buildTree = (parentId) => {
     return categories
@@ -97,11 +99,14 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   };
 
   return (
-    <Box p={2}>
-      <Text fontWeight={600}>{t(_t("Categories"))}</Text>
-      <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
-      <Box ml={'-16px'}>{renderTree(treeData)}</Box>
-    </Box>
+    appMode === 'lg' ?
+      <Box p={2}>
+        <Text fontWeight={600}>{t(_t("Categories"))}</Text>
+        <Divider m={'5px 0 10px'} borderColor={'gray.500'} />
+        <Box ml={'-16px'}>{renderTree(treeData)}</Box>
+      </Box>
+      :
+      <></>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
@@ -6,7 +6,7 @@ import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
-import { getDealsService, getFilterDealsService } from "../../Services/Deal";
+import { getFilterDealsService } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 
 const Category = () => {
@@ -18,27 +18,12 @@ const Category = () => {
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
-  const getDeals = async () => {
-    setIsloading(true);
-    const data = await getDealsService();
-    setDeals(data);
-    setIsloading(false);
-  };
-
   const filterDeals = async (catIds) => {
     setIsloading(true);
     const data = await getFilterDealsService(catIds);
     setDeals(data);
     setIsloading(false);
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await getDeals();
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>
@@ -54,17 +39,15 @@ const Category = () => {
         <MyBreadcrumb categories={categories} categorySlug={categorySlug} />
         <Box id="Home">
           <Flex>
-            {appMode === 'lg' &&
-              <Box
-                width={'20%'}
-              >
-                <TreeViewCategories
-                  categories={categories}
-                  categorySlug={categorySlug}
-                  filterDeals={filterDeals}
-                />
-              </Box>
-            }
+            <Box
+              width={appMode === 'lg' ? '20%' : '0px'} 
+            >
+              <TreeViewCategories
+                categories={categories}
+                categorySlug={categorySlug}
+                filterDeals={filterDeals}
+              />
+            </Box>
             <SimpleGrid
               flex={1}
               columns={[1, 2, 3, 4]}

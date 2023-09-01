@@ -17,28 +17,30 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useToast,
 } from "@chakra-ui/react";
 import { Helmet } from "react-helmet";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
-import { ExternalLinkIcon, TimeIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { getDealByIdService } from "../../Services/Deal";
-import { getTimeDiff } from "../../Helpers";
+import { getTimeDiff, isMoreThanAMonth } from "../../Helpers";
 // import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { addLikeDealService, isLikedDealService } from "../../Services/Like";
+import './index.css'
+import { addLikeDealService } from "../../Services/Like";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 // import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
   const { dealTitle } = useParams();
   const [deal, setDeal] = useState({});
-  const [isLiked, setLiked] = useState(false);
+  const toast = useToast();
   // const [isOpen, setIsOpen] = useState(false);
   // const [newComment, setNewComment] = useState(null);
   // const [comments, setComments] = useState([]);
@@ -63,29 +65,16 @@ const Deal = () => {
   // }
 
   useEffect(() => {
-    const dealId = getDealIdFromParams(dealTitle);
-    getDealById(dealId);
-    // getCommentsByDealId(dealId);
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(deal).indexOf("id") >= 0)
-      checkIsLikedDeal();
-  }, [deal])
-
-  const checkIsLikedDeal = async () => {
-    const result = await isLikedDealService({
-      type: "deal",
-      dest_id: deal.id
-    });
-    if (result.status === 200) {
-      setLiked(true)
-    } else {
+    const fetchData = async () => {
+      const dealId = await getDealIdFromParams(dealTitle);
+      await getDealById(dealId);
+      // getCommentsByDealId(dealId);
     }
-  }
+
+    fetchData();
+  }, [dealTitle]);
 
   const handleLike = async (isLike) => {
-    if (isLiked) return;
     const result = await addLikeDealService({
       type: "deal",
       dest_id: deal.id,
@@ -93,7 +82,23 @@ const Deal = () => {
     });
     if (result.status === 200) {
       setDeal({ ...deal, cnt_like: deal.cnt_like + (isLike ? 1 : -1) })
-      setLiked(true)
+      // toast({
+      //   title: t(_t('Success.')),
+      //   description: t(_t('Thank you for your feedback.')),
+      //   position: 'top',
+      //   status: 'Success',
+      //   duration: 3000,
+      //   isClosable: true,
+      // })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: result?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   }
 
@@ -101,7 +106,7 @@ const Deal = () => {
     return (
       <>
         <Helmet>
-          <title>{t(_t("Chollitos")) + " - "  + deal.title}</title>
+          <title>{t(_t("Chollitos")) + " - " + deal.title}</title>
         </Helmet>
         <Box
           color={themeColor}
@@ -276,44 +281,67 @@ const Deal = () => {
   // }
 
   return (
-    <Box maxW={'1200px'} m={'auto'}>
-      <MyBreadcrumb categories={categories} categorySlug={deal?.category_slug} />
-      <Box
-        id="Home"
-        maxW={'960px'}
-        m={'auto'}
-      >
+    <>
+      {isMoreThanAMonth(deal.start_date) &&
+        <Box bg={'yellow.100'}>
+          <Text maxW={'1200px'} m={'auto'} p={5}>
+            <InfoIcon boxSize={4} mr={2} mt={'-1px'} color={'blue.500'} />
+            This deal was posted over a month ago and may no longer be available.
+          </Text>
+        </Box>
+      }
+      <Box maxW={'1200px'} m={'auto'}>
+        <MyBreadcrumb categories={categories} categorySlug={deal?.category_slug} />
         <Box
-          bg={'white'}
-          borderWidth="1px"
-          rounded="lg"
-          shadow="1px 1px 3px rgba(0,0,0,0.3)"
-          p={6}
-          mb={'10px'}
+          id="Home"
+          maxW={'960px'}
+          m={'auto'}
         >
-          <Flex>
-            <Spacer />
-            <Menu>
-              <MenuButton
-                size="sm"
-                ml={2}
-                fontSize={'2em'}
-                h={5}
-              >
-                <Flex>
-                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
-                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
-                  <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
-                </Flex>
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={''} >{t(_t("Expired"))}</MenuItem>
-              </MenuList>
-            </Menu>
-          </Flex>
-          {appMode === 'lg' ?
+          <Box
+            bg={'white'}
+            borderWidth="1px"
+            rounded="lg"
+            shadow="1px 1px 3px rgba(0,0,0,0.3)"
+            p={6}
+            mb={'10px'}
+          >
             <Flex>
-              <Box flex='0.4'>
+              <Spacer />
+              <Menu>
+                <MenuButton
+                  size="sm"
+                  ml={2}
+                  fontSize={'2em'}
+                  h={5}
+                >
+                  <Flex>
+                    <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                    <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                    <Box w="5px" h="5px" borderRadius="50%" bg="black" mr={'2px'} />
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={''} >{t(_t("Expired"))}</MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+            {appMode === 'lg' ?
+              <Flex>
+                <Box flex='0.4'>
+                  <Image
+                    src={deal.image_url}
+                    alt="image"
+                    m={'auto'}
+                    height={"170px"}
+                    width={"auto"}
+                  />
+                </Box>
+                <Box flex='0.6' ml={5}>
+                  <DealHeader />
+                </Box>
+              </Flex>
+              :
+              <>
                 <Image
                   src={deal.image_url}
                   alt="image"
@@ -321,43 +349,29 @@ const Deal = () => {
                   height={"170px"}
                   width={"auto"}
                 />
-              </Box>
-              <Box flex='0.6' ml={5}>
+                <Spacer h={'10px'} />
                 <DealHeader />
-              </Box>
+              </>
+            }
+            <Divider m={'20px 0'} />
+            <Flex color={"gray.400"} fontSize={'0.8em'} mb={3}>
+              <Flex alignItems="center">
+                <Avatar
+                  src={deal.avatar}
+                  name={deal.username}
+                  size={'xs'}
+                  mr={2}
+                />
+                <Text>{deal.username}</Text>
+              </Flex>
+              <Spacer />
+              <Flex alignItems={'center'}>
+                <TimeIcon />
+                <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+              </Flex>
             </Flex>
-            :
-            <>
-              <Image
-                src={deal.image_url}
-                alt="image"
-                m={'auto'}
-                height={"170px"}
-                width={"auto"}
-              />
-              <Spacer h={'10px'} />
-              <DealHeader />
-            </>
-          }
-          <Divider m={'20px 0'} />
-          <Flex color={"gray.400"} fontSize={'0.8em'} mb={3}>
-            <Flex alignItems="center">
-              <Avatar
-                src={deal.avatar}
-                name={deal.username}
-                size={'xs'}
-                mr={2}
-              />
-              <Text>{deal.username}</Text>
-            </Flex>
-            <Spacer />
-            <Flex alignItems={'center'}>
-              <TimeIcon />
-              <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
-            </Flex>
-          </Flex>
-          <Text dangerouslySetInnerHTML={{ __html: deal.description }} />
-          {/* <Flex
+            <Text id="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />
+            {/* <Flex
             bg={themeColor}
             color={'white'}
             p={'8px'}
@@ -369,7 +383,7 @@ const Deal = () => {
             </Box>
             <Text>What do you think of this {deal.storename} discount code?</Text>
           </Flex> */}
-          {/* <CommentEditor />
+            {/* <CommentEditor />
           <Box id="comments_container">
             <Comment />
             <Comment>
@@ -379,13 +393,14 @@ const Deal = () => {
               <Comment />
             </Comment>
           </Box> */}
-        </Box>
-        <Box>
-          <PopularShops stores={stores} />
-          <PopularCategories categories={categories} />
+          </Box>
+          <Box>
+            <PopularShops stores={stores} />
+            <PopularCategories categories={categories} />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 export default function CreateDeal() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
 
@@ -39,10 +39,31 @@ export default function CreateDeal() {
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()-1).padStart(2, '0')}`);
+  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link'],
+      ['clean'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'list',
+    'bullet',
+    'link',
+  ];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
@@ -290,6 +311,8 @@ export default function CreateDeal() {
             theme="snow"
             value={description}
             onChange={(content) => setDescription(content)}
+            modules={modules}
+            formats={formats}
           />
         </FormControl>
 
@@ -317,7 +340,7 @@ export default function CreateDeal() {
           >
             {categories ?
               categories.map(v => {
-                return <option id={v.id}>{v.name}</option>
+                return <option id={v.id} key={v.id}>{v.name}</option>
               }) : null
             }
           </Select>
@@ -348,7 +371,7 @@ export default function CreateDeal() {
             {
               stores ?
                 stores.map(v => {
-                  return <option id={v.id}>{v.name}</option>
+                  return <option id={v.id} key={v.id}>{v.name}</option>
                 }) : null
             }
           </Select>
