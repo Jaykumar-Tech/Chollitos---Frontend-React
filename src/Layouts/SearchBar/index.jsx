@@ -27,6 +27,7 @@ export default function SearchBar({ appMode }) {
   const themeColor = "blue.500";
   const [deals, setDeals] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isloading, setIsloading] = useState(false);
   const [keyword, setKeyword] = useState('');
 
   const getDeals = async () => {
@@ -51,7 +52,9 @@ export default function SearchBar({ appMode }) {
   }, []);
 
   const handleSearch = async () => {
+    setIsloading(true);
     await getDeals();
+    setIsloading(false);
   }
 
   const getUrlFromTitle = (title) => {
@@ -123,6 +126,7 @@ export default function SearchBar({ appMode }) {
                   children={
                     appMode === 'lg' ?
                       <Button
+                        isLoading={isloading}
                         w={'100px'}
                         colorScheme="blue"
                         onClick={handleSearch}
@@ -130,7 +134,9 @@ export default function SearchBar({ appMode }) {
                         {t(_t("Search"))}
                       </Button>
                       :
-                      <SearchIcon onClick={handleSearch} />
+                      isloading ? <Button isLoading={isloading} />
+                        :
+                        <SearchIcon onClick={handleSearch} />
                   } />
               </InputGroup>
               <Text m={5} fontSize={'1.2em'} fontWeight={600}>{t(_t("Deals"))}</Text>
@@ -174,6 +180,7 @@ export default function SearchBar({ appMode }) {
                   </Link>
                 ))
                 }
+                {!deals && <Text p={5}>No Data</Text>}
               </SimpleGrid>
             </Box>
           </DrawerBody>

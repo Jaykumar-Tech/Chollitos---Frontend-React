@@ -148,7 +148,7 @@ const Deal = () => {
             <span>
               {
                 (deal.type=='free' || (deal.price_low<0.001 && deal.type== 'deal'))  ?
-                "FREE": 
+                t(_t("FREE")): 
                 deal.type=='deal'?<span>{deal.price_low}€
                 <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>:
                 deal.type=='discount_percent'?

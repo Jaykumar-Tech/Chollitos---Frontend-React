@@ -33,7 +33,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    i18n.changeLanguage('en');
+    i18n.changeLanguage('es');
     console.log(t('enTranslate'));
   }, []);
 
