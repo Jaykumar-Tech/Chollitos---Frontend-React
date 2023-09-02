@@ -9,8 +9,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const theme = extendTheme({
   fonts: {
-    heading: `'Open Sans', sans-serif`,
-    body: `'Raleway', sans-serif`,
+    heading: `Open Sans, sans-serif`,
+    body: `Raleway, sans-serif`,
   },
 })
 

@@ -18,7 +18,7 @@ import { FaThumbsUp, FaThumbsDown, /*FaComment,*/ FaFire } from "react-icons/fa"
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 

@@ -27,7 +27,7 @@ const Page404 = () => {
         <Heading as="h1" size="4xl" mb={4}>
           404
         </Heading>
-        <Text fontSize="xl">{t(_t("Page Not Found"))}</Text>
+        <Text fontSize="xl">{t(_t("Page not found"))}</Text>
         <Button onClick={handleGoBack} colorScheme="blue" mt={5}>
           {t(_t("Back"))}
         </Button>
