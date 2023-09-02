@@ -385,7 +385,7 @@ export default function Navbar() {
               onClick={handleSignInOpenModal}
             >
               {appMode === 'lg' ? (
-                'Sign In'
+                t(_t('Sign In'))
               ) : (
                 <Icon as={FaUser} boxSize={3} />
               )}
@@ -396,7 +396,7 @@ export default function Navbar() {
       <Modal isOpen={isSignInOpen} onClose={handleSignInCloseModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Sign in</ModalHeader>
+          <ModalHeader>{t(_t("Sign in"))}</ModalHeader>
           <ModalCloseButton />
           <Box
             rounded={"lg"}
@@ -439,13 +439,13 @@ export default function Navbar() {
               <Spacer height={4} /> */}
               <form onSubmit={handleSignIn}>
                 <FormControl id="email">
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
                 <FormControl id="password">
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t(_t("Password"))}</FormLabel>
                   <Input type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)} />

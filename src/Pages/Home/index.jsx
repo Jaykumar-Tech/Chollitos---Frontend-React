@@ -10,6 +10,7 @@ import PopularShops from "../../Components/PopularShops";
 import { getDealByFilter, } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
+import { _t } from "../../Utils/_t";
 
 const Home = () => {
   const { t, i18n } = useTranslation();
@@ -47,7 +48,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos - {dealFeature} deals </title>
+        <title>{t(_t("Chollitos"))} - {dealFeature} {t(_t("deals"))} </title>
       </Helmet>
       <DoubleTopBar categories={categories} setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>

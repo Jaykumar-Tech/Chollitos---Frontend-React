@@ -40,7 +40,7 @@ function MenuBar({ appMode }) {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
       if (auth_token && auth_token.user.role !== "vip") {
         toast({
-          title: 'Error.',
+          title: t(_t('Error.')),
           description: t(_t("You don't have a access to VIP")),
           position: 'top',
           status: 'error',
@@ -84,7 +84,7 @@ function MenuBar({ appMode }) {
             bg: 'white',
           }}
         >
-          Menu
+          {t(_t("Menu"))}
         </Button>
       }
       <Drawer
@@ -109,7 +109,7 @@ function MenuBar({ appMode }) {
                   <Box px={2} flex={1} borderRight={'1px'}>
                     <Flex p={'15px 0'}>
                       <FaFolderOpen style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2}>Categories</Text>
+                      <Text fontWeight={600} ml={2}>{t(_t("Categories"))}</Text>
                     </Flex>
                     <Box p={2}>
                       {categories
@@ -135,7 +135,7 @@ function MenuBar({ appMode }) {
                           fontWeight={600}
                           onClick={() => setIsOpen(false)}
                         >
-                          All Categories
+                          {t(_t("All Categories"))}
                           <ArrowForwardIcon />
                         </Text>
                       </Link>
@@ -145,7 +145,7 @@ function MenuBar({ appMode }) {
                   <Box px={2} flex={1} borderRight={'1px'} pl={10}>
                     <Flex p={'15px 0'}>
                       <FaShoppingCart style={{ marginTop: '5px' }} />
-                      <Text fontWeight={600} ml={2}>Shops</Text>
+                      <Text fontWeight={600} ml={2}>{t(_t("Shops"))}</Text>
                     </Flex>
                     <Box pt={2}>
                       <Grid templateColumns="repeat(2, 1fr)" gap={2}>
@@ -170,7 +170,7 @@ function MenuBar({ appMode }) {
                           fontWeight={600}
                           onClick={() => setIsOpen(false)}
                         >
-                          All Shops
+                          {t(_t("All Shops"))}
                           <ArrowForwardIcon />
                         </Text>
                       </Link>
@@ -181,7 +181,7 @@ function MenuBar({ appMode }) {
                     <Link to="/free" onClick={() => setIsOpen(false)}>
                       <Flex p={'15px 0'} cursor={"pointer"}>
                         <FaMoneyBill style={{ marginTop: '5px' }} />
-                        <Text fontWeight={600} ml={2} >Free</Text>
+                        <Text fontWeight={600} ml={2} >{t(_t("Free"))}</Text>
                       </Flex>
                     </Link>
                   </Box>
@@ -190,7 +190,7 @@ function MenuBar({ appMode }) {
                     {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
                       <Flex p={'15px 0'} cursor={"pointer"}>
                         <FaCrown style={{ marginTop: '5px' }} />
-                        <Text fontWeight={600} ml={2} >VIP</Text>
+                        <Text fontWeight={600} ml={2} >{t(_t("VIP"))}</Text>
                       </Flex>
                     {/* </Link> */}
                   </Box>
@@ -201,7 +201,7 @@ function MenuBar({ appMode }) {
                 <Link to="/free" onClick={() => setIsOpen(false)}>
                   <Flex p={'15px 0'}>
                     <FaMoneyBill style={{ marginTop: '5px' }} />
-                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>Free</Text>
+                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("Free"))}</Text>
                   </Flex>
                 </Link>
 
@@ -210,14 +210,14 @@ function MenuBar({ appMode }) {
                 {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
                   <Flex p={'15px 0'} onClick={handleVip}>
                     <FaCrown style={{ marginTop: '5px' }} />
-                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>VIP</Text>
+                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("VIP"))}</Text>
                   </Flex>
                 {/* </Link> */}
                 <Divider borderColor={'gray.500'} />
 
                 <Flex p={'15px 0'}>
                   <FaFolderOpen style={{ marginTop: '5px' }} />
-                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>Categories</Text>
+                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("Categories"))}</Text>
                 </Flex>
                 <Box p={2}>
                   <Grid templateColumns="repeat(2, 1fr)" gap={2}>
@@ -245,7 +245,7 @@ function MenuBar({ appMode }) {
                       fontWeight={600}
                       onClick={() => setIsOpen(false)}
                     >
-                      All Categories
+                      {t(_t("All Categories"))}
                       <ArrowForwardIcon />
                     </Text>
                   </Link>
@@ -255,7 +255,7 @@ function MenuBar({ appMode }) {
 
                 <Flex p={'15px 0'}>
                   <FaShoppingCart style={{ marginTop: '5px' }} />
-                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>Shops</Text>
+                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("Shops"))}</Text>
                 </Flex>
                 <Box pt={2}>
                   <Grid templateColumns="repeat(2, 1fr)" gap={2}>
@@ -281,7 +281,7 @@ function MenuBar({ appMode }) {
                       fontWeight={600}
                       onClick={() => setIsOpen(false)}
                     >
-                      All Shops
+                      {t(_t("All Shops"))}
                       <ArrowForwardIcon />
                     </Text>
                   </Link>

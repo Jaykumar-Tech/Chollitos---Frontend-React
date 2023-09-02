@@ -35,7 +35,7 @@ const AllShops = () => {
   return (
     <Box maxWidth="1200px" m={'auto'} p={'10px'}>
       <Helmet>
-        <title>Chollitos - all shops</title>
+        <title>{t(_t("Chollitos"))} - {t(_t("all shops"))}</title>
       </Helmet>
       <Breadcrumb
         separator=">"
@@ -52,7 +52,7 @@ const AllShops = () => {
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
           <BreadcrumbLink>
-            {(("All Shops"))}
+            {t(_t("All Shops"))}
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>

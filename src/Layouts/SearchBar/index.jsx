@@ -127,13 +127,13 @@ export default function SearchBar({ appMode }) {
                         colorScheme="blue"
                         onClick={handleSearch}
                       >
-                        Search
+                        {t(_t("Search"))}
                       </Button>
                       :
                       <SearchIcon onClick={handleSearch} />
                   } />
               </InputGroup>
-              <Text m={5} fontSize={'1.2em'} fontWeight={600}>Deals</Text>
+              <Text m={5} fontSize={'1.2em'} fontWeight={600}>{t(_t("Deals"))}</Text>
               <SimpleGrid
                 flex={1}
                 columns={appMode === 'lg' ? 2 : 1}
@@ -161,7 +161,7 @@ export default function SearchBar({ appMode }) {
                         >
                           {
                             (deal.type == 'free' || (deal.price_low < 0.001 && deal.type == 'deal')) ?
-                              "FREE" :
+                              t(_t("FREE")) :
                               deal.type == 'deal' ? <span>{deal.price_low}€
                                 <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
                                 deal.type == 'discount_percent' ?

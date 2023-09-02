@@ -35,7 +35,7 @@ const AllCategories = () => {
   return (
     <Box maxWidth="1200px" m={'auto'} p={'10px'}>
       <Helmet>
-        <title>Chollitos - all categories</title>
+        <title>{t(_t("Chollitos"))} - {t(_t("all categories"))}</title>
       </Helmet>
       <Breadcrumb
         separator=">"

@@ -8,8 +8,11 @@ import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
 import { getFilterDealsService } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { _t } from "../../Utils/_t";
 
 const Category = () => {
+  const {t} = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { categories } = globalProps;
   const { categorySlug } = useParams();
@@ -28,7 +31,7 @@ const Category = () => {
   return (
     <>
       <Helmet>
-        <title>Chollitos - {categorySlug} deals</title>
+        <title>{t(_t("Chollitos"))} - {categorySlug} {t(_t("deals"))}</title>
       </Helmet>
       <Box
         shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}

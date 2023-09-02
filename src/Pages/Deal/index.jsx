@@ -295,7 +295,7 @@ const Deal = () => {
         <Box bg={'yellow.100'}>
           <Text maxW={'1200px'} m={'auto'} p={5}>
             <InfoIcon boxSize={4} mr={2} mt={'-1px'} color={'blue.500'} />
-            This deal was posted over a month ago and may no longer be available.
+            {t(_t("This deal was posted over a month ago and may no longer be available."))}
           </Text>
         </Box>
       }
