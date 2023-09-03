@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 function MyBreadcrumb({ categories, categorySlug }) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [breads, setBreads] = useState([]);
   const [dspDeal, setDspDeal] = useState("");
   const themeColor = 'blue.500';
@@ -50,8 +50,9 @@ function MyBreadcrumb({ categories, categorySlug }) {
   function getAllChildren(id) {
     var res = [];
     var que = [id];
-    while (que.length > 0) {
-      var cur = que.shift();
+    var index = 0;
+    while (index < que.length) {
+      var cur = que[index];
       var isParent = false;
       for (let i = 0; i < categories.length; i++) {
         if (categories[i].parent_id === cur) {
@@ -59,10 +60,11 @@ function MyBreadcrumb({ categories, categorySlug }) {
           isParent = true;
         }
       }
-      if (!isParent)
-        res.push(cur);
+      // if (!isParent)
+      //   res.push(cur);
+      index++;
     }
-    return res;
+    return que;
   }
 
   const getCategoryById = (id) => {

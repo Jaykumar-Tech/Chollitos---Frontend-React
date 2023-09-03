@@ -71,11 +71,16 @@ const getDealByFilter = async (data) => {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
+    
+    var headers = {} ;
+    if ( auth_token ) {
+      headers = {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      } ;
+    }
     const response = await api.post('deal/find', data,
       {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
+        headers: headers
       });
     return response.data.data;
   } catch (error) {
