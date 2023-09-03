@@ -58,7 +58,7 @@ const CustomCard = ({ deal }) => {
               mr={2}
               size={'xs'}
             />
-            <Text>{deal.username} {deal.id} {deal.category_slug}</Text>
+            <Text>{deal.username}</Text>
           </Flex>
           <Spacer />
           <Flex alignItems={'center'}>
