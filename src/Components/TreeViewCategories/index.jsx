@@ -50,21 +50,23 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
   }
 
   function getAllChildren(id) {
-    var res = [];
+    // var res = [];
     var que = [id];
-    while (que.length > 0) {
-      var cur = que.shift();
-      var isParent = false;
+    var index = 0;
+    while ( index < que.length ) {
+      var cur = que[index];
+      // var isParent = false;
       for (let i = 0; i < categories.length; i++) {
         if (categories[i].parent_id === cur) {
           que.push(categories[i].id);
-          isParent = true;
+          // isParent = true;
         }
       }
-      if (!isParent)
-        res.push(cur);
+      // if (!isParent)
+      //   res.push(cur);
+      index ++ ;
     }
-    return res;
+    return que;
   }
 
   useEffect(() => {

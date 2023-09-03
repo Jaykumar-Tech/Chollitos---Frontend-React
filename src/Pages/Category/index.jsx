@@ -6,7 +6,7 @@ import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
-import { getFilterDealsService } from "../../Services/Deal";
+import { getDealByFilter, getFilterDealsService } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
@@ -23,7 +23,7 @@ const Category = () => {
 
   const filterDeals = async (catIds) => {
     setIsloading(true);
-    const data = await getFilterDealsService(catIds);
+    const data = await getDealByFilter({category_id: catIds, start_at: 0, length: 100});
     setDeals(data);
     setIsloading(false);
   }
@@ -74,7 +74,7 @@ const Category = () => {
                   zIndex={1}
                 />
               }
-              {deals.map((deal) => (
+              {deals && deals.map((deal) => (
                 <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
                   <CustomCard deal={deal} />
                 </Box>
