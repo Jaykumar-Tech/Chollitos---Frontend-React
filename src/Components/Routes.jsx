@@ -24,7 +24,7 @@ function Routes() {
         <Route path="/category/:categorySlug" component={Category} />
         <Route exact path="/shops" component={AllShops} />
         <Route path="/shop/:store_name" component={Store} />
-        <Route path="/:store_name/:dealTitle" component={Deal} />
+        <Route path="/deal/:dealTitle" component={Deal} />
         <Route exact path="/free" component={Free} />
         <Route exact path="/vip" component={Vip} />
         <Route component={Page404} />

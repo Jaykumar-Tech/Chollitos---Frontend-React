@@ -31,7 +31,7 @@ export default function CreateDeal() {
   const { categories, stores } = globalProps;
 
   const [url, setUrl] = useState('');
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [price, setPrice] = useState(0);
   const [lowPrice, setLowPrice] = useState(0);
   const [ship, setShip] = useState(0);
@@ -41,17 +41,24 @@ export default function CreateDeal() {
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
   const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
+  const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
 
   const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link'],
-      ['clean'],
-    ],
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['link'],
+        [{ image: 'image' }],
+        [{ align: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ color: [] }, { background: [] }],
+        ['clean']
+      ],
+    },
   };
 
   const formats = [
@@ -60,40 +67,63 @@ export default function CreateDeal() {
     'italic',
     'underline',
     'strike',
-    'list',
-    'bullet',
     'link',
+    'image',
+    'align',
+    'list',
+    'ordered',
+    'bullet',
+    'color',
+    'background',
+    'clean',
   ];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
-    onDrop: async (acceptedFiles) => {
-      setIsloading(true);
+    onDrop: (acceptedFiles) => {
+      setIsuploading(true);
+      if (acceptedFiles.length === 0) {
+        setIsuploading(false);
+        return;
+      }
       const formData = new FormData();
       formData.append("file", acceptedFiles[0]);
 
-      const result = await getUrlUploadedService(formData);
-      setIsloading(false);
-      if (result.status === 200) {
-        setImage(result.data.url);
-        toast({
-          title: t(_t('Upload Success.')),
-          description: t(_t("We've uploaded your image.")),
-          position: 'top',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
+      getUrlUploadedService(formData)
+        .then((result) => {
+          setIsuploading(false);
+          if (result && result.status === 200) {
+            setImages([result.data.url]);
+            toast({
+              title: t(_t('Upload Success.')),
+              description: t(_t("We've uploaded your image.")),
+              position: 'top',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            })
+          } else {
+            toast({
+              title: t(_t('Error.')),
+              description: result?.response?.data.message,
+              position: 'top',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })
+          }
         })
-      } else {
-        toast({
-          title: t(_t('Error.')),
-          description: result.response?.data.message,
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
+        .catch((error) => {
+          setIsuploading(false);
+          toast({
+            title: t(_t('Error.')),
+            description: error.message,
+            position: 'top',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          })
         })
-      }
     }
   });
 
@@ -107,14 +137,17 @@ export default function CreateDeal() {
       price_low: lowPrice,
       price_ship: ship,
       deal_url: url,
-      image_url: image,
+      image_urls: JSON.stringify(images),
     };
     if (categoryId.id !== -1) sendData.category_id = categoryId.id;
     if (storeId !== -1) sendData.store_id = storeId.id;
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
+    setIsloading(true);
     const response = await createDealService(sendData);
+    setIsloading(false);
+
     if (response.status === 200) {
       toast({
         title: t(_t('Deal created.')),
@@ -196,14 +229,14 @@ export default function CreateDeal() {
             borderColor={isDragActive ? "blue.500" : "gray.200"}
           >
             <input {...getInputProps()} />
-            {image ?
-              <Image src={image} alt="Uploaded" m={'auto'} />
+            {images.length > 0 ?
+              <Image src={images[0]} alt="Uploaded" m={'auto'} />
               :
               <>
                 <Box>
                   <FaFileImage size={24} />
                 </Box>
-                {!isloading &&
+                {!isuploading &&
                   <>
                     <Box mt={2} fontWeight="semibold" >
                       {isDragActive ? t(_t("Drop the image here")) : t(_t("Drag and drop an image here"))}
@@ -215,7 +248,7 @@ export default function CreateDeal() {
                 }
               </>
             }
-            {isloading &&
+            {isuploading &&
               <Spinner
                 thickness="4px"
                 speed="0.65s"
@@ -278,6 +311,8 @@ export default function CreateDeal() {
             name="price_shipment"
             id="price_shipment"
             size="sm"
+            value={ship}
+            onChange={(e) => setShip(e.target.value)}
           />
         </FormControl>
 
@@ -423,6 +458,7 @@ export default function CreateDeal() {
               {t(_t("Back"))}
             </Button>
             <Button
+              isLoading={isloading}
               w="6rem"
               colorScheme="blue"
               variant="solid"

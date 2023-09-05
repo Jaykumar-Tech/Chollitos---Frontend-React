@@ -5,12 +5,8 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
 const Page404 = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const history = useHistory();
-
-  const handleGoBack = () => {
-    history.goBack();
-  };
 
   return (
     <>
@@ -28,8 +24,8 @@ const Page404 = () => {
           404
         </Heading>
         <Text fontSize="xl">{t(_t("Page not found"))}</Text>
-        <Button onClick={handleGoBack} colorScheme="blue" mt={5}>
-          {t(_t("Back"))}
+        <Button onClick={() => history.push('/')} colorScheme="blue" mt={5}>
+          {t(_t("Homepage"))}
         </Button>
       </Flex>
     </>

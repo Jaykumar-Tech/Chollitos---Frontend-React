@@ -35,23 +35,31 @@ function MenuBar({ appMode }) {
     setIsOpen(!isOpen);
   };
 
-  
+
   const handleVip = () => {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-      if (auth_token && auth_token.user.role !== "vip") {
-        toast({
-          title: t(_t('Error.')),
-          description: t(_t("You don't have a access to VIP")),
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-      }
-      else if (auth_token) {
-        setIsOpen(false);
-        history.push('/vip');
-      }
+    if (!auth_token) {
+      toast({
+        title: t(_t('Error.')),
+        description: t(_t("Please login")),
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else if (auth_token.user.role !== "vip") {
+      toast({
+        title: t(_t('Error.')),
+        description: t(_t("You don't have a access to VIP")),
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      setIsOpen(false);
+      history.push('/vip');
+    }
   }
 
 
@@ -188,10 +196,10 @@ function MenuBar({ appMode }) {
 
                   <Box px={2} flex={0.7} pl={10} onClick={handleVip}>
                     {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
-                      <Flex p={'15px 0'} cursor={"pointer"}>
-                        <FaCrown style={{ marginTop: '5px' }} />
-                        <Text fontWeight={600} ml={2} >{t(_t("VIP"))}</Text>
-                      </Flex>
+                    <Flex p={'15px 0'} cursor={"pointer"}>
+                      <FaCrown style={{ marginTop: '5px' }} />
+                      <Text fontWeight={600} ml={2} >{t(_t("VIP"))}</Text>
+                    </Flex>
                     {/* </Link> */}
                   </Box>
                 </Flex>
@@ -208,10 +216,10 @@ function MenuBar({ appMode }) {
                 <Divider borderColor={'gray.500'} />
 
                 {/* <Link to="/vip" onClick={() => setIsOpen(false)}> */}
-                  <Flex p={'15px 0'} onClick={handleVip}>
-                    <FaCrown style={{ marginTop: '5px' }} />
-                    <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("VIP"))}</Text>
-                  </Flex>
+                <Flex p={'15px 0'} onClick={handleVip}>
+                  <FaCrown style={{ marginTop: '5px' }} />
+                  <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("VIP"))}</Text>
+                </Flex>
                 {/* </Link> */}
                 <Divider borderColor={'gray.500'} />
 

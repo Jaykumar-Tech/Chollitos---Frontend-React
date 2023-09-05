@@ -14,7 +14,7 @@ import {
   Avatar
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, /*FaComment,*/ FaFire } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
@@ -101,9 +101,9 @@ const CustomCard = ({ deal }) => {
         }
       </CardHeader>
       <CardBody p={2}>
-        <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}>
+        <Link to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}>
           <Image
-            src={deal.image_url}
+            src={deal.image_urls && JSON.parse(deal.image_urls)[0]}
             alt="image"
             m={'auto'}
             height={"170px"}
@@ -121,7 +121,7 @@ const CustomCard = ({ deal }) => {
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Link to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}>
+          <Link to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}>
             <Text
               lineHeight="1.2"
               css={{
@@ -156,13 +156,13 @@ const CustomCard = ({ deal }) => {
             <ExternalLinkIcon mr={1} />
             <span>
               {
-                (deal.type=='free' || (deal.price_low<0.001 && deal.type== 'deal'))  ?
-                t(_t("FREE")): 
-                deal.type=='deal'?<span>{deal.price_low}€
-                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>:
-                deal.type=='discount_percent'?
-                <span>-{deal.price_new}%</span>:
-                <span>-{deal.price_new}€</span>
+                (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
+                  t(_t("FREE")) :
+                  deal.type === 'deal' ? <span>{deal.price_low}€
+                    <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
+                    deal.type === 'discount_percent' ?
+                      <span>-{deal.price_new}%</span> :
+                      <span>-{deal.price_new}€</span>
               }
             </span>
           </Button>
@@ -191,7 +191,7 @@ const CustomCard = ({ deal }) => {
               </Box>
             }
           </Flex>
-          {/* <Spacer />
+          <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
               <Link title="Comments" to="#">
@@ -200,7 +200,7 @@ const CustomCard = ({ deal }) => {
             </Box>
             <Spacer mx={'5px'} />
             <span>{deal.cnt_comment}</span>
-          </Flex> */}
+          </Flex>
         </Flex>
       </CardFooter>
     </Card>

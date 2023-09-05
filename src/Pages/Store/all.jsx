@@ -19,7 +19,7 @@ import { _t } from "../../Utils/_t";
 import { Helmet } from "react-helmet";
 
 const AllShops = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { stores } = globalProps;
   const [searchTerm, setSearchTerm] = useState('');

@@ -7,32 +7,33 @@ import {
   Box,
   Flex,
   Button,
-  Image,
+  ButtonGroup,
   Avatar,
   Text,
   useBreakpointValue,
   Spacer,
   Divider,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
+  // Menu,
+  // MenuButton,
+  // MenuList,
+  // MenuItem,
   useToast,
 } from "@chakra-ui/react";
+import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaReply } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { getDealByIdService } from "../../Services/Deal";
 import { getTimeDiff, isMoreThanAMonth } from "../../Helpers";
-// import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './index.css'
 import { addLikeDealService } from "../../Services/Like";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
-// import { getCommentsByDealIdService } from "../../Services/Comment";
+import { getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
   const { t } = useTranslation();
@@ -40,13 +41,44 @@ const Deal = () => {
   const { categories, stores } = globalProps;
   const { dealTitle } = useParams();
   const [deal, setDeal] = useState({});
+  const [images, setImages] = useState([]);
   const toast = useToast();
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [newComment, setNewComment] = useState(null);
-  // const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState(null);
+  const [comments, setComments] = useState([]);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
+
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['link'],
+        [{ align: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ color: [] }, { background: [] }],
+        ['clean']
+      ],
+    },
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'link',
+    'align',
+    'list',
+    'ordered',
+    'bullet',
+    'color',
+    'background',
+    'clean',
+  ];
 
   const getDealIdFromParams = (dealTitle) => {
     const splitTitle = dealTitle.split('-');
@@ -55,26 +87,44 @@ const Deal = () => {
 
   const getDealById = async (dealId) => {
     const data = await getDealByIdService(dealId);
-    setDeal(data);
+    return data;
   };
 
-  // const getCommentsByDealId = async (dealId) => {
-  //   const data = await getCommentsByDealIdService(dealId);
-  //   console.log(JSON.stringify(data));
-  //   setComments(data);
-  // }
+  const getCommentsByDealId = async (dealId) => {
+    const data = await getCommentsByDealIdService(dealId);
+    return data;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
-      const dealId = await getDealIdFromParams(dealTitle);
-      await getDealById(dealId);
-      // getCommentsByDealId(dealId);
+      const dealId = getDealIdFromParams(dealTitle);
+      const [deal, comments] = await Promise.all([
+        getDealById(dealId),
+        getCommentsByDealId(dealId),
+      ]);
+
+      setDeal(deal);
+      setImages(JSON.parse(deal.image_urls));
+      setComments(comments);
     }
 
     fetchData();
   }, [dealTitle]);
 
   const handleLike = async (isLike) => {
+    if (!localStorage.getItem('authToken')) {
+      toast({
+        title: t(_t('Warning.')),
+        description: t(_t('Please login.')),
+        position: 'top',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+
+      return;
+    }
+
     const result = await addLikeDealService({
       type: "deal",
       dest_id: deal.id,
@@ -82,14 +132,14 @@ const Deal = () => {
     });
     if (result.status === 200) {
       setDeal({ ...deal, cnt_like: deal.cnt_like + (isLike ? 1 : -1) })
-      // toast({
-      //   title: t(_t('Success.')),
-      //   description: t(_t('Thank you for your feedback.')),
-      //   position: 'top',
-      //   status: 'Success',
-      //   duration: 3000,
-      //   isClosable: true,
-      // })
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Thank you for your feedback.')),
+        position: 'top',
+        status: 'Success',
+        duration: 3000,
+        isClosable: true,
+      })
     } else {
       toast({
         title: t(_t('Error.')),
@@ -100,6 +150,18 @@ const Deal = () => {
         isClosable: true,
       })
     }
+  }
+
+  const handleAddComment = async () => {
+    if (!newComment) {
+      return;
+    }
+    
+    //
+  }
+
+  const handleCommentLike = async (commentId, isLike) => {
+    //
   }
 
   const DealHeader = () => {
@@ -136,7 +198,6 @@ const Deal = () => {
         </Box>
         <Flex mt={2}>
           <Text
-            flex={0.2}
             colorScheme="blue"
             color={themeColor}
             bg={'blue.50'}
@@ -147,13 +208,13 @@ const Deal = () => {
           >
             <span>
               {
-                (deal.type=='free' || (deal.price_low<0.001 && deal.type== 'deal'))  ?
-                t(_t("FREE")): 
-                deal.type=='deal'?<span>{deal.price_low}€
-                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>:
-                deal.type=='discount_percent'?
-                <span>-{deal.price_new}%</span>:
-                <span>-{deal.price_new}€</span>
+                (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
+                  t(_t("FREE")) :
+                  deal.type === 'deal' ? <span>{deal.price_low}€
+                    <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
+                    deal.type === 'discount_percent' ?
+                      <span>-{deal.price_new}%</span> :
+                      <span>-{deal.price_new}€</span>
               }
             </span>
           </Text>
@@ -182,7 +243,7 @@ const Deal = () => {
               borderRadius={5}
               fontWeight={600}
             >
-              {t(_t("Deal Score"))}: {deal.cnt_like ?? 0}
+              {t(_t("Score"))}: {deal.cnt_like ?? 0}
             </Text>
             <Spacer mx={'5px'} />
             <Box _hover={{ color: themeColor }}>
@@ -197,97 +258,76 @@ const Deal = () => {
               </Link>
             </Box>
           </Flex>
-          {/* <Spacer /> */}
-          {/* <Flex alignItems={'center'}>
+          <Spacer />
+          <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link title="Comments" to="#">
+              <Link as="a" title="Comments" to="#">
                 <FaComment />
               </Link>
             </Box>
             <Spacer mx={'5px'} />
             <span>{deal.cnt_comment}</span>
-          </Flex> */}
+          </Flex>
         </Flex>
       </>
     )
   }
 
-  // const Comment = ({ props, comment }) => {
-  //   return (
-  //     <Box className="comments">
-  //       <Flex>
-  //         <Avatar
-  //           src={deal.avatar}
-  //           name={deal.username}
-  //           size={'sm'}
-  //           m={'10px'}
-  //         />
-  //         <Box className="child_comments" flex={1} m={'10px 0'}>
-  //           <Box>
-  //             <Flex color={"gray.400"} fontSize={'0.8em'}>
-  //               <Spacer />
-  //               <TimeIcon />
-  //               <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
-  //             </Flex>
-  //             <Text
-  //               bg={'gray.100'}
-  //               p={'15px'}
-  //               borderRadius={10}
-  //               shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
-  //             >
-  //               {deal.description}
-  //             </Text>
-  //             <Flex m={'10px 0 20px'} color={'gray.500'}>
-  //               <Flex _hover={{ color: themeColor }}>
-  //                 <Link title="Like" to="#">
-  //                   <Flex mr={2}>
-  //                     <Text mr={1}>Like</Text>
-  //                     <FaThumbsUp />
-  //                   </Flex>
-  //                 </Link>
-  //                 <Text>0</Text>
-  //               </Flex>
-  //               <Flex _hover={{ color: themeColor }} ml={5}>
-  //                 <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
-  //                   <Flex mr={2}>
-  //                     <Text mr={1}>Reply</Text>
-  //                     <FaReply />
-  //                   </Flex>
-  //                 </Link>
-  //               </Flex>
-  //             </Flex>
-  //             {isOpen &&
-  //               <CommentEditor />
-  //             }
-
-  //           </Box>
-  //           {props.children}
-  //         </Box>
-  //       </Flex>
-  //     </Box>
-  //   )
-  // }
-
-  // const CommentEditor = () => {
-  //   return (
-  //     <Box className="comment_editor">
-  //       <ReactQuill
-  //         name="description"
-  //         theme="snow"
-  //         value={newComment}
-  //         onChange={(content) => setNewComment(content)}
-  //       />
-  //       <ButtonGroup>
-  //         <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
-  //           Comment
-  //         </Button>
-  //         <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setNewComment(null); setIsOpen(false); }}>
-  //           Cancel
-  //         </Button>
-  //       </ButtonGroup>
-  //     </Box>
-  //   )
-  // }
+  const Comment = ({ comment, children }) => {
+    return (
+      <Box className="parent_comments" mt={10}>
+        <Flex color={"gray.400"} fontSize={'0.8em'} my={2} alignItems={'center'}>
+          <Avatar
+            src={comment.avatar}
+            name={comment.username}
+            size={'xs'}
+            mr={2}
+          />
+          <Text>{comment.username}</Text>
+          <Spacer />
+          <TimeIcon />
+          <Text ml={1}>{getTimeDiff(comment.start_date)}</Text>
+        </Flex>
+        <Box>
+          <Text
+            bg={'gray.100'}
+            p={'15px'}
+            borderRadius={10}
+            shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
+          >
+            {comment.description}
+          </Text>
+          <Flex m={'10px'} color={'gray.500'} alignItems={'center'}>
+            <Link title="Like" to="#" onClick={() => handleCommentLike(comment.id, true)}>
+              <Flex mr={2} _hover={{ color: themeColor }}>
+                <FaThumbsUp />
+              </Flex>
+            </Link>
+            <Link title="Like" to="#" onClick={() => handleCommentLike(comment.id, false)}>
+              <Flex mr={2} _hover={{ color: themeColor }}>
+                <FaThumbsDown />
+              </Flex>
+            </Link>
+            <Text>{comment.cnt_like ?? 0}</Text>
+            {/* <Flex _hover={{ color: themeColor }} ml={5}>
+                <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
+                  <Flex mr={2}>
+                    <Text mr={1}>Reply</Text>
+                    <FaReply />
+                  </Flex>
+                </Link>
+              </Flex> */}
+          </Flex>
+          {/* {isOpen &&
+              <CommentEditor />
+            } */}
+        </Box>
+        <Box className="child_comments" ml={'20px'}>
+          {children}
+        </Box>
+      </Box>
+    )
+  }
 
   return (
     <>
@@ -314,7 +354,7 @@ const Deal = () => {
             p={6}
             mb={'10px'}
           >
-            <Flex>
+            {/* <Flex>
               <Spacer />
               <Menu>
                 <MenuButton
@@ -333,17 +373,11 @@ const Deal = () => {
                   <MenuItem onClick={''} >{t(_t("Expired"))}</MenuItem>
                 </MenuList>
               </Menu>
-            </Flex>
+            </Flex> */}
             {appMode === 'lg' ?
               <Flex>
                 <Box flex='0.4'>
-                  <Image
-                    src={deal.image_url}
-                    alt="image"
-                    m={'auto'}
-                    height={"170px"}
-                    width={"auto"}
-                  />
+                  <Carousel images={images} m={'auto'} />
                 </Box>
                 <Box flex='0.6' ml={5}>
                   <DealHeader />
@@ -351,16 +385,17 @@ const Deal = () => {
               </Flex>
               :
               <>
-                <Image
-                  src={deal.image_url}
-                  alt="image"
-                  m={'auto'}
-                  height={"170px"}
-                  width={"auto"}
-                />
+                <Carousel images={images} m={'auto'} />
                 <Spacer h={'10px'} />
                 <DealHeader />
               </>
+            }
+            {deal.info_html &&
+              <Box p={5} mt={5} bg={'gray.100'}>
+                <InfoIcon boxSize={4} mr={2} mt={'-1px'} color={'blue.500'} />
+                <Text as={'span'} fontWeight={600}>{deal.storename + " " + t(_t('information'))}</Text>
+                <Text className="rich_description" mt={3} dangerouslySetInnerHTML={{ __html: deal.info_html }} />
+              </Box>
             }
             <Divider m={'20px 0'} />
             <Flex color={"gray.400"} fontSize={'0.8em'} mb={3}>
@@ -379,29 +414,51 @@ const Deal = () => {
                 <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
               </Flex>
             </Flex>
-            <Text id="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />
-            {/* <Flex
-            bg={themeColor}
-            color={'white'}
-            p={'8px'}
-            m={'30px 0 10px'}
-            borderRadius={5}
-          >
-            <Box m={'4px 5px 0'}>
-              <FaComment />
+            <Text className="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />
+            <Flex
+              bg={themeColor}
+              color={'white'}
+              p={'8px'}
+              m={'30px 0 10px'}
+              borderRadius={5}
+            >
+              <Box m={'4px 5px 0'}>
+                <FaComment />
+              </Box>
+              <Text>What do you think of this {deal.storename} {deal.type} code?</Text>
+            </Flex>
+            <Box id="new_comment" className="comment_editor">
+              <ReactQuill
+                name="new_comment_quill"
+                theme="snow"
+                modules={modules}
+                formats={formats}
+                value={newComment}
+                onChange={(content) => setNewComment(content)}
+              />
+              <ButtonGroup>
+                <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
+                  Comment
+                </Button>
+                <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setNewComment(null) }}>
+                  Cancel
+                </Button>
+              </ButtonGroup>
             </Box>
-            <Text>What do you think of this {deal.storename} discount code?</Text>
-          </Flex> */}
-            {/* <CommentEditor />
-          <Box id="comments_container">
-            <Comment />
-            <Comment>
-              <Comment>
-                <Comment />
-              </Comment>
-              <Comment />
-            </Comment>
-          </Box> */}
+            <Box id="comments_container">
+              {comments.length > 0 ?
+                comments.map((comment) => {
+                  <Comment key={comment.id} comment={comment} />
+                })
+                :
+                <Box p={5} bg={'gray.100'} mt={6} borderRadius={5} fontWeight={600} textAlign={'center'}>
+                  No comments yet
+                </Box>
+              }
+              <Comment comment={deal} />
+              <Comment comment={deal} />
+              <Comment comment={deal} />
+            </Box>
           </Box>
           <Box>
             <PopularShops stores={stores} />

@@ -30,16 +30,15 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 export default function CreateDiscount() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
 
   const [url, setUrl] = useState('');
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [type, setType] = useState(0);
-  const [price, setPrice] = useState(null);
-  const [lowPrice, setLowPrice] = useState(null);
-  const [shipPrice, setShipPrice] = useState(null);
+  const [price, setPrice] = useState(0);
+  const [shipPrice, setShipPrice] = useState(0);
   const [ship, setShip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -48,39 +47,90 @@ export default function CreateDiscount() {
   const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
   const [endDate, setEndDate] = useState('');
   const [isloading, setIsloading] = useState(false);
+  const [isuploading, setIsuploading] = useState(false);
   const [code, setCode] = useState("")
   const toast = useToast();
   const typeStr = ["discount_percent", "discount_fixed", "free"];
 
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['link'],
+        [{ image: 'image' }],
+        [{ align: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ color: [] }, { background: [] }],
+        ['clean']
+      ],
+    },
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'link',
+    'image',
+    'align',
+    'list',
+    'ordered',
+    'bullet',
+    'color',
+    'background',
+    'clean',
+  ];
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
     onDrop: async (acceptedFiles) => {
-      setIsloading(true);
+      setIsuploading(true);
+      if (acceptedFiles.length === 0) {
+        setIsuploading(false);
+        return;
+      }
       const formData = new FormData();
       formData.append("file", acceptedFiles[0]);
 
-      const result = await getUrlUploadedService(formData);
-      setIsloading(false);
-      if (result.status === 200) {
-        setImage(result.data.url);
-        toast({
-          title: t(_t('Upload Success.')),
-          description: t(_t("We've uploaded your image.")),
-          position: 'top',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
+      getUrlUploadedService(formData)
+        .then((result) => {
+          setIsuploading(false);
+          if (result && result.status === 200) {
+            setImages([result.data.url]);
+            toast({
+              title: t(_t('Upload Success.')),
+              description: t(_t("We've uploaded your image.")),
+              position: 'top',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            })
+          } else {
+            toast({
+              title: t(_t('Error.')),
+              description: result?.response?.data.message,
+              position: 'top',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })
+          }
         })
-      } else {
-        toast({
-          title: t(_t('Error.')),
-          description: result.response?.data.message,
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
+        .catch((error) => {
+          setIsuploading(false);
+          toast({
+            title: t(_t('Error.')),
+            description: error.message,
+            position: 'top',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          })
         })
-      }
     }
   });
 
@@ -90,10 +140,10 @@ export default function CreateDiscount() {
       title: title,
       description: description,
       deal_url: url,
-      image_url: image,
-      code : code
+      image_urls: JSON.stringify(images),
+      code: code
     };
-    if (type < 2) {
+    if (type <= 2) {
       sendData.type = typeStr[type];
       sendData.price_new = price;
       if (!ship) sendData.price_ship = 0;
@@ -104,7 +154,9 @@ export default function CreateDiscount() {
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
+    setIsloading(true);
     const response = await createDealService(sendData);
+    setIsloading(false);
     if (response.status === 200) {
       toast({
         title: t(_t('Deal created.')),
@@ -154,7 +206,7 @@ export default function CreateDiscount() {
             fontWeight={600}
             htmlFor="url"
             mt="2%">
-           {t(_t("URL"))}
+            {t(_t("URL"))}
           </FormLabel>
           <Input
             type="text"
@@ -186,14 +238,14 @@ export default function CreateDiscount() {
             borderColor={isDragActive ? "blue.500" : "gray.200"}
           >
             <input {...getInputProps()} />
-            {image ?
-              <Image src={image} alt="Uploaded" m={'auto'} />
+            {images.length > 0 ?
+              <Image src={images[0]} alt="Uploaded" m={'auto'} />
               :
               <>
                 <Box>
                   <FaFileImage size={24} />
                 </Box>
-                {!isloading &&
+                {!isuploading &&
                   <>
                     <Box mt={2} fontWeight="semibold" >
                       {isDragActive ? t(_t("Drop the image here")) : t(_t("Drag and drop an image here"))}
@@ -205,7 +257,7 @@ export default function CreateDiscount() {
                 }
               </>
             }
-            {isloading &&
+            {isuploading &&
               <Spinner
                 thickness="4px"
                 speed="0.65s"
@@ -254,7 +306,6 @@ export default function CreateDiscount() {
             justifyContent={'center'}
           >
             <Tab
-              isSelected={type === 0}
               onClick={() => setType(0)}
               flex={1}
               fontSize={'0.9em'}
@@ -266,7 +317,6 @@ export default function CreateDiscount() {
               {t(_t("Percentage"))} (%)
             </Tab>
             <Tab
-              isSelected={type === 1}
               onClick={() => setType(1)}
               flex={1}
               fontSize={'0.9em'}
@@ -278,7 +328,6 @@ export default function CreateDiscount() {
               {t(_t("Eruo"))} (€)
             </Tab>
             <Tab
-              isSelected={type === 2}
               onClick={() => setType(2)}
               flex={1}
               fontSize={'0.9em'}
@@ -364,6 +413,8 @@ export default function CreateDiscount() {
             theme="snow"
             value={description}
             onChange={(content) => setDescription(content)}
+            modules={modules}
+            formats={formats}
           />
         </FormControl>
 
@@ -391,7 +442,7 @@ export default function CreateDiscount() {
           >
             {categories ?
               categories.map(v => {
-                return <option id={v.id}>{v.name}</option>
+                return <option id={v.id} key={v.id}>{v.name}</option>
               }) : null
             }
           </Select>
@@ -422,7 +473,7 @@ export default function CreateDiscount() {
             {
               stores ?
                 stores.map(v => {
-                  return <option id={v.id}>{v.name}</option>
+                  return <option id={v.id} key={v.id}>{v.name}</option>
                 }) : null
             }
           </Select>
@@ -474,6 +525,7 @@ export default function CreateDiscount() {
               {t(_t("Back"))}
             </Button>
             <Button
+              isLoading={isloading}
               w="6rem"
               colorScheme="blue"
               variant="solid"

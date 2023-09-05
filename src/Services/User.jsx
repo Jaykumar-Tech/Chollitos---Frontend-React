@@ -34,6 +34,6 @@ const signUpService = async (email, password, username) => {
 };
 
 export {
-  signInService, 
+  signInService,
   signUpService,
 };

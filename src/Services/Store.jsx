@@ -28,7 +28,7 @@ const getStoreByIdService = async (id) => {
 const getStoreByNameService = async (name) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-    if ( auth_token && auth_token.user.role === 'vip' ) name += "_vip" ;
+    if (auth_token && auth_token.user.role === 'vip') name += "_vip";
     const response = await api.get('store/getbyname/' + name);
     return response.data.data;
   } catch (error) {

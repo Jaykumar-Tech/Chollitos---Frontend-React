@@ -6,6 +6,7 @@ import TabBar from "../../Layouts/CategoryBar/tabs";
 import CustomCard from "../../Components/Cards";
 import { Spinner } from "@chakra-ui/react";
 import { getDealByFilter } from "../../Services/Deal";
+import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
@@ -15,7 +16,8 @@ const Vip = () => {
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
-  const {toast} = useToast();
+  const history = useHistory();
+  const toast = useToast();
 
   const getDeals = async () => {
     setIsloading(true);
@@ -32,6 +34,8 @@ const Vip = () => {
   useEffect(() => {
     i18n.changeLanguage('en');
     console.log(t('enTranslate'));
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    if (!auth_token || auth_token.user.role !== "vip") history.push('/404');
   }, []);
 
   useEffect(() => {

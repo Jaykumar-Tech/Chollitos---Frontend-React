@@ -17,7 +17,7 @@
     "EXPIRED": "EXPIRED",
     "deal": "deal",
     "deals": "deals",
-    "Deal_Score": "Deal Score",
+    "Score": "Score",
     "Go_to": "Go to",
     "Expired": "Expired",
     "Deal": "Deal",
@@ -42,6 +42,7 @@
     "End_Date": "End Date",
     "Back": "Back",
     "Create":"Create",
+    "information": "information",
     "Deal_Information": "Deal Information",
     "VIP": "VIP",
     "discount_code": "discount code",
@@ -108,5 +109,6 @@
     "Get_code": "Get code",
     "Get": "Get",
     "Extra": "Extra",
-    "USED": "USADO"
+    "USED": "USADO",
+    "Homepage": "Homepage"
 }

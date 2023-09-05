@@ -106,18 +106,10 @@ export default function Navbar() {
     setIsSignInLoading(false);
 
     if (response.status === 200) {
+      const expirationTime = new Date().getTime() + (60 * 60 * 1000);
       localStorage.setItem('authToken', JSON.stringify(response.data));
-      setAuthToken(response.data);
-      setIsSignInOpen(false);
-      resetTimer();
-      toast({
-        title: t(_t('Success.')),
-        description: t(_t('You are logged in')),
-        position: 'top',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
+      localStorage.setItem('expirationTime', expirationTime);
+      window.location.reload();
     } else {
       toast({
         title: t(_t('Error.')),
@@ -197,7 +189,8 @@ export default function Navbar() {
 
   const handleSignOut = () => {
     localStorage.removeItem('authToken');
-    setAuthToken(null);
+    localStorage.removeItem('expirationTime');
+    window.location.reload();
   }
 
   // const handleSignInGoogle = (isLogin) => {

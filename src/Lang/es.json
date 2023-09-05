@@ -17,7 +17,7 @@
     "EXPIRED": "EXPIRADO",
     "deal": "oferta",
     "deals": "ofertas",
-    "Deal_Score": "Puntuación de Oferta",
+    "Score": "Puntaje",
     "Go_to": "Ir a",
     "Expired": "Expirado",
     "Deal": "Oferta",
@@ -42,6 +42,7 @@
     "End_Date": "Fecha de Finalización",
     "Back": "Atrás",
     "Create":"Crear",
+    "information": "Información",
     "Deal_Information": "Información de la Oferta",
     "VIP": "VIP",
     "discount_code": "código de descuento",
@@ -107,5 +108,6 @@
     "Don't_forget_to_apply_the_code_at_checkout": "No olvides aplicar el código al finalizar la compra",
     "Get_code": "Obtener código",
     "Get": "Obtener",
-    "Extra": "Extra"
+    "Extra": "Extra",
+    "Homepage": "Página principal"
     }
