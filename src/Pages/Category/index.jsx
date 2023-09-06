@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import CategoryBar from "../../Layouts/CategoryBar/categories";
-import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner, Center, Button } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
 import { getDealByFilter } from "../../Services/Deal";
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 const Category = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { categories } = globalProps;
   const { categorySlug } = useParams();
@@ -21,12 +21,45 @@ const Category = () => {
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
-  const filterDeals = async (catIds) => {
+  const [offset, setOffset] = useState(0);
+  const [isend, setIsend] = useState(false);
+  const [catIds, setCatIds] = useState([])
+  const limit = 12;
+
+  const getDeals = async (loadmore = true) => {
+
     setIsloading(true);
-    const data = await getDealByFilter({category_id: catIds, start_at: 0, length: 100});
-    setDeals(data);
+
+    if (!loadmore) {
+      setDeals([]);
+      setOffset(0);
+    }
+
+    const data = await getDealByFilter({
+      start_at: loadmore ? offset : 0,
+      length: limit + 1,
+      category_id: catIds
+    });
+
+    if (data) {
+
+      if (data.length > limit) {
+        setIsend(false);
+        data.pop();
+      } else {
+        setIsend(true);
+      }
+
+      loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
+      setOffset(loadmore ? offset + limit : limit);
+    }
+
     setIsloading(false);
-  }
+  };
+
+  useEffect(()=>{
+    getDeals(false)
+  }, [catIds])
 
   return (
     <>
@@ -43,12 +76,12 @@ const Category = () => {
         <Box id="Home">
           <Flex>
             <Box
-              width={appMode === 'lg' ? '20%' : '0px'} 
+              width={appMode === 'lg' ? '20%' : '0px'}
             >
               <TreeViewCategories
                 categories={categories}
                 categorySlug={categorySlug}
-                filterDeals={filterDeals}
+                filterDeals={setCatIds}
               />
             </Box>
             <SimpleGrid
@@ -81,6 +114,16 @@ const Category = () => {
               ))}
             </SimpleGrid>
           </Flex>
+          {deals.length > 0 && !isend &&
+            <Center w={'100%'} p={5} colSpan={[1, 2, 3, 4]}>
+              <Button
+                colorScheme="blue"
+                onClick={getDeals}
+              >
+                Load more
+              </Button>
+            </Center>
+          }
         </Box>
       </Box>
     </>

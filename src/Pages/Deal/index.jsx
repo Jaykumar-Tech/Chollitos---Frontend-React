@@ -181,44 +181,49 @@ const Deal = () => {
   }
 
   const handleCommentLike = async (commentId, isLike) => {
-    // if (!localStorage.getItem('authToken')) {
-    //   toast({
-    //     title: t(_t('Warning.')),
-    //     description: t(_t('Please login.')),
-    //     position: 'top',
-    //     status: 'warning',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
+    if (!localStorage.getItem('authToken')) {
+      toast({
+        title: t(_t('Warning.')),
+        description: t(_t('Please login.')),
+        position: 'top',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
 
-    //   return;
-    // }
+      return;
+    }
 
-    // const result = await addLikeDealService({
-    //   type: "comment",
-    //   dest_id: commentId,
-    //   is_like: isLike
-    // });
-    // if (result.status === 200) {
-    //   setDeal({ ...deal, cnt_like: deal.cnt_like + (isLike ? 1 : -1) })
-    //   toast({
-    //     title: t(_t('Success.')),
-    //     description: t(_t('Thank you for your feedback.')),
-    //     position: 'top',
-    //     status: 'Success',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   })
-    // } else {
-    //   toast({
-    //     title: t(_t('Error.')),
-    //     description: result?.response?.data?.message,
-    //     position: 'top',
-    //     status: 'error',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   })
-    // }
+    const result = await addLikeDealService({
+      type: "comment",
+      dest_id: commentId,
+      is_like: isLike
+    });
+    if (result.status === 200) {
+      setComments(comments.map(comment=>{
+        if ( comment.id == commentId ) {
+           comment.cnt_like = comment.cnt_like + (isLike ? 1 : -1) ;
+        }
+        return comment;
+      }))
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Thank you for your feedback.')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: result?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   const DealHeader = () => {
