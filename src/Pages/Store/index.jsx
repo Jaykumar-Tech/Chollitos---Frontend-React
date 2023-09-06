@@ -32,7 +32,7 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 const Store = () => {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { store_name } = useParams();
   const [store, setStore] = useState(null);
   const [deals, setDeals] = useState(null);
@@ -64,7 +64,6 @@ const Store = () => {
   }
 
   useEffect(() => {
-    i18n.changeLanguage("es")
     const fetchData = async () => {
       await getStoreByName();
     };

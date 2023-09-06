@@ -48,7 +48,7 @@ function MyBreadcrumb({ categories, categorySlug }) {
   }
 
   function getAllChildren(id) {
-    var res = [];
+    // var res = [];
     var que = [id];
     var index = 0;
     while (index < que.length) {

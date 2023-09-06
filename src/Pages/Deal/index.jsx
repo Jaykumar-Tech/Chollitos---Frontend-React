@@ -156,7 +156,7 @@ const Deal = () => {
     if (!newComment) {
       return;
     }
-    
+
     //
   }
 
@@ -261,9 +261,9 @@ const Deal = () => {
           <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link as="a" title="Comments" to="#">
+              <a title="Comments" href="#add_comment">
                 <FaComment />
-              </Link>
+              </a>
             </Box>
             <Spacer mx={'5px'} />
             <span>{deal.cnt_comment}</span>
@@ -415,21 +415,22 @@ const Deal = () => {
               </Flex>
             </Flex>
             <Text className="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />
+            <Spacer id="add_comment" h={'50px'}/>
             <Flex
               bg={themeColor}
               color={'white'}
               p={'8px'}
-              m={'30px 0 10px'}
+              m={'10px 0'}
               borderRadius={5}
             >
               <Box m={'4px 5px 0'}>
                 <FaComment />
               </Box>
-              <Text>What do you think of this {deal.storename} {deal.type} code?</Text>
+              <Text>What do you think of this {deal.storename} deal?</Text>
             </Flex>
-            <Box id="new_comment" className="comment_editor">
+            <Box className="comment_editor">
               <ReactQuill
-                name="new_comment_quill"
+                name="comment_quill"
                 theme="snow"
                 modules={modules}
                 formats={formats}
