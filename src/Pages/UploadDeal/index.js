@@ -4,7 +4,7 @@ import {
     Spinner,
     Box
 } from '@chakra-ui/react';
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 
@@ -16,11 +16,12 @@ const UploadDeal = () => {
     useEffect(() => {
         const auth_token = JSON.parse(localStorage.getItem('authToken'));
         if (!auth_token || auth_token.user.role !== "vip") history.push('/404');
-      }, []);
+    }, []);
 
     const handleFileUpload = async (event) => {
         event.preventDefault();
         const file = event.target.file.files[0];
+        const auth_token = JSON.parse(localStorage.getItem('authToken'));
 
         // Create a new FormData object
         const formData = new FormData();
@@ -32,6 +33,9 @@ const UploadDeal = () => {
             const response = await fetch('http://chollitos.net/api/deal/upload', {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    authorization: auth_token.token_type + " " + auth_token.access_token
+                }
             });
             if (response.ok) {
                 // File uploaded successfully
@@ -48,7 +52,7 @@ const UploadDeal = () => {
     return (
         <>
             {
-                isLoading ? <Spinner/> :
+                isLoading ? <Spinner /> :
                     <form onSubmit={handleFileUpload}>
                         <Input type="file" name="file" />
                         <Button type="submit" >Upload</Button>

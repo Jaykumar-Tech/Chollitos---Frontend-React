@@ -151,9 +151,36 @@ const Deal = () => {
     }
   }
 
+  const handleChangeComment = (content) => {
+    if (!localStorage.getItem('authToken') ) {
+      setNewComment("") ;
+      toast({
+        title: t(_t('Warning.')),
+        description: t(_t('Please login.')),
+        position: 'top',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      
+      return;
+    }
+    setNewComment(content) ;
+  }
+
   const handleAddComment = async () => {
     if (!newComment) {
       return;
+    }
+    if (!localStorage.getItem('authToken')) {
+      toast({
+        title: t(_t('Warning.')),
+        description: t(_t('Please login.')),
+        position: 'top',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
     }
     var result = await createCommentService({
       blog: newComment,
@@ -491,7 +518,7 @@ const Deal = () => {
               <Box m={'4px 5px 0'}>
                 <FaComment />
               </Box>
-              <Text>What do you think of this {deal.storename} deal?</Text>
+              <Text>{t(_t("What do you think of this"))} {deal.storename} {t(_t("deal"))}?</Text>
             </Flex>
             <Box className="comment_editor">
               <ReactQuill
@@ -500,14 +527,14 @@ const Deal = () => {
                 modules={modules}
                 formats={formats}
                 value={newComment}
-                onChange={(content) => setNewComment(content)}
+                onChange={(content) => handleChangeComment(content)}
               />
               <ButtonGroup>
                 <Button mt={2} colorScheme="blue" onClick={handleAddComment}>
-                  Comment
+                  {t(_t("Comment"))}
                 </Button>
                 <Button mt={2} ml={2} colorScheme="gray" onClick={() => { setNewComment(null) }}>
-                  Cancel
+                  {t(_t("Cancel"))}
                 </Button>
               </ButtonGroup>
             </Box>
@@ -518,7 +545,7 @@ const Deal = () => {
                 })
                 :
                 <Box p={5} bg={'gray.100'} mt={6} borderRadius={5} fontWeight={600} textAlign={'center'}>
-                  No comments yet
+                  {t(_t("No comments yet"))}
                 </Box>
               }
             </Box>

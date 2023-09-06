@@ -120,7 +120,7 @@ const Free = () => {
                 colorScheme="blue"
                 onClick={getDeals}
               >
-                Load more
+                {t(_t("Load more"))}
               </Button>
             </Center>
           }
