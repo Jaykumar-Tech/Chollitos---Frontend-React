@@ -158,6 +158,16 @@ export default function CreateDiscount() {
     const response = await createDealService(sendData);
     setIsloading(false);
     if (response.status === 200) {
+      setUrl("");
+      setImages([]);
+      setPrice(0);
+      setShip(0);
+      setTitle("")
+      setDescription("")
+      setCategoryId({ name: "", id: -1 })
+      setStoreId({ name: "", id: -1 })
+      setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
+      setEndDate('');
       toast({
         title: t(_t('Deal created.')),
         description: t(_t("We've created your deal.")),

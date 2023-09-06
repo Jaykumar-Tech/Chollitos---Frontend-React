@@ -149,6 +149,18 @@ export default function CreateDeal() {
     setIsloading(false);
 
     if (response.status === 200) {
+
+      setUrl("");
+      setImages([]);
+      setPrice(0);
+      setLowPrice(0);
+      setShip(0);
+      setTitle("")
+      setDescription("")
+      setCategoryId({ name: "", id: -1 })
+      setStoreId({ name: "", id: -1 })
+      setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
+      setEndDate('');
       toast({
         title: t(_t('Deal created.')),
         description: t(_t("We've created your deal.")),
@@ -157,6 +169,7 @@ export default function CreateDeal() {
         duration: 3000,
         isClosable: true,
       })
+
     } else {
       toast({
         title: t(_t('Error.')),
@@ -270,7 +283,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="price_new"
             mt="2%">
-            {t(_t("Price (new)"))}
+            {t(_t("Old Price"))}
           </FormLabel>
           <Input
             type="text"
@@ -287,7 +300,7 @@ export default function CreateDeal() {
             fontWeight={600}
             htmlFor="lowest_price"
             mt="2%">
-            {t(_t("Lowest price"))}
+            {t(_t("New Price"))}
           </FormLabel>
           <Input
             type="text"

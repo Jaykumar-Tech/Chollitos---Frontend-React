@@ -119,5 +119,7 @@
     "Cancel":"Cancel",
     "What_do_you_think_of_this":"What do you think of this",
     "Commented":"Commented",
-    "Load_more": "Load more"
+    "Load_more": "Load more",
+    "Old_Price": "Old Price",
+    "New_Price": "New Price"
 }
