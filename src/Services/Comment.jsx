@@ -18,6 +18,26 @@ const getCommentsByDealIdService = async (dealId) => {
   }
 }
 
+const createCommentService = async ( {blog, dealId} ) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.post('comment/add', {
+      "type": "deal",
+      "dest_id": dealId,
+      "blog": blog
+    }, {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export {
   getCommentsByDealIdService,
+  createCommentService
 };

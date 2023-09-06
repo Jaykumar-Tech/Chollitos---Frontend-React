@@ -33,7 +33,7 @@ import './index.css'
 import { addLikeDealService } from "../../Services/Like";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
-import { getCommentsByDealIdService } from "../../Services/Comment";
+import { createCommentService, getCommentsByDealIdService } from "../../Services/Comment";
 
 const Deal = () => {
   const { t } = useTranslation();
@@ -98,14 +98,13 @@ const Deal = () => {
   useEffect(() => {
     const fetchData = async () => {
       const dealId = getDealIdFromParams(dealTitle);
-      const [deal, comments] = await Promise.all([
+      const [_deal, _comments] = await Promise.all([
         getDealById(dealId),
         getCommentsByDealId(dealId),
       ]);
-
-      setDeal(deal);
-      setImages(JSON.parse(deal.image_urls));
-      setComments(comments);
+      setDeal(_deal);
+      setImages(JSON.parse(_deal.image_urls));
+      setComments(_comments);
     }
 
     fetchData();
@@ -136,7 +135,7 @@ const Deal = () => {
         title: t(_t('Success.')),
         description: t(_t('Thank you for your feedback.')),
         position: 'top',
-        status: 'Success',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       })
@@ -156,12 +155,70 @@ const Deal = () => {
     if (!newComment) {
       return;
     }
-
-    //
+    var result = await createCommentService({
+      blog: newComment,
+      dealId: deal.id
+    })
+    if (result) {
+      console.log([
+        ...comments,
+        result
+      ]);
+      setComments([
+        result,
+        ...comments
+      ])
+    } else {
+      toast({
+        title: t(_t('Warning.')),
+        description: t(_t('Please login.')),
+        position: 'top',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   }
 
   const handleCommentLike = async (commentId, isLike) => {
-    //
+    // if (!localStorage.getItem('authToken')) {
+    //   toast({
+    //     title: t(_t('Warning.')),
+    //     description: t(_t('Please login.')),
+    //     position: 'top',
+    //     status: 'warning',
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+
+    //   return;
+    // }
+
+    // const result = await addLikeDealService({
+    //   type: "comment",
+    //   dest_id: commentId,
+    //   is_like: isLike
+    // });
+    // if (result.status === 200) {
+    //   setDeal({ ...deal, cnt_like: deal.cnt_like + (isLike ? 1 : -1) })
+    //   toast({
+    //     title: t(_t('Success.')),
+    //     description: t(_t('Thank you for your feedback.')),
+    //     position: 'top',
+    //     status: 'Success',
+    //     duration: 3000,
+    //     isClosable: true,
+    //   })
+    // } else {
+    //   toast({
+    //     title: t(_t('Error.')),
+    //     description: result?.response?.data?.message,
+    //     position: 'top',
+    //     status: 'error',
+    //     duration: 3000,
+    //     isClosable: true,
+    //   })
+    // }
   }
 
   const DealHeader = () => {
@@ -274,6 +331,8 @@ const Deal = () => {
   }
 
   const Comment = ({ comment, children }) => {
+    useEffect(() => {
+    }, [])
     return (
       <Box className="parent_comments" mt={10}>
         <Flex color={"gray.400"} fontSize={'0.8em'} my={2} alignItems={'center'}>
@@ -294,8 +353,9 @@ const Deal = () => {
             p={'15px'}
             borderRadius={10}
             shadow={'0 2px 2px rgba(0,0,0,.18), 0 0 0 rgba(0,0,0,.18)'}
+            dangerouslySetInnerHTML={{ __html: comment.description }}
           >
-            {comment.description}
+
           </Text>
           <Flex m={'10px'} color={'gray.500'} alignItems={'center'}>
             <Link title="Like" to="#" onClick={() => handleCommentLike(comment.id, true)}>
@@ -415,7 +475,7 @@ const Deal = () => {
               </Flex>
             </Flex>
             <Text className="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />
-            <Spacer id="add_comment" h={'50px'}/>
+            <Spacer id="add_comment" h={'50px'} />
             <Flex
               bg={themeColor}
               color={'white'}
@@ -449,16 +509,13 @@ const Deal = () => {
             <Box id="comments_container">
               {comments.length > 0 ?
                 comments.map((comment) => {
-                  <Comment key={comment.id} comment={comment} />
+                  return <Comment key={comment.id} comment={comment} />
                 })
                 :
                 <Box p={5} bg={'gray.100'} mt={6} borderRadius={5} fontWeight={600} textAlign={'center'}>
                   No comments yet
                 </Box>
               }
-              <Comment comment={deal} />
-              <Comment comment={deal} />
-              <Comment comment={deal} />
             </Box>
           </Box>
           <Box>

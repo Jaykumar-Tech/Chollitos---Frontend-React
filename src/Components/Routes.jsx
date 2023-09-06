@@ -12,6 +12,8 @@ import AllCategories from "../Pages/Category/all";
 import Free from "../Pages/Free";
 import Vip from "../Pages/Vip";
 import Page404 from "../Pages/404";
+import UploadDeal from "../Pages/UploadDeal";
+
 
 function Routes() {
   return (
@@ -27,6 +29,7 @@ function Routes() {
         <Route path="/deal/:dealTitle" component={Deal} />
         <Route exact path="/free" component={Free} />
         <Route exact path="/vip" component={Vip} />
+        <Route exact path="/upload" component={UploadDeal} />
         <Route component={Page404} />
       </Switch>
     </Box>

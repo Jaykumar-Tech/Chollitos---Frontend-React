@@ -1,6 +1,6 @@
 const getTimeDiff = (date) => {
   const givenDate = new Date(date);
-  const today = new Date();
+  const today = new Date(new Date().toUTCString());
   const timeDiff = today.getTime() - givenDate.getTime();
 
   const minutesDiff = Math.floor(timeDiff / (1000 * 60));
