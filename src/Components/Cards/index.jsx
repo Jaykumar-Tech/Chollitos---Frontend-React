@@ -194,7 +194,10 @@ const CustomCard = ({ deal }) => {
           <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
-              <Link title="Comments" to="#">
+              <Link
+                title="Comments"
+                to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
+              >
                 <FaComment />
               </Link>
             </Box>

@@ -1,32 +1,15 @@
-import { Tab, TabList, Tabs, Box, useToast } from "@chakra-ui/react";
+import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
 function TabBar({ setFeature }) {
   const { t } = useTranslation();
   const themeColor = "blue.500";
-  const tabList = [t(_t('New')), t(_t('Popular')), t(_t('Highlights'))];
-  const tabFeatureList = ['new', 'popular', 'highlight'];
-  const toast = useToast();
+  const tabList = [t(_t('New')), t(_t('Popular')), t(_t('Highlights')), t(_t('Commented'))];
+  const tabFeatureList = ['new', 'popular', 'highlight', 'commented'];
 
   const setFeatureInTab = (index) => {
-    if (index < 3) setFeature(tabFeatureList[index]);
-    else {
-      const auth_token = JSON.parse(localStorage.getItem('authToken'));
-      if (auth_token && auth_token.user.role !== "vip") {
-        toast({
-          title: 'Error.',
-          description: t(_t("You don't have a access to VIP")),
-          position: 'top',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-      }
-      else if (auth_token) {
-        setFeature(tabFeatureList[index]);
-      }
-    }
+    setFeature(tabFeatureList[index]);
   }
 
   return (

@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
 
 const Home = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
   const [deals, setDeals] = useState([]);
@@ -31,11 +31,6 @@ const Home = () => {
     setDeals(data);
     setIsloading(false);
   };
-
-  useEffect(() => {
-    i18n.changeLanguage('es');
-    console.log(t('enTranslate'));
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

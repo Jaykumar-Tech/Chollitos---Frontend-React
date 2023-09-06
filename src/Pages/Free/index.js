@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
 
 const Free = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
@@ -27,11 +27,6 @@ const Free = () => {
     setDeals(data);
     setIsloading(false);
   };
-
-  useEffect(() => {
-    i18n.changeLanguage('en');
-    console.log(t('enTranslate'));
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
