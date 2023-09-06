@@ -6,7 +6,7 @@ import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
-import { getDealByFilter, getFilterDealsService } from "../../Services/Deal";
+import { getDealByFilter } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";

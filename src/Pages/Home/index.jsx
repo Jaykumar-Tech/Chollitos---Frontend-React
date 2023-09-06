@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "../../Components/GlobalContext";
 import DoubleTopBar from "../../Layouts/CategoryBar";
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, Flex, SimpleGrid, Center } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import { Spinner, useBreakpointValue } from "@chakra-ui/react";
 import PopularCategories from "../../Components/PopularCategories";
@@ -20,21 +20,44 @@ const Home = () => {
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
+  const [offset, setOffset] = useState(0);
+  const [isend, setIsend] = useState(false);
+  const limit = 12;
 
-  const getDeals = async () => {
+  const getDeals = async (loadmore = true) => {
+
     setIsloading(true);
+
+    if (!loadmore) {
+      setDeals([]);
+      setOffset(0);
+    }
+
     const data = await getDealByFilter({
-      start_at: 0,
-      length: 100,
+      start_at: loadmore ? offset : 0,
+      length: limit + 1,
       feature: dealFeature
     });
-    setDeals(data);
+
+    if (data) {
+
+      if (data.length > limit) {
+        setIsend(false);
+        data.pop();
+      } else {
+        setIsend(true);
+      }
+      
+      loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
+      setOffset(loadmore ? offset + limit : limit);
+    }
+
     setIsloading(false);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      await getDeals();
+      await getDeals(false);
     };
 
     fetchData();
@@ -50,35 +73,46 @@ const Home = () => {
         <MyBreadcrumb />
         <Box id="Home">
           <Flex>
-            <SimpleGrid
-              flex={1}
-              columns={[1, 2, 3, 4]}
-              spacingX={2}
-              spacingY={5}
-              m={'0 10px 20px'}
-              position={'relative'}
-            >
-              {isloading &&
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                  size="xl"
-                  position="absolute"
-                  top="200px"
-                  left="calc(50% - 20px)"
-                  transform="translate(-50%, -50%)"
-                  opacity={1}
-                  zIndex={1}
-                />
+            <Box flex={1}>
+              <SimpleGrid
+                columns={[1, 2, 3, 4]}
+                spacingX={2}
+                spacingY={5}
+                m={'0 10px 20px'}
+                position={'relative'}
+              >
+                {isloading &&
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                    position="fixed"
+                    top="50%"
+                    left="calc(40%)"
+                    transform="translate(-50%, -50%)"
+                    opacity={1}
+                    zIndex={1}
+                  />
+                }
+                {deals && deals.map((deal) => (
+                  <Box key={"home_deal" + deal.id} opacity={isloading ? 0.3 : 1}>
+                    <CustomCard deal={deal} />
+                  </Box>
+                ))}
+              </SimpleGrid>
+              {deals.length > 0 && !isend &&
+                <Center w={'100%'} p={5} colSpan={[1, 2, 3, 4]}>
+                  <Button
+                    colorScheme="blue"
+                    onClick={getDeals}
+                  >
+                    Load more
+                  </Button>
+                </Center>
               }
-              {deals && deals.map((deal, index) => (
-                <Box key={"home_deal"+deal.id} opacity={isloading ? 0.3 : 1}>
-                  <CustomCard deal={deal} />
-                </Box>
-              ))}
-            </SimpleGrid>
+            </Box>
             {appMode === 'lg' &&
               <Box
                 width={'20%'}

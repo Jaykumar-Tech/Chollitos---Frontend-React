@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon } from "@chakra-ui/react";
+import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon, Center, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import TabBar from "../../Layouts/CategoryBar/tabs";
@@ -17,28 +17,50 @@ const Vip = () => {
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
   const history = useHistory();
+  const [offset, setOffset] = useState(0);
+  const [isend, setIsend] = useState(false);
+  const limit = 12;
 
-  const getDeals = async () => {
+  const getDeals = async (loadmore = true) => {
+
     setIsloading(true);
+
+    if (!loadmore) {
+      setDeals([]);
+      setOffset(0);
+    }
+
     const data = await getDealByFilter({
-      start_at: 0,
-      length: 100,
+      start_at: loadmore ? offset : 0,
+      length: limit + 1,
       vip: 1,
       feature: dealFeature
     });
-    setDeals(data);
+
+    if (data) {
+      
+      if (data.length > limit) {
+        setIsend(false);
+        data.pop();
+      } else {
+        setIsend(true);
+      }
+
+      loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
+      setOffset(loadmore ? offset + limit : limit);
+    }
+
     setIsloading(false);
   };
 
   useEffect(() => {
-    console.log(t('enTranslate'));
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (!auth_token || auth_token.user.role !== "vip") history.push('/404');
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      await getDeals();
+      await getDeals(false);
     };
 
     fetchData();
@@ -85,20 +107,30 @@ const Vip = () => {
                 emptyColor="gray.200"
                 color="blue.500"
                 size="xl"
-                position="absolute"
-                top="200px"
-                left="calc(50% - 20px)"
+                position="fixed"
+                top="50%"
+                left="calc(50% - 25px)"
                 transform="translate(-50%, -50%)"
                 opacity={1}
                 zIndex={1}
               />
             }
-            {deals && deals.map((deal, index) => (
+            {deals && deals.map((deal) => (
               <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
                 <CustomCard deal={deal} />
               </Box>
             ))}
           </SimpleGrid>
+          {deals.length > 0 && !isend &&
+            <Center w={'100%'} p={5} colSpan={[1, 2, 3, 4]}>
+              <Button
+                colorScheme="blue"
+                onClick={getDeals}
+              >
+                Load more
+              </Button>
+            </Center>
+          }
         </Box>
       </Box>
     </>
