@@ -59,9 +59,11 @@ export default function Navbar() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [authToken, setAuthToken] = useState(null);
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [isEmailVerify, setIsEmailVerify] = useState(false);
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
@@ -88,10 +90,6 @@ export default function Navbar() {
 
   const handleSignInOpenModal = () => {
     setIsSignInOpen(true);
-  };
-
-  const handleSignInCloseModal = () => {
-    setIsSignInOpen(false);
   };
 
   // const handleSignUpOpenModal = () => {
@@ -126,7 +124,7 @@ export default function Navbar() {
     e.preventDefault();
     setIsSignUpLoading(true);
 
-    const response = await signUpService(email, password, username);
+    const response = await signUpService(email, password, username, birthday);
     setIsSignUpLoading(false);
 
     if (response.status === 200) {
@@ -257,10 +255,6 @@ export default function Navbar() {
   //     });
   // }
 
-  const handleSignUpCloseModal = () => {
-    setIsSignUpOpen(false);
-  };
-
   const toSignUp = () => {
     setIsSignInOpen(false);
     setIsSignUpOpen(true);
@@ -386,7 +380,7 @@ export default function Navbar() {
           }
         </Flex>
       </Box>
-      <Modal isOpen={isSignInOpen} onClose={handleSignInCloseModal}>
+      <Modal isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("Sign in"))}</ModalHeader>
@@ -431,26 +425,26 @@ export default function Navbar() {
               </Button>
               <Spacer height={4} /> */}
               <form onSubmit={handleSignIn}>
-                <FormControl id="email">
+                <FormControl id="email" mt={3}>
                   <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
-                <FormControl id="password">
+                <FormControl id="password" mt={3}>
                   <FormLabel>{t(_t("Password"))}</FormLabel>
                   <Input type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)} />
                 </FormControl>
-                <Stack spacing={10}>
+                <Stack spacing={10} mt={2}>
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
                     justify={"space-between"}
                   >
                     <Checkbox>{t(_t("Remember me"))}</Checkbox>
-                    <Text color={"blue.400"}>{t(_t("Forgot password?"))}</Text>
+                    <Text color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}</Text>
                   </Stack>
                   <Button
                     isLoading={isSignInLoading}
@@ -469,13 +463,13 @@ export default function Navbar() {
                 <Text>
                   {t(_t("Don't have an account?"))}
                 </Text>
-                <Text color={'blue.400'} onClick={toSignUp}>{t(_t("Signup"))}</Text>
+                <Text color={'blue.400'} onClick={toSignUp} cursor={'pointer'}>{t(_t("Signup"))}</Text>
               </Stack>
             </Stack>
           </Box>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isSignUpOpen} onClose={handleSignUpCloseModal}>
+      <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("Sign up"))}</ModalHeader>
@@ -519,21 +513,25 @@ export default function Navbar() {
               </Button>
               <Spacer height={4} /> */}
               <form onSubmit={handleSignUp}>
-                <Box>
-                  <FormControl id="name" isRequired>
-                    <FormLabel>{t(_t("User Name"))}</FormLabel>
-                    <Input type="text"
-                      value={username}
-                      onChange={e => setUsername(e.target.value)} />
-                  </FormControl>
-                </Box>
-                <FormControl id="email" isRequired>
+                <FormControl id="name" isRequired mt={3}>
+                  <FormLabel>{t(_t("User Name"))}</FormLabel>
+                  <Input type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)} />
+                </FormControl>
+                <FormControl id="email" isRequired mt={3}>
                   <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
-                <FormControl id="password" isRequired>
+                <FormControl id="gender" isRequired mt={3}>
+                  <FormLabel>{t(_t("Gender"))}</FormLabel>
+                  <Input type="date"
+                    value={birthday}
+                    onChange={e => setBirthday(e.target.value)} />
+                </FormControl>
+                <FormControl id="password" isRequired mt={3}>
                   <FormLabel>{t(_t("Password"))}</FormLabel>
                   <InputGroup>
                     <Input type={showPassword ? 'text' : 'password'}
@@ -567,9 +565,31 @@ export default function Navbar() {
                 <Text>
                   {t(_t("Already have an account?"))}
                 </Text>
-                <Text color={'blue.400'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
+                <Text color={'blue.400'} cursor={'pointer'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
               </Stack>
             </Stack>
+          </Box>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isEmailVerify} onClose={() => setIsEmailVerify(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("OTP Verification"))}</ModalHeader>
+          <ModalCloseButton />
+          <Box
+            rounded={'lg'}
+            bg={useColorModeValue('white', 'gray.700')}
+            boxShadow={'lg'}
+            p={8}
+          >
+            <FormControl id="otp" mb={4} isRequired>
+              <Input type="text" placeholder={t(_t("Enter the OTP"))} />
+            </FormControl>
+            <Flex>
+              <Text color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
+              <Spacer />
+              <Button colorScheme="blue" onClick={() => { }}>{t(_t("Verify"))}</Button>
+            </Flex>
           </Box>
         </ModalContent>
       </Modal>

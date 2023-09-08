@@ -19,8 +19,8 @@ i18n
         translation: esTranslation,
       },
     },
-    lng: 'es', // Default language
-    fallbackLng: 'en', // Fallback language if translation is missing
+    lng: 'en', // Default language
+    fallbackLng: 'es', // Fallback language if translation is missing
     interpolation: {
       escapeValue: false, // React already escapes values by default
     },

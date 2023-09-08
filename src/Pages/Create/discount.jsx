@@ -346,7 +346,7 @@ export default function CreateDiscount() {
               borderRadius={5}
               _selected={{ bg: 'blue.500', color: 'white' }}
             >
-              {t(_t("Free Shipment"))}
+              {t(_t("Free"))}
             </Tab>
           </TabList>
         </Tabs>
@@ -356,11 +356,12 @@ export default function CreateDiscount() {
             <FormLabel
               fontWeight={600}
               htmlFor="price_new"
-              mt="2%">
-              Price (new)
+              mt="2%"
+            >
+              Price {type === 0 ? '(%)' : '(€)'}
             </FormLabel>
             <Input
-              type="text"
+              type="number"
               name="price_new"
               id="price_new"
               size="sm"
@@ -379,7 +380,7 @@ export default function CreateDiscount() {
               {t(_t("Price of shipment"))}
             </FormLabel>
             <Input
-              type="text"
+              type="number"
               name="price_shipment"
               id="price_shipment"
               size="sm"

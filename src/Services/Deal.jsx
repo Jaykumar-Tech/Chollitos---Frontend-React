@@ -78,6 +78,7 @@ const getDealByFilter = async (data) => {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       };
     }
+    
     const response = await api.post('deal/find', data,
       {
         headers: headers

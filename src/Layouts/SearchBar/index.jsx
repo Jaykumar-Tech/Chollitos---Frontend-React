@@ -58,7 +58,10 @@ export default function SearchBar({ appMode }) {
   }
 
   const getUrlFromTitle = (title) => {
-    return title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+    title.replace(/[^a-zA-Z0-9-]/g, "-");
+    title.toLowerCase();
+    title.slice(0, 30);
+    return title;
   }
 
   const handleKeyPress = (event) => {
@@ -151,7 +154,7 @@ export default function SearchBar({ appMode }) {
                 {deals && deals.map((deal) => (
                   <Link
                     key={deal.id}
-                    to={`/${deal.storename}/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                    to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
                     onClick={() => { setIsOpen(false) }}
                   >
                     <Flex fontSize={'0.9em'}>

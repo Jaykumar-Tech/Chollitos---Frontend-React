@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../Components/GlobalContext";
-import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import {
   Box,
@@ -21,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaReply } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, /*FaReply*/ } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
@@ -45,6 +44,7 @@ const Deal = () => {
   const toast = useToast();
   const [newComment, setNewComment] = useState(null);
   const [comments, setComments] = useState([]);
+  const history = useHistory();
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
@@ -102,9 +102,15 @@ const Deal = () => {
         getDealById(dealId),
         getCommentsByDealId(dealId),
       ]);
+
+      if(!_deal?.id > 0) {
+        history.push('/404');
+        return;
+      }
+
       setDeal(_deal);
-      setImages(JSON.parse(_deal.image_urls));
       setComments(_comments);
+      _deal?.image_urls && setImages(JSON.parse(_deal.image_urls));
     }
 
     fetchData();
@@ -152,8 +158,8 @@ const Deal = () => {
   }
 
   const handleChangeComment = (content) => {
-    if (!localStorage.getItem('authToken') ) {
-      setNewComment("") ;
+    if (!localStorage.getItem('authToken')) {
+      setNewComment("");
       toast({
         title: t(_t('Warning.')),
         description: t(_t('Please login.')),
@@ -162,10 +168,10 @@ const Deal = () => {
         duration: 3000,
         isClosable: true,
       });
-      
+
       return;
     }
-    setNewComment(content) ;
+    setNewComment(content);
   }
 
   const handleAddComment = async () => {
@@ -227,9 +233,9 @@ const Deal = () => {
       is_like: isLike
     });
     if (result.status === 200) {
-      setComments(comments.map(comment=>{
-        if ( comment.id == commentId ) {
-           comment.cnt_like = comment.cnt_like + (isLike ? 1 : -1) ;
+      setComments(comments.map(comment => {
+        if (comment.id === commentId) {
+          comment.cnt_like = comment.cnt_like + (isLike ? 1 : -1);
         }
         return comment;
       }))
@@ -299,7 +305,7 @@ const Deal = () => {
               {
                 (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
                   t(_t("FREE")) :
-                  deal.type === 'deal' ? <span>{deal.price_low + "€ "} 
+                  deal.type === 'deal' ? <span>{deal.price_low + "€ "}
                     <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
                     deal.type === 'discount_percent' ?
                       <span>-{deal.price_new}%</span> :
@@ -422,6 +428,7 @@ const Deal = () => {
   }
 
   return (
+    deal.id > 0 &&
     <>
       {isMoreThanAMonth(deal.start_date) &&
         <Box bg={'yellow.100'}>
