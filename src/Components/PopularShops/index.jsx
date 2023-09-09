@@ -5,7 +5,7 @@ import { _t } from "../../Utils/_t";
 import { useTranslation } from "react-i18next";
 
 const PopularShops = ({ stores }) => {
-  const  {t} = useTranslation();
+  const { t } = useTranslation();
   const themeColor = 'blue.500';
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
@@ -18,7 +18,7 @@ const PopularShops = ({ stores }) => {
         {t(_t("Working codes, discounts and vouchers for"))} {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
-        {stores.slice(0,10).map((store, index) => (
+        {stores.slice(0, 10).map((store, index) => (
           <Button
             as={Link}
             to={`/shop/${store.name}`}

@@ -103,7 +103,7 @@ const Deal = () => {
         getCommentsByDealId(dealId),
       ]);
 
-      if(!_deal?.id > 0) {
+      if (!_deal?.id > 0) {
         history.push('/404');
         return;
       }
@@ -158,6 +158,10 @@ const Deal = () => {
   }
 
   const handleChangeComment = (content) => {
+    setNewComment(content);
+  }
+
+  const handleAddComment = async () => {
     if (!localStorage.getItem('authToken')) {
       setNewComment("");
       toast({
@@ -171,32 +175,30 @@ const Deal = () => {
 
       return;
     }
-    setNewComment(content);
-  }
 
-  const handleAddComment = async () => {
-    if (!newComment) {
-      return;
-    }
-    if (!localStorage.getItem('authToken')) {
+    const div = document.createElement('div');
+    div.innerHTML = newComment;
+    const hasText = div.textContent.trim().length > 0;
+
+    if (!hasText) {
       toast({
         title: t(_t('Warning.')),
-        description: t(_t('Please login.')),
+        description: t(_t('Empty Comment!')),
         position: 'top',
         status: 'warning',
         duration: 3000,
         isClosable: true,
       });
+
+      return;
     }
-    var result = await createCommentService({
+
+    const result = await createCommentService({
       blog: newComment,
       dealId: deal.id
     })
+
     if (result) {
-      console.log([
-        ...comments,
-        result
-      ]);
       setComments([
         result,
         ...comments
@@ -533,6 +535,7 @@ const Deal = () => {
                 theme="snow"
                 modules={modules}
                 formats={formats}
+                readOnly={localStorage.getItem('authToken') ? false : true}
                 value={newComment}
                 onChange={(content) => handleChangeComment(content)}
               />
