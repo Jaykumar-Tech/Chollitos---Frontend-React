@@ -33,7 +33,7 @@ const Free = () => {
       start_at: offset,
       length: limit,
       type: "free",
-      feature: dealFeature
+      feature: localStorage.getItem("feature")
     });
 
     if (data) {
@@ -78,8 +78,15 @@ const Free = () => {
 
     window.removeEventListener("scroll", () => { });
   }
-  window.addEventListener("scroll", handleScroll);
 
+  useEffect(()=>{
+    window.addEventListener("scroll", handleScroll);
+    localStorage.setItem("feature", "new");
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [])
+  
   return (
     <>
       <Helmet>

@@ -20,14 +20,15 @@ let isend = false;
 const Home = () => {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores} = globalProps;
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
-  const [dealFeature, setDealFeature] = useState("new");
+  const [feature,setFeature] = useState("new")
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
-  const limit = 8;
+  const limit = 24;
 
   const getDeals = async (loadmore = true) => {
+
     if (!loadmore) {
       offset = 0;
       isend = false;
@@ -38,11 +39,11 @@ const Home = () => {
     const data = await getDealByFilter({
       start_at: offset,
       length: limit,
-      feature: dealFeature
+      feature: localStorage.getItem("feature")
     });
 
     if (data) {
-
+      
       if (data.length !== limit) {
         isend = true;
       }
@@ -63,16 +64,16 @@ const Home = () => {
     };
 
     fetchData();
-  }, [dealFeature]);
+  }, [feature]);
 
-  useEffect(() => {
-    if (!isScrolled) return;
-    const fetchData = async () => {
-      await getDeals();
-    };
+  // useEffect(() => {
+  //   if (!isScrolled) return;
+  //   const fetchData = async () => {
+  //     await getDeals();
+  //   };
 
-    fetchData();
-  }, [isScrolled]);
+  //   fetchData();
+  // }, [isScrolled]);
 
   const handleScroll = () => {
 
@@ -83,19 +84,25 @@ const Home = () => {
 
       if (isScrolled) return;
       isScrolled = true;
-      // getDeals();
+      getDeals();
     }
-
     window.removeEventListener("scroll", () => {});
   }
-  window.addEventListener("scroll", handleScroll);
+
+  useEffect(()=>{
+    window.addEventListener("scroll", handleScroll);
+    localStorage.setItem("feature", "new");
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [])
 
   return (
     <div>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {dealFeature} {t(_t("deals"))} </title>
+        <title>{t(_t("Chollitos"))} - {feature} {t(_t("deals"))} </title>
       </Helmet>
-      <DoubleTopBar categories={categories} setFeature={setDealFeature} />
+      <DoubleTopBar categories={categories} setFeature={setFeature}/>
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb />
         <Box id="Home">

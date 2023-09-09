@@ -9,6 +9,7 @@ function TabBar({ setFeature }) {
   const tabFeatureList = ['new', 'popular', 'highlight', 'commented'];
 
   const setFeatureInTab = (index) => {
+    localStorage.setItem("feature", tabFeatureList[index])
     setFeature(tabFeatureList[index]);
   }
 

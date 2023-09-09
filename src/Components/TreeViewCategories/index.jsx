@@ -75,7 +75,9 @@ const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
 
     const curId = buildFilter();
     if (curId >= 0) {
-      filterDeals(getAllChildren(curId));
+      var catIds = getAllChildren(curId)
+      localStorage.setItem("category", JSON.stringify(catIds))
+      filterDeals(catIds);
     }
   }, [categories, categorySlug]);
 
