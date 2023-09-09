@@ -23,7 +23,7 @@ const Category = () => {
 
   const [offset, setOffset] = useState(0);
   const [isend, setIsend] = useState(false);
-  const [catIds, setCatIds] = useState([])
+  const [catIds, setCatIds] = useState([]);
   const limit = 12;
 
   const getDeals = async (loadmore = true) => {

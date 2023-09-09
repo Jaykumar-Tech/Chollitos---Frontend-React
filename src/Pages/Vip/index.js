@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon, Center, Button } from "@chakra-ui/react";
+import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import TabBar from "../../Layouts/CategoryBar/tabs";
@@ -11,46 +11,49 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
 
+let isScrolled = false;
+let offset = 0;
+let isend = false;
+
 const Vip = () => {
   const { t } = useTranslation();
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
   const history = useHistory();
-  const [offset, setOffset] = useState(0);
-  const [isend, setIsend] = useState(false);
   const limit = 12;
 
   const getDeals = async (loadmore = true) => {
 
-    setIsloading(true);
-
     if (!loadmore) {
+      offset = 0;
       setDeals([]);
-      setOffset(0);
+      setIsloading(true);
     }
 
     const data = await getDealByFilter({
-      start_at: loadmore ? offset : 0,
-      length: limit + 1,
+      start_at: offset,
+      length: limit,
       vip: 1,
       feature: dealFeature
     });
 
     if (data) {
-      
-      if (data.length > limit) {
-        setIsend(false);
-        data.pop();
+
+      if (data.length === limit) {
+        isend = false;
       } else {
-        setIsend(true);
+        isend = true;
       }
 
       loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
-      setOffset(loadmore ? offset + limit : limit);
+      offset += limit;
     }
 
     setIsloading(false);
+    setTimeout(() => {
+      !isend && (isScrolled = false);
+    }, 100);
   };
 
   useEffect(() => {
@@ -65,6 +68,25 @@ const Vip = () => {
 
     fetchData();
   }, [dealFeature]);
+
+  const handleScroll = () => {
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.offsetHeight;
+
+    if (scrollPosition + 1000 >= documentHeight) {
+
+      if (isScrolled)
+        return;
+      isScrolled = true;
+
+      getDeals();
+    }
+
+    window.removeEventListener("scroll", () => { });
+  }
+  window.addEventListener("scroll", handleScroll);
+
 
   return (
     <>
@@ -121,16 +143,6 @@ const Vip = () => {
               </Box>
             ))}
           </SimpleGrid>
-          {deals.length > 0 && !isend &&
-            <Center w={'100%'} p={5} colSpan={[1, 2, 3, 4]}>
-              <Button
-                colorScheme="blue"
-                onClick={getDeals}
-              >
-                {t(_t("Load more"))}
-              </Button>
-            </Center>
-          }
         </Box>
       </Box>
     </>

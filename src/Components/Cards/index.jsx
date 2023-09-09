@@ -28,7 +28,11 @@ const CustomCard = ({ deal }) => {
   const themeColor = 'blue.500';
 
   const getUrlFromTitle = (title) => {
-    return title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+    const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+    if (_title.length > 30) {
+      return _title.slice(0, 30) + "...";
+    }
+    return _title;
   }
 
   const handleLike = async (isLike) => {

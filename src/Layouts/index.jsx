@@ -47,7 +47,7 @@ import MenuBar from "./MenuBar";
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { signInService, signUpService } from "../Services/User";
+import { resendCode, signInService, signUpService, verifyCode } from "../Services/User";
 import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
@@ -59,9 +59,12 @@ export default function Navbar() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [authToken, setAuthToken] = useState(null);
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [isEmailVerify, setIsEmailVerify] = useState(false);
+  const [code, setCode] = useState("")
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
@@ -89,14 +92,6 @@ export default function Navbar() {
   const handleSignInOpenModal = () => {
     setIsSignInOpen(true);
   };
-
-  const handleSignInCloseModal = () => {
-    setIsSignInOpen(false);
-  };
-
-  // const handleSignUpOpenModal = () => {
-  //   setIsSignUpOpen(true);
-  // };
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -126,14 +121,50 @@ export default function Navbar() {
     e.preventDefault();
     setIsSignUpLoading(true);
 
-    const response = await signUpService(email, password, username);
+    const response = await signUpService(email, password, username, birthday);
     setIsSignUpLoading(false);
 
-    if (response.status === 200) {
-      setIsSignUpOpen(false);
+    if ( response.status === 200 ) {
+      setIsSignUpOpen(false)
+      setIsEmailVerify(true) ;
+    } else {
       toast({
-        title: t(_t('Account created.')),
-        description: t(_t("We've created your account for you.")),
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('expirationTime');
+    window.location.reload();
+  }
+
+  const emptyInputs = () => {
+    
+  }
+
+  const toSignUp = () => {
+    setIsSignInOpen(false);
+    setIsSignUpOpen(true);
+  }
+
+  const toSignIn = () => {
+    setIsSignUpOpen(false);
+    setIsSignInOpen(true);
+  }
+
+  const handleVerifyCode = async (e) => {
+    const response = await verifyCode(email, code)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Email')),
+        description: t(_t("You have registered successfully.")),
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -151,124 +182,31 @@ export default function Navbar() {
         duration: 3000,
         isClosable: true,
       })
+      setCode("");
     }
-    // axios.post("https://chollitos.net/api/user/register",
-    //   {
-    //     email: email,
-    //     password: password,
-    //     username: username,
-    //   })
-    //   .then(response => {
-    //     if (response.status === 200) {
-    //       setIsSignUpOpen(false);
-    //       toast({
-    //         title: 'Account created.',
-    //         description: "We've created your account for you.",
-    //         position: 'top',
-    //         status: 'success',
-    //         duration: 3000,
-    //         isClosable: true,
-    //       })
-    //       setTimeout(() => {
-    //         handleSignIn(e);
-    //       }, 100);
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //     toast({
-    //       title: 'Error.',
-    //       description: err.response?.data.message,
-    //       position: 'top',
-    //       status: 'error',
-    //       duration: 3000,
-    //       isClosable: true,
-    //     })
-    //   })
   }
 
-  const handleSignOut = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('expirationTime');
-    window.location.reload();
-  }
-
-  // const handleSignInGoogle = (isLogin) => {
-  //   const firebaseConfig = {
-  //     apiKey: "AIzaSyC2fD6TDBdbhZYg5097RAkMYs-7fJIPf_g",
-  //     authDomain: "chollo-es-396117.firebaseapp.com",
-  //     projectId: "chollo-es-396117",
-  //     storageBucket: "chollo-es-396117.appspot.com",
-  //     messagingSenderId: "416034001184",
-  //     appId: "1:416034001184:web:73027a3783bf8fd7e60745",
-  //     measurementId: "G-B9XRQE5YX9"
-  //   };
-
-  //   // Initialize Firebase
-  //   const app = initializeApp(firebaseConfig);
-  //   const analytics = getAnalytics(app);
-  //   const provider = new GoogleAuthProvider();
-  //   provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-  //   // provider.setCustomParameters({
-  //   //   'login_hint': 'gemma@gmail.com'
-  //   // });
-
-  //   // Initialize Firebase Authentication and get a reference to the service
-  //   const auth = getAuth(app);
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //       if (isLogin) {
-
-  //         result.user.getIdToken(true).then(function (idToken) {
-  //           axios.post("https://chollitos.net/api/user/google", {
-  //             idToken: idToken,
-  //             email: user.email
-  //           })
-  //             .then(response => {
-  //               console.log("login success")
-  //             })
-  //             .catch(err => {
-  //               console.log(err)
-  //             })
-  //         }).catch(function (err) {
-  //           console.log(err);
-  //         })
-  //       } else {
-  //         setEmail(user.email);
-  //         setUsername(user.displayName);
-  //       }
-  //       // IdP data available using getAdditionalUserInfo(result)
-  //       // ...
-  //     }).catch((error) => {
-  //       // Handle Errors here.
-  //       console.log(error)
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       // ...
-  //     });
-  // }
-
-  const handleSignUpCloseModal = () => {
-    setIsSignUpOpen(false);
-  };
-
-  const toSignUp = () => {
-    setIsSignInOpen(false);
-    setIsSignUpOpen(true);
-  }
-
-  const toSignIn = () => {
-    setIsSignUpOpen(false);
-    setIsSignInOpen(true);
+  const handleResendCode = async (e) => {
+    const response = await resendCode(email)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success')),
+        description: t(_t("Email Sent.")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -386,7 +324,7 @@ export default function Navbar() {
           }
         </Flex>
       </Box>
-      <Modal isOpen={isSignInOpen} onClose={handleSignInCloseModal}>
+      <Modal isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("Sign in"))}</ModalHeader>
@@ -431,26 +369,26 @@ export default function Navbar() {
               </Button>
               <Spacer height={4} /> */}
               <form onSubmit={handleSignIn}>
-                <FormControl id="email">
+                <FormControl id="email" mt={3}>
                   <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
-                <FormControl id="password">
+                <FormControl id="password" mt={3}>
                   <FormLabel>{t(_t("Password"))}</FormLabel>
                   <Input type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)} />
                 </FormControl>
-                <Stack spacing={10}>
+                <Stack spacing={10} mt={2}>
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
                     justify={"space-between"}
                   >
                     <Checkbox>{t(_t("Remember me"))}</Checkbox>
-                    <Text color={"blue.400"}>{t(_t("Forgot password?"))}</Text>
+                    <Text color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}</Text>
                   </Stack>
                   <Button
                     isLoading={isSignInLoading}
@@ -469,13 +407,13 @@ export default function Navbar() {
                 <Text>
                   {t(_t("Don't have an account?"))}
                 </Text>
-                <Text color={'blue.400'} onClick={toSignUp}>{t(_t("Signup"))}</Text>
+                <Text color={'blue.400'} onClick={toSignUp} cursor={'pointer'}>{t(_t("Signup"))}</Text>
               </Stack>
             </Stack>
           </Box>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isSignUpOpen} onClose={handleSignUpCloseModal}>
+      <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("Sign up"))}</ModalHeader>
@@ -519,21 +457,25 @@ export default function Navbar() {
               </Button>
               <Spacer height={4} /> */}
               <form onSubmit={handleSignUp}>
-                <Box>
-                  <FormControl id="name" isRequired>
-                    <FormLabel>{t(_t("User Name"))}</FormLabel>
-                    <Input type="text"
-                      value={username}
-                      onChange={e => setUsername(e.target.value)} />
-                  </FormControl>
-                </Box>
-                <FormControl id="email" isRequired>
+                <FormControl id="name" isRequired mt={3}>
+                  <FormLabel>{t(_t("User Name"))}</FormLabel>
+                  <Input type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)} />
+                </FormControl>
+                <FormControl id="email" isRequired mt={3}>
                   <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
-                <FormControl id="password" isRequired>
+                <FormControl id="gender" isRequired mt={3}>
+                  <FormLabel>{t(_t("Birthday"))}</FormLabel>
+                  <Input type="date"
+                    value={birthday}
+                    onChange={e => setBirthday(e.target.value)} />
+                </FormControl>
+                <FormControl id="password" isRequired mt={3}>
                   <FormLabel>{t(_t("Password"))}</FormLabel>
                   <InputGroup>
                     <Input type={showPassword ? 'text' : 'password'}
@@ -567,9 +509,34 @@ export default function Navbar() {
                 <Text>
                   {t(_t("Already have an account?"))}
                 </Text>
-                <Text color={'blue.400'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
+                <Text color={'blue.400'} cursor={'pointer'} onClick={toSignIn}>{t(_t("Signin"))}</Text>
               </Stack>
             </Stack>
+          </Box>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isEmailVerify} onClose={() => setIsEmailVerify(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("OTP Verification"))}</ModalHeader>
+          <ModalCloseButton />
+          <Box
+            rounded={'lg'}
+            bg={useColorModeValue('white', 'gray.700')}
+            boxShadow={'lg'}
+            p={8}
+          >
+            <FormControl id="otp" mb={4} isRequired>
+              <Input type="text" placeholder={t(_t("Enter the OTP"))} value={code}
+              onChange={(e)=>setCode(e.target.value)} />
+            </FormControl>
+            <Flex>
+              <Text 
+              onClick={handleResendCode}
+              color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
+              <Spacer />
+              <Button colorScheme="blue" onClick= {handleVerifyCode }>{t(_t("Verify"))}</Button>
+            </Flex>
           </Box>
         </ModalContent>
       </Modal>
