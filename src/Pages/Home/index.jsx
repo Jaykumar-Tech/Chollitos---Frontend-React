@@ -4,6 +4,7 @@ import DoubleTopBar from "../../Layouts/CategoryBar";
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
+import Banner from "../../Components/Banner";
 import { Spinner, useBreakpointValue } from "@chakra-ui/react";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
@@ -53,8 +54,8 @@ const Home = () => {
 
     setIsloading(false);
     // setTimeout(() => {
-      !isend && (isScrolled = false);
-    // }, 100);
+    !isend && (isScrolled = false);
+    // }, 0);
   };
 
   useEffect(() => {
@@ -65,6 +66,15 @@ const Home = () => {
     fetchData();
   }, [dealFeature]);
 
+  useEffect(() => {
+    if (!isScrolled) return;
+    const fetchData = async () => {
+      await getDeals();
+    };
+
+    fetchData();
+  }, [isScrolled]);
+
   const handleScroll = () => {
 
     const scrollPosition = window.innerHeight + window.scrollY;
@@ -72,14 +82,12 @@ const Home = () => {
 
     if (scrollPosition + 1000 >= documentHeight) {
 
-      if (isScrolled)
-        return;
+      if (isScrolled) return;
       isScrolled = true;
-
-      getDeals();
+      // getDeals();
     }
 
-    window.removeEventListener("scroll", () => { });
+    window.removeEventListener("scroll", () => {});
   }
   window.addEventListener("scroll", handleScroll);
 
@@ -127,6 +135,7 @@ const Home = () => {
               <Box
                 width={'20%'}
               >
+                <Banner />
                 <PopularShops stores={stores} />
                 <PopularCategories categories={categories} />
               </Box>
