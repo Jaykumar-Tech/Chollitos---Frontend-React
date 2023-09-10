@@ -12,7 +12,7 @@ function Logo() {
         history.push('/');
       }}
       cursor={'pointer'}
-      display={{ base: "none", md: 'inline-flex' }}
+      display={'inline-flex'}
     >
       <Image src={"/logo.png"} title="logo.png" />
     </Box>

@@ -34,6 +34,14 @@ const signUpService = async (email, password, username, birthday) => {
   }
 };
 
+const getAllUserService = async () => {
+  try {
+    const response = await api.get("user/getall");
+    return response.data.data;
+  } catch (error) {
+    return error;
+  }
+};
 const verifyCode = async (email, code) => {
   try {
     const response = await api.post("user/verify_code", {
@@ -75,6 +83,7 @@ const resetPassword = async ( email, password ) => {
 export {
   signInService,
   signUpService,
+  getAllUserService,
   verifyCode,
   resendCode,
   resetPassword

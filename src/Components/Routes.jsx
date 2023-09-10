@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 
@@ -13,9 +14,17 @@ import Free from "../Pages/Free";
 import Vip from "../Pages/Vip";
 import Page404 from "../Pages/404";
 import UploadDeal from "../Pages/UploadDeal";
+import User from "../Pages/User";
 
 
 function Routes() {
+  const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
+
+  useEffect(() => {
+    if (localStorage.getItem(authToken))
+      setAuthToken(JSON.parse(localStorage.getItem('authToken')));
+  }, []);
+
   return (
     <Box minH={'calc(100vh - 54px)'} bg={'gray.100'}>
       <Switch>
@@ -30,6 +39,7 @@ function Routes() {
         <Route exact path="/free" component={Free} />
         <Route exact path="/vip" component={Vip} />
         <Route exact path="/upload" component={UploadDeal} />
+        {authToken?.user?.role === 'admin' && <Route exact path="/users" component={User} />}
         <Route component={Page404} />
       </Switch>
     </Box>
