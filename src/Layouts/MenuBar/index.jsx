@@ -20,8 +20,8 @@ import { Link } from "react-router-dom";
 import { FaShoppingCart, FaMoneyBill, FaFolderOpen, FaCrown } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
-import { Redirect } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import Logo from "../../Components/Logo";
 
 function MenuBar({ appMode }) {
   const { globalProps } = useContext(GlobalContext);
@@ -108,8 +108,14 @@ function MenuBar({ appMode }) {
           marginX={'auto'}
           marginTop={appMode === 'lg' ? "54px" : "0px"}
         >
-          <DrawerCloseButton />
-          <DrawerHeader></DrawerHeader>
+          <DrawerCloseButton color={'white'} />
+          {appMode !== 'lg' &&
+            <DrawerHeader bg={'blue.500'} h={'54px'} p={0}>
+              <Box onClick={() => setIsOpen(false)}>
+                <Logo />
+              </Box>
+            </DrawerHeader>
+          }
           <DrawerBody>
             {appMode === 'lg' ?
               <Box maxW={'1200px'} m={'auto'}>

@@ -104,9 +104,7 @@ export default function Navbar() {
     setIsSignInLoading(false);
 
     if (response.status === 200) {
-      const expirationTime = new Date().getTime() + (60 * 60 * 1000);
       localStorage.setItem('authToken', JSON.stringify(response.data));
-      localStorage.setItem('expirationTime', expirationTime);
       window.location.reload();
     } else {
       toast({
@@ -279,7 +277,7 @@ export default function Navbar() {
           alignItems={"center"}
           justifyContent={"space-between"}
         >
-          <Logo />
+          {appMode === 'lg' && <Logo />}
 
           <MenuBar appMode={appMode} />
 

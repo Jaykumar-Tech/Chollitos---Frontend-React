@@ -33,7 +33,17 @@ const signUpService = async (email, password, username) => {
   }
 };
 
+const getAllUserService = async () => {
+  try {
+    const response = await api.get("user/getall");
+    return response.data.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export {
   signInService,
   signUpService,
+  getAllUserService,
 };
