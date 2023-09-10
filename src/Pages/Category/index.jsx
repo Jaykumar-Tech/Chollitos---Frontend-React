@@ -85,7 +85,6 @@ const Category = () => {
 
   useEffect(()=>{
     window.addEventListener("scroll", handleScroll);
-    localStorage.setItem("category", "[]");
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };

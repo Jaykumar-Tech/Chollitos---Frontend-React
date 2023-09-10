@@ -59,9 +59,23 @@ const resendCode = async ( email ) => {
   }
 }
 
+const resetPassword = async ( email, password ) => {
+  try {
+    const response = await api.post("user/reset_password", {
+      email: email,
+      password: password
+    });
+    console.log(JSON.stringify(response));
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   signInService,
   signUpService,
   verifyCode,
-  resendCode
+  resendCode,
+  resetPassword
 };
