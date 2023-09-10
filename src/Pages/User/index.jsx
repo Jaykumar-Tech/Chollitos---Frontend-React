@@ -4,11 +4,20 @@ import ChollitosTable from "../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
   Box,
+  Button,
   Icon,
   Progress,
   Badge,
   Heading,
   Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -16,7 +25,9 @@ import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
 
 const User = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [users, setUsers] = useState([]);
+  const [deleteUserId, setDeleteUserId] = useState(0);
   const [isloading, setIsloading] = useState(false);
   const { t } = useTranslation();
 
@@ -96,7 +107,10 @@ const User = () => {
             boxSize={5}
             cursor={'pointer'}
             title={t(_t('delete'))}
-            onClick={() => deleteUser(row.original.id)}
+            onClick={() => {
+              setDeleteUserId(row.original.id);
+              onOpen();
+            }}
           />
         </>
       ),
@@ -119,19 +133,19 @@ const User = () => {
   }, []);
 
   const activateUser = (id) => {
-    
+    alert(id);
   }
 
   const deactivateUser = (id) => {
-
+    alert(id);
   }
 
   const deleteUser = (id) => {
-
+    alert(id);
   }
 
   const setUserRole = (id, role) => {
-
+    alert(id + ", " + role);
   }
 
   return (
@@ -173,6 +187,27 @@ const User = () => {
           </Box>
         }
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("Delete User"))}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {t(_t("Are you sure?"))}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onClose}>
+              {t(_t("Cancel"))}
+            </Button>
+            <Button colorScheme="red" onClick={() => {
+              deleteUser(deleteUserId);
+              onClose();
+            }}>
+              {t(_t("Delete"))}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   )
 }
