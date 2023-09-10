@@ -123,7 +123,6 @@ const Store = () => {
           <Heading fontSize={'1.5em'}>{store?.name} {t(_t("discount code"))}</Heading>
           <Text>{t(_t("View the newest"))} {store?.name} {t(_t("discount codes in"))} {month} {currentDate.getFullYear()}</Text>
           <Box fontSize={'sm'}>
-            <Text fontSize={'sm'} color={'gray.500'}> Last updated: {getTimeDiff(store?.updated_at)} {t(_t("ago"))}</Text>
             <a href={`https://${store?.url}`} target={"_blank"} rel={"noopener noreferrer"} style={{ color: 'blue' }}>
               {store?.url}
             </a>

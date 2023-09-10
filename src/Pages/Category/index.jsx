@@ -26,7 +26,7 @@ const Category = () => {
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
   const [catIds, setCatIds] = useState([]);
-  const limit = 12;
+  const limit = 24;
 
   const getDeals = async (loadmore = true) => {
 
