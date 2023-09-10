@@ -43,6 +43,7 @@ import "./index.css";
 import Logo from "../Components/Logo";
 import SearchBar from './SearchBar';
 import MenuBar from "./MenuBar";
+import AdminMenu from "./AdminMenu";
 
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
@@ -64,6 +65,7 @@ export default function Navbar() {
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
   const [isEmailVerify, setIsEmailVerify] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [code, setCode] = useState("")
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
@@ -78,16 +80,16 @@ export default function Navbar() {
     }
   }, []);
 
-  let timer;
-  const resetTimer = () => {
-    clearTimeout(timer);
-    timer = setTimeout(handleSignOut, 60 * 60 * 1000);
-  };
+  // let timer;
+  // const resetTimer = () => {
+  //   clearTimeout(timer);
+  //   timer = setTimeout(handleSignOut, 60 * 60 * 1000);
+  // };
 
-  const userEvents = ['click', 'mousemove', 'keydown'];
-  userEvents.forEach((event) => {
-    document.addEventListener(event, resetTimer);
-  });
+  // const userEvents = ['click', 'mousemove', 'keydown'];
+  // userEvents.forEach((event) => {
+  //   document.addEventListener(event, resetTimer);
+  // });
 
   const handleSignInOpenModal = () => {
     setIsSignInOpen(true);
@@ -122,9 +124,9 @@ export default function Navbar() {
     const response = await signUpService(email, password, username, birthday);
     setIsSignUpLoading(false);
 
-    if ( response.status === 200 ) {
+    if (response.status === 200) {
       setIsSignUpOpen(false)
-      setIsEmailVerify(true) ;
+      setIsEmailVerify(true);
     } else {
       toast({
         title: t(_t('Error.')),
@@ -139,12 +141,11 @@ export default function Navbar() {
 
   const handleSignOut = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('expirationTime');
     window.location.reload();
   }
 
   const emptyInputs = () => {
-    
+
   }
 
   const toSignUp = () => {
@@ -158,7 +159,9 @@ export default function Navbar() {
   }
 
   const handleVerifyCode = async (e) => {
-    const response = await verifyCode(email, code)
+    setIsVerifying(true);
+    const response = await verifyCode(email, code);
+    setIsVerifying(false);
     if (response.status === 200) {
       toast({
         title: t(_t('Email')),
@@ -224,6 +227,8 @@ export default function Navbar() {
           {appMode === 'lg' && <Logo />}
 
           <MenuBar appMode={appMode} />
+
+          <AdminMenu />
 
           < Spacer />
 
@@ -526,14 +531,14 @@ export default function Navbar() {
           >
             <FormControl id="otp" mb={4} isRequired>
               <Input type="text" placeholder={t(_t("Enter the OTP"))} value={code}
-              onChange={(e)=>setCode(e.target.value)} />
+                onChange={(e) => setCode(e.target.value)} />
             </FormControl>
             <Flex>
-              <Text 
-              onClick={handleResendCode}
-              color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
+              <Text
+                onClick={handleResendCode}
+                color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
               <Spacer />
-              <Button colorScheme="blue" onClick= {handleVerifyCode }>{t(_t("Verify"))}</Button>
+              <Button isLoading={isVerifying} colorScheme="blue" onClick={handleVerifyCode}>{t(_t("Verify"))}</Button>
             </Flex>
           </Box>
         </ModalContent>

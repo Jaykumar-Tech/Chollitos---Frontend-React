@@ -9,12 +9,12 @@ import {
   GridItem,
   FormLabel,
   Input,
-  Select,
   Text,
   useToast,
   Image,
   Spinner,
 } from '@chakra-ui/react'
+import Select from "react-select";
 import { useDropzone } from 'react-dropzone';
 import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
@@ -77,6 +77,18 @@ export default function CreateDeal() {
     'background',
     'clean',
   ];
+
+  const categoryOptions = categories.map((category) => ({
+    value: category.slug,
+    label: category.name,
+    id: category.id,
+  }));
+
+  const storeOptions = stores.map((store) => ({
+    value: store.name,
+    label: store.name,
+    id: store.id,
+  }));
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'image/*',
@@ -373,25 +385,16 @@ export default function CreateDeal() {
             {t(_t("Categories"))}
           </FormLabel>
           <Select
-            id="category"
             name="category"
-            autoComplete="category"
             placeholder={t(_t("Select Category"))}
-            shadow="sm"
-            size="sm"
-            w="full"
-            value={categoryId.name}
+            isSearchable={true}
+            options={categoryOptions}
+            value={categoryOptions.find((category) => category.value === categoryId.name)}
             onChange={(e) => setCategoryId({
-              name: e.target.value,
-              id: parseInt(e.target.options[e.target.selectedIndex].id)
+              name: e.label,
+              id: parseInt(e.id)
             })}
-          >
-            {categories ?
-              categories.map(v => {
-                return <option id={v.id} key={v.id}>{v.name}</option>
-              }) : null
-            }
-          </Select>
+          />
         </FormControl>
 
         <FormControl as={GridItem} colSpan={[6, 3]}>
@@ -403,26 +406,16 @@ export default function CreateDeal() {
             {t(_t("Stores"))}
           </FormLabel>
           <Select
-            id="store"
             name="store"
-            autoComplete="store"
             placeholder={t(_t("Select Store"))}
-            shadow="sm"
-            size="sm"
-            w="full"
-            value={storeId.name}
+            isSearchable={true}
+            options={storeOptions}
+            value={storeOptions.find((store) => store.value === storeId.name)}
             onChange={(e) => setStoreId({
-              name: e.target.value,
-              id: parseInt(e.target.options[e.target.selectedIndex].id)
+              name: e.value,
+              id: parseInt(e.id)
             })}
-          >
-            {
-              stores ?
-                stores.map(v => {
-                  return <option id={v.id} key={v.id}>{v.name}</option>
-                }) : null
-            }
-          </Select>
+          />
         </FormControl>
 
         <FormControl as={GridItem} colSpan={6}>

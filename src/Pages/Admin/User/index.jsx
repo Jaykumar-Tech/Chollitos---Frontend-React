@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getAllUserService } from "../../Services/User"
-import ChollitosTable from "../../Components/DataTable";
+import { getAllUserService } from "../../../Services/User"
+import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   Progress,
   Badge,
   Heading,
-  Select,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -19,10 +18,11 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from '@chakra-ui/react';
+import Select from "react-select";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTranslation } from 'react-i18next';
-import { _t } from "../../Utils/_t";
+import { _t } from "../../../Utils/_t";
 
 const User = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,6 +30,12 @@ const User = () => {
   const [deleteUserId, setDeleteUserId] = useState(0);
   const [isloading, setIsloading] = useState(false);
   const { t } = useTranslation();
+
+  const options = [
+    { value: 'admin', label: t(_t('admin')) },
+    { value: 'vip', label: t(_t('vip')) },
+    { value: 'customer', label: t(_t('customer')) }
+  ];
 
   const columns = [
     { Header: t(_t('Id')), accessor: 'id' },
@@ -49,17 +55,17 @@ const User = () => {
     {
       Header: t(_t('Role')), accessor: 'role',
       Cell: ({ value, row }) => (
-        <Select
-          size={'sm'}
-          value={value}
-          onChange={(e) => {
-            setUserRole(row.original.id, e.target.value)
-          }}
-        >
-          <option value='admin'>{t(_t('admin'))}</option>
-          <option value='vip'>{t(_t('vip'))}</option>
-          <option value='customer'>{t(_t('customer'))}</option>
-        </Select>
+        <Box w={'100px'}>
+          <Select
+            size={'sm'}
+            options={options}
+            isSearchable={true}
+            value={options.find(option => option.value === value)}
+            onChange={(e) => {
+              setUserRole(row.original.id, e.value)
+            }}
+          />
+        </Box>
       ),
     },
     {

@@ -5,17 +5,17 @@ import { getStoresService } from "../Services/Store";
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-  const [categories, setCategories] = useState([]);
-  const [stores, setStores] = useState([]);
+  const [categories, _setCategories] = useState([]);
+  const [stores, _setStores] = useState([]);
 
   const getCategories = async () => {
     const data = await getCategoriesService();
-    setCategories(data);
+    _setCategories(data);
   };
 
   const getStores = async () => {
     const data = await getStoresService();
-    setStores(data);
+    _setStores(data);
   };
 
   useEffect(() => {
@@ -30,6 +30,8 @@ export const GlobalProvider = ({ children }) => {
   const globalProps = {
     categories: categories,
     stores: stores,
+    _setCategories: _setCategories,
+    _setStores: _setStores,
   };
 
   return (
