@@ -11,6 +11,10 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
+let isScrolled = false;
+let offset = 0;
+let isend = false;
+
 const Category = () => {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
@@ -21,46 +25,71 @@ const Category = () => {
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
-  const [offset, setOffset] = useState(0);
-  const [isend, setIsend] = useState(false);
   const [catIds, setCatIds] = useState([]);
   const limit = 12;
 
   const getDeals = async (loadmore = true) => {
 
-    setIsloading(true);
-
     if (!loadmore) {
+      offset = 0 ;
+      isend = false;
       setDeals([]);
-      setOffset(0);
+      setIsloading(true);
     }
 
     const data = await getDealByFilter({
-      start_at: loadmore ? offset : 0,
-      length: limit + 1,
-      category_id: catIds
+      start_at: offset,
+      length: limit,
+      category_id: JSON.parse(localStorage.getItem("category"))
     });
 
     if (data) {
 
-      if (data.length > limit) {
-        setIsend(false);
-        data.pop();
-      } else {
-        setIsend(true);
+     
+      if (data.length !== limit) {
+        isend = true;
       }
 
       loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
-      setOffset(loadmore ? offset + limit : limit);
+      offset += limit;
     }
 
     setIsloading(false);
+    !isend && (isScrolled = false);
   };
 
   useEffect(()=>{
-    getDeals(false)
+    const fetchData = async () => {
+      await getDeals(false);
+    };
+
+    fetchData();
   }, [catIds])
 
+  const handleScroll = () => {
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.offsetHeight;
+
+    if (scrollPosition + 1000 >= documentHeight) {
+
+      if (isScrolled)
+        return;
+      isScrolled = true;
+
+      getDeals();
+    }
+
+    window.removeEventListener("scroll", () => { });
+  }
+
+  useEffect(()=>{
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [])
+  
   return (
     <>
       <Helmet>
@@ -114,7 +143,7 @@ const Category = () => {
               ))}
             </SimpleGrid>
           </Flex>
-          {deals.length > 0 && !isend &&
+          {/* {deals.length > 0 && !isend &&
             <Center w={'100%'} p={5} colSpan={[1, 2, 3, 4]}>
               <Button
                 colorScheme="blue"
@@ -123,7 +152,7 @@ const Category = () => {
                 {t(_t("Load more"))}
               </Button>
             </Center>
-          }
+          } */}
         </Box>
       </Box>
     </>

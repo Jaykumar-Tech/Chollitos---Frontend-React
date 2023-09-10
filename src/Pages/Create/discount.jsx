@@ -161,13 +161,14 @@ export default function CreateDiscount() {
       setUrl("");
       setImages([]);
       setPrice(0);
-      setShip(0);
+      setShipPrice(0);
       setTitle("")
       setDescription("")
       setCategoryId({ name: "", id: -1 })
       setStoreId({ name: "", id: -1 })
       setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
       setEndDate('');
+      setCode("")
       toast({
         title: t(_t('Deal created.')),
         description: t(_t("We've created your deal.")),

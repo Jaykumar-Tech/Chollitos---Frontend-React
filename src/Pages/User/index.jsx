@@ -119,7 +119,7 @@ const User = () => {
   }, []);
 
   const activateUser = (id) => {
-
+    
   }
 
   const deactivateUser = (id) => {
@@ -131,7 +131,7 @@ const User = () => {
   }
 
   const setUserRole = (id, role) => {
-    
+
   }
 
   return (

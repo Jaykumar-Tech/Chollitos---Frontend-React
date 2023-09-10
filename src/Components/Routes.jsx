@@ -39,7 +39,7 @@ function Routes() {
         <Route exact path="/free" component={Free} />
         <Route exact path="/vip" component={Vip} />
         <Route exact path="/upload" component={UploadDeal} />
-        {authToken?.user?.role === 'vip' && <Route exact path="/users" component={User} />}
+        {authToken?.user?.role === 'admin' && <Route exact path="/users" component={User} />}
         <Route component={Page404} />
       </Switch>
     </Box>

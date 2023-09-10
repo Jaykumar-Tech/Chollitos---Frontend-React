@@ -21,7 +21,7 @@ const Vip = () => {
   const [isloading, setIsloading] = useState(false);
   const [dealFeature, setDealFeature] = useState("new");
   const history = useHistory();
-  const limit = 12;
+  const limit = 24;
 
   const getDeals = async (loadmore = true) => {
 
@@ -35,7 +35,7 @@ const Vip = () => {
       start_at: offset,
       length: limit,
       vip: 1,
-      feature: dealFeature
+      feature: localStorage.getItem("feature")
     });
 
     if (data) {
@@ -56,10 +56,15 @@ const Vip = () => {
     }, 100);
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (!auth_token || auth_token.user.role !== "vip") history.push('/404');
-  }, []);
+    window.addEventListener("scroll", handleScroll);
+    localStorage.setItem("feature", "new");
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,8 +90,6 @@ const Vip = () => {
 
     window.removeEventListener("scroll", () => { });
   }
-  window.addEventListener("scroll", handleScroll);
-
 
   return (
     <>

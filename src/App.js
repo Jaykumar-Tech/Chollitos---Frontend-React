@@ -7,6 +7,7 @@ import { initReactI18next } from 'react-i18next';
 import enTranslation from './Lang/en.json';
 import esTranslation from './Lang/es.json';
 import { _t } from './Utils/_t';
+import { useEffect } from 'react';
 
 i18n
   .use(initReactI18next)
@@ -20,7 +21,7 @@ i18n
       },
     },
     lng: 'en', // Default language
-    fallbackLng: 'es', // Fallback language if translation is missing
+    fallbackLng: 'en', // Fallback language if translation is missing
     interpolation: {
       escapeValue: false, // React already escapes values by default
     },

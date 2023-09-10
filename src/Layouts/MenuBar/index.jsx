@@ -41,7 +41,7 @@ function MenuBar({ appMode }) {
     if (!auth_token) {
       toast({
         title: t(_t('Error.')),
-        description: t(_t("Please login")),
+        description: t(_t("Please login.")),
         position: 'top',
         status: 'error',
         duration: 3000,

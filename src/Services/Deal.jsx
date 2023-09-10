@@ -44,7 +44,13 @@ const getFilterDealsService = async (catIds) => {
 
 const getDealByIdService = async (dealId) => {
   try {
-    const response = await api.get('deal/get/' + dealId);
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/get/' + dealId,
+    {
+      headers: {
+        authorization: auth_token?(auth_token.token_type + " " + auth_token.access_token): "",
+      }
+    });
     return response.data.data;
   } catch (error) {
     console.log(error);
