@@ -122,5 +122,17 @@
     "Commented":"Commented",
     "Load_more": "Load more",
     "Old_Price": "Old Price",
-    "New_Price": "New Price"
+    "New_Price": "New Price",
+    "You_have_registered_successfully.":"You have registered successfully.",
+    "Email":"Email",
+    "Email_Sent.":"Email Sent.",
+    "OTP_Verification":"OTP Verification",
+    "Enter_the_OTP":"Enter the OTP",
+    "Resend_code":"Resend code",
+    "Verify":"Verify",
+    "":"",
+    "":"",
+    "":"",
+    "":"",
+    "":""
 }
