@@ -26,7 +26,7 @@ const Category = () => {
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
   const [catIds, setCatIds] = useState([]);
-  const limit = 12;
+  const limit = 24;
 
   const getDeals = async (loadmore = true) => {
 
@@ -45,13 +45,13 @@ const Category = () => {
 
     if (data) {
 
-     
       if (data.length !== limit) {
         isend = true;
       }
 
       loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
       offset += limit;
+      console.log(data[0], offset)
     }
 
     setIsloading(false);
@@ -59,6 +59,7 @@ const Category = () => {
   };
 
   useEffect(()=>{
+    if ( !catIds.length ) return ;
     const fetchData = async () => {
       await getDeals(false);
     };

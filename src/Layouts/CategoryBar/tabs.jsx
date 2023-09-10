@@ -1,6 +1,7 @@
 import { Tab, TabList, Tabs, Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { useEffect } from "react";
 
 function TabBar({ setFeature }) {
   const { t } = useTranslation();
@@ -12,6 +13,10 @@ function TabBar({ setFeature }) {
     localStorage.setItem("feature", tabFeatureList[index])
     setFeature(tabFeatureList[index]);
   }
+
+  useEffect(()=>{
+    setFeatureInTab(0)
+  }, [])
 
   return (
     <Box
