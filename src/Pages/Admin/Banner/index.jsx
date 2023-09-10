@@ -7,15 +7,18 @@ import {
   Progress,
   Badge,
   Heading,
+  useToast,
 } from '@chakra-ui/react';
 import ReactQuill from 'react-quill';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { getBannerService, saveBannerService } from "../../../Services/Banner";
 
 const Banner = () => {
   const [banner, setBanner] = useState('');
   const [isloading, setIsloading] = useState(false);
   const { t } = useTranslation();
+  const toast = useToast() ;
 
   const modules = {
     toolbar: {
@@ -50,10 +53,33 @@ const Banner = () => {
 
   const getBanner = async () => {
     setIsloading(true);
-    // const data = await getBannerService();
-    // setBanner(data);
+    const data = await getBannerService();
+    setBanner(data.html);
     setIsloading(false);
   };
+
+  const handleBannerSave = async () => {
+    var result = await saveBannerService(banner);
+    if ( result.status == 200 ) {
+      toast({
+        title: t(_t('Save Success.')),
+        description: t(_t("Saved a banner successfully.")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: result?.response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,6 +118,11 @@ const Banner = () => {
             onChange={(content) => setBanner(content)}
           />
         </Box>
+        <Button variant="contained"
+        onClick={handleBannerSave}
+         color="primary">
+          Save
+        </Button>
       </Box>
     </>
   )
