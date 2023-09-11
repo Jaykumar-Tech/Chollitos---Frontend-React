@@ -51,17 +51,11 @@ const getAllUserService = async () => {
 };
 const verifyCodeService = async (email, code) => {
 
-  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/verify_code", {
       email: email,
       code: code
-    },
-      {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+    });
     return response;
   } catch (error) {
     return error;
@@ -69,17 +63,10 @@ const verifyCodeService = async (email, code) => {
 }
 
 const resendCodeService = async (email) => {
-
-  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/resend_code", {
       email: email
-    },
-      {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+    });
     return response;
   } catch (error) {
     return error;
@@ -88,17 +75,11 @@ const resendCodeService = async (email) => {
 
 const resetPasswordService = async (email, password) => {
 
-  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/reset_password", {
       email: email,
       password: password
-    },
-      {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+    });
     return response;
   } catch (error) {
     return error;
@@ -106,7 +87,6 @@ const resetPasswordService = async (email, password) => {
 }
 
 const updateRoleService = async (id, role) => {
-
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/update_role", {
