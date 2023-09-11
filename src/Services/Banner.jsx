@@ -11,7 +11,7 @@ const getBannerService = async (id) => {
     return response.data.data;
   } catch (error) {
     console.log(error);
-    return [];
+    return null;
   }
 }
 
@@ -28,7 +28,7 @@ const saveBannerService = async (html) => {
     return response
   } catch (error) {
     console.log(error);
-    return null;
+    return error;
   }
 }
 
