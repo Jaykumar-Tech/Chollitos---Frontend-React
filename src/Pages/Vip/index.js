@@ -58,7 +58,7 @@ const Vip = () => {
 
   useEffect(()=>{
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-    if (!auth_token || auth_token.user.role !== "vip") history.push('/404');
+    if (!auth_token || auth_token.user.role === "customer") history.push('/404');
     window.addEventListener("scroll", handleScroll);
     localStorage.setItem("feature", "new");
     return () => {

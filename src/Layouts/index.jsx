@@ -228,7 +228,7 @@ export default function Navbar() {
 
           <MenuBar appMode={appMode} />
 
-          <AdminMenu />
+          {authToken?.user?.role === "admin" && <AdminMenu />}
 
           < Spacer />
 
