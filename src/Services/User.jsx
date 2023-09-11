@@ -110,10 +110,10 @@ const deleteUserService = async (id) => {
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.get(`user/delete/${id}}`, {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
 
     return response;
   } catch (error) {
@@ -122,14 +122,14 @@ const deleteUserService = async (id) => {
 }
 
 const deactivateUserService = async (id) => {
- 
+
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get(`user/deactivate/${id}}`, {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+    const response = await api.get(`user/deactivate/${id}`, {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     return error;
@@ -140,10 +140,10 @@ const activateUserService = async (id) => {
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.get(`user/activate/${id}}`, {
-        headers: {
-          authorization: auth_token.token_type + " " + auth_token.access_token,
-        }
-      });
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     return error;
