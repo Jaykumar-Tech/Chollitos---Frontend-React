@@ -109,7 +109,7 @@ const deleteUserService = async (id) => {
 
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get(`user/delete/${id}}`, {
+    const response = await api.get(`user/delete/${id}`, {
       headers: {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       }
@@ -139,7 +139,7 @@ const deactivateUserService = async (id) => {
 const activateUserService = async (id) => {
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get(`user/activate/${id}}`, {
+    const response = await api.get(`user/activate/${id}`, {
       headers: {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       }
