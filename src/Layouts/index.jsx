@@ -13,6 +13,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
+  ModalBody,
+  ModalFooter,
   Stack,
   FormControl,
   FormLabel,
@@ -66,7 +68,11 @@ export default function Navbar() {
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
   const [isEmailVerify, setIsEmailVerify] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [code, setCode] = useState("")
+  const [isChangePWD, setIsChangePWD] = useState(false);
+  const [code, setCode] = useState("");
+  const [oldPWD, setOldPWD] = useState("");
+  const [newPWD, setNewPWD] = useState("");
+  const [confirmPWD, setConfirmPWD] = useState("");
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
@@ -144,8 +150,8 @@ export default function Navbar() {
     window.location.reload();
   }
 
-  const emptyInputs = () => {
-
+  const handleChangePassword = () => {
+    alert('change password');
   }
 
   const toSignUp = () => {
@@ -301,6 +307,7 @@ export default function Navbar() {
                 />
               </MenuButton>
               <MenuList>
+                <MenuItem onClick={() => { setIsChangePWD(true) }}>{t(_t("Change Password"))}</MenuItem>
                 <MenuItem onClick={handleSignOut}>{t(_t("Logout"))}</MenuItem>
               </MenuList>
             </Menu>
@@ -372,13 +379,13 @@ export default function Navbar() {
               </Button>
               <Spacer height={4} /> */}
               <form onSubmit={handleSignIn}>
-                <FormControl id="email" mt={3}>
+                <FormControl id="email" mt={3} isRequired>
                   <FormLabel>{t(_t("Email address"))}</FormLabel>
                   <Input type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
                 </FormControl>
-                <FormControl id="password" mt={3}>
+                <FormControl id="password" mt={3} isRequired>
                   <FormLabel>{t(_t("Password"))}</FormLabel>
                   <Input type="password"
                     value={password}
@@ -530,17 +537,48 @@ export default function Navbar() {
             p={8}
           >
             <FormControl id="otp" mb={4} isRequired>
-              <Input type="text" placeholder={t(_t("Enter the OTP"))} value={code}
+              <Input type="text" placeholder={t(_t("Enter OTP CODE"))} value={code}
                 onChange={(e) => setCode(e.target.value)} />
             </FormControl>
             <Flex>
               <Text
                 onClick={handleresendCodeService}
-                color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
+                color={'blue.400'}
+                cursor={'pointer'}
+              >
+                {t(_t("Resend code"))}
+              </Text>
               <Spacer />
               <Button isLoading={isVerifying} colorScheme="blue" onClick={handleverifyCodeService}>{t(_t("Verify"))}</Button>
             </Flex>
           </Box>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isChangePWD} onClose={() => setIsChangePWD(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t('Change Password'))}</ModalHeader>
+          <ModalCloseButton />
+          <form onSubmit={handleChangePassword}>
+            <ModalBody>
+              <FormControl mt={5} isRequired>
+                <FormLabel>{t(_t('Current Password'))}</FormLabel>
+                <Input type="password" value={oldPWD} onChange={(e) => { setOldPWD(e.target.value) }} />
+              </FormControl>
+              <FormControl mt={5} isRequired>
+                <FormLabel>{t(_t('New Password'))}</FormLabel>
+                <Input type="password" value={newPWD} onChange={(e) => { setNewPWD(e.target.value) }} />
+              </FormControl>
+              <FormControl mt={5} isRequired isInvalid={confirmPWD !== newPWD}>
+                <FormLabel>{t(_t('Confirm Password'))}</FormLabel>
+                <Input type="password" value={confirmPWD} onChange={(e) => { setConfirmPWD(e.target.value) }} />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button type="submit" colorScheme="blue" mr={3}>Save</Button>
+              <Button onClick={() => setIsChangePWD(false)}>Cancel</Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </div>

@@ -4,7 +4,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Spacer,
+  Flex,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
@@ -41,6 +44,24 @@ const AdminMenu = () => {
         <Link to="/admin/shops">
           <MenuItem>{t(_t("Shops"))}</MenuItem>
         </Link>
+        <Menu>
+          <MenuButton
+            px={3}
+            py={2}
+            w={'100%'}
+            _hover={{ bg: 'gray.100' }}
+          >
+            <Flex alignItems={'center'}>
+              {t(_t("Languages"))}
+              <Spacer />
+              <ChevronDownIcon />
+            </Flex>
+          </MenuButton>
+          <MenuList>
+            <MenuItem>English</MenuItem>
+            <MenuItem>Español</MenuItem>
+          </MenuList>
+        </Menu>
       </MenuList>
     </Menu>
   )

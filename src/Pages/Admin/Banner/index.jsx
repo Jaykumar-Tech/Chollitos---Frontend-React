@@ -129,7 +129,7 @@ const Banner = () => {
         </Box>
         <Flex>
           <Spacer />
-          <Button isLoading={isUpdating} variant="outline" colorScheme="teal" onClick={() => window.history.back()} mt={2}>
+          <Button variant="outline" colorScheme="teal" onClick={() => window.history.back()} mt={2}>
             {t(_t('Back'))}
           </Button>
           <Button isLoading={isUpdating} colorScheme="blue" onClick={handleBannerSave} m={2}>
