@@ -5,7 +5,7 @@ import { InfoIcon } from "@chakra-ui/icons";
 
 const Banner = () => {
   const [isOpen, setIsOpen] = useState(sessionStorage.getItem('banner') === 'show');
-  const [banner, setBanner] = useState('');
+  const [banner, setBanner] = useState(null);
 
   const getBanner = async () => {
     const data = await getBannerService();
@@ -22,7 +22,7 @@ const Banner = () => {
   }, []);
 
   return (
-    isOpen &&
+    isOpen && banner &&
     <Box
       p={2}
       mb={5}
@@ -44,7 +44,7 @@ const Banner = () => {
         <InfoIcon boxSize={5} mr={2} mt={'-1px'} color={'blue.500'} />
         Chollitos.net
       </Text>
-      <Text mt={5} dangerouslySetInnerHTML={{ __html: banner.html }} />
+      <Text mt={5} dangerouslySetInnerHTML={{ __html: banner?.html }} />
     </Box>
   )
 }

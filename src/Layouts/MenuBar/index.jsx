@@ -47,7 +47,7 @@ function MenuBar({ appMode }) {
         duration: 3000,
         isClosable: true,
       })
-    } else if (auth_token.user.role !== "vip") {
+    } else if (auth_token.user.role === "customer") {
       toast({
         title: t(_t('Error.')),
         description: t(_t("You don't have a access to VIP")),
