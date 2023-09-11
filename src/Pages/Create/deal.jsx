@@ -32,9 +32,9 @@ export default function CreateDeal() {
 
   const [url, setUrl] = useState('');
   const [images, setImages] = useState([]);
-  const [price, setPrice] = useState(0);
-  const [lowPrice, setLowPrice] = useState(0);
-  const [ship, setShip] = useState(0);
+  const [price, setPrice] = useState("0");
+  const [lowPrice, setLowPrice] = useState("0");
+  const [ship, setShip] = useState("0");
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
@@ -164,9 +164,9 @@ export default function CreateDeal() {
 
       setUrl("");
       setImages([]);
-      setPrice(0);
-      setLowPrice(0);
-      setShip(0);
+      setPrice("0");
+      setLowPrice("0");
+      setShip("0");
       setTitle("")
       setDescription("")
       setCategoryId({ name: "", id: -1 })

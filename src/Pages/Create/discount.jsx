@@ -37,8 +37,8 @@ export default function CreateDiscount() {
   const [url, setUrl] = useState('');
   const [images, setImages] = useState([]);
   const [type, setType] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [shipPrice, setShipPrice] = useState(0);
+  const [price, setPrice] = useState("0");
+  const [shipPrice, setShipPrice] = useState("0");
   const [ship, setShip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -147,7 +147,6 @@ export default function CreateDiscount() {
   });
 
   const handleCreate = async () => {
-    const auth_token = JSON.parse(localStorage.getItem('authToken'));
     var sendData = {
       title: title,
       description: description,
@@ -158,7 +157,7 @@ export default function CreateDiscount() {
     if (type <= 2) {
       sendData.type = typeStr[type];
       sendData.price_new = price;
-      if (!ship) sendData.price_ship = 0;
+      if (!ship) sendData.price_ship = "0";
       else sendData.price_ship = shipPrice;
     }
     if (categoryId.id !== -1) sendData.category_id = categoryId.id;
@@ -172,8 +171,8 @@ export default function CreateDiscount() {
     if (response.status === 200) {
       setUrl("");
       setImages([]);
-      setPrice(0);
-      setShipPrice(0);
+      setPrice("0");
+      setShipPrice("0");
       setTitle("")
       setDescription("")
       setCategoryId({ name: "", id: -1 })
@@ -374,7 +373,7 @@ export default function CreateDiscount() {
               Price {type === 0 ? '(%)' : '(€)'}
             </FormLabel>
             <Input
-              type="number"
+              type="text"
               name="price_new"
               id="price_new"
               size="sm"
@@ -393,7 +392,7 @@ export default function CreateDiscount() {
               {t(_t("Price of shipment"))}
             </FormLabel>
             <Input
-              type="number"
+              type="text"
               name="price_shipment"
               id="price_shipment"
               size="sm"
