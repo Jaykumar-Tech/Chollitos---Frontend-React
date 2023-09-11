@@ -35,45 +35,135 @@ const signUpService = async (email, password, username, birthday) => {
 };
 
 const getAllUserService = async () => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get("user/getall");
+    const response = await api.get("user/getall",
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
     return response.data.data;
   } catch (error) {
     return error;
   }
 };
-const verifyCode = async (email, code) => {
+const verifyCodeService = async (email, code) => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/verify_code", {
       email: email,
       code: code
-    });
-    console.log(JSON.stringify(response));
+    },
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
     return response;
   } catch (error) {
     return error;
   }
 }
 
-const resendCode = async ( email ) => {
+const resendCodeService = async (email) => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/resend_code", {
       email: email
-    });
-    console.log(JSON.stringify(response));
+    },
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
     return response;
   } catch (error) {
     return error;
   }
 }
 
-const resetPassword = async ( email, password ) => {
+const resetPasswordService = async (email, password) => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post("user/reset_password", {
       email: email,
       password: password
-    });
-    console.log(JSON.stringify(response));
+    },
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+const updateRoleService = async (id, role) => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.post("user/update_role", {
+      user_id: id,
+      role: role
+    },
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+const deleteUserService = async (id) => {
+
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.get(`user/delete/${id}}`, {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+const deactivateUserService = async (id) => {
+ 
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.get(`user/deactivate/${id}}`, {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+const activateUserService = async (id) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.get(`user/activate/${id}}`, {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
     return response;
   } catch (error) {
     return error;
@@ -84,7 +174,11 @@ export {
   signInService,
   signUpService,
   getAllUserService,
-  verifyCode,
-  resendCode,
-  resetPassword
+  verifyCodeService,
+  resendCodeService,
+  resetPasswordService,
+  deleteUserService,
+  activateUserService,
+  deactivateUserService,
+  updateRoleService,
 };

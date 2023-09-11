@@ -48,7 +48,7 @@ import AdminMenu from "./AdminMenu";
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { resendCode, signInService, signUpService, verifyCode } from "../Services/User";
+import { resendCodeService, signInService, signUpService, verifyCodeService } from "../Services/User";
 import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
@@ -158,9 +158,9 @@ export default function Navbar() {
     setIsSignInOpen(true);
   }
 
-  const handleVerifyCode = async (e) => {
+  const handleverifyCodeService = async (e) => {
     setIsVerifying(true);
-    const response = await verifyCode(email, code);
+    const response = await verifyCodeService(email, code);
     setIsVerifying(false);
     if (response.status === 200) {
       toast({
@@ -187,8 +187,8 @@ export default function Navbar() {
     }
   }
 
-  const handleResendCode = async (e) => {
-    const response = await resendCode(email)
+  const handleresendCodeService = async (e) => {
+    const response = await resendCodeService(email)
     if (response.status === 200) {
       toast({
         title: t(_t('Success')),
@@ -535,10 +535,10 @@ export default function Navbar() {
             </FormControl>
             <Flex>
               <Text
-                onClick={handleResendCode}
+                onClick={handleresendCodeService}
                 color={'blue.400'} cursor={'pointer'}>{t(_t("Resend code"))}</Text>
               <Spacer />
-              <Button isLoading={isVerifying} colorScheme="blue" onClick={handleVerifyCode}>{t(_t("Verify"))}</Button>
+              <Button isLoading={isVerifying} colorScheme="blue" onClick={handleverifyCodeService}>{t(_t("Verify"))}</Button>
             </Flex>
           </Box>
         </ModalContent>

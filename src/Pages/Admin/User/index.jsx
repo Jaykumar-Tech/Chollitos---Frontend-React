@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllUserService } from "../../../Services/User"
+import { activateUserService, deactivateUserService, deleteUserService, getAllUserService, updateRoleService } from "../../../Services/User"
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
@@ -17,6 +17,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import Select from "react-select";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
@@ -29,6 +30,7 @@ const User = () => {
   const [users, setUsers] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(0);
   const [isloading, setIsloading] = useState(false);
+  const toast = useToast();
   const { t } = useTranslation();
 
   const options = [
@@ -138,20 +140,117 @@ const User = () => {
     fetchData();
   }, []);
 
-  const activateUser = (id) => {
-    alert(id);
+  const activateUser = async (id) => {
+    setIsloading(true);
+    const response = await activateUserService(id);
+    if ( response.status === 200 ) {
+      setUsers(users.map(user=>(user.id!=id?user:{
+        ...user,
+        status: 1
+      })))
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t("Activating User Success")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setIsloading(false);
   }
 
-  const deactivateUser = (id) => {
-    alert(id);
+  const deactivateUser = async (id) => {
+    setIsloading(true);
+    const response = await deactivateUserService(id);
+    if ( response.status === 200 ) {
+      setUsers(users.map(user=>(user.id!=id?user:{
+        ...user,
+        status: 0
+      })))
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t("Deactivating User Success")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setIsloading(false);
   }
 
-  const deleteUser = (id) => {
-    alert(id);
+  const deleteUser = async (id) => {
+    setIsloading(true);
+    const response = await deleteUserService(id);
+    if ( response.status === 200 ) {
+      setUsers(users.filter(user=>(user.id!= id)))
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t("Deleting User Success")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setIsloading(false);
   }
 
-  const setUserRole = (id, role) => {
-    alert(id + ", " + role);
+  const setUserRole = async (id, role) => {
+    setIsloading(true);
+    const response = await updateRoleService(id, role);
+    if ( response.status === 200 ) {
+      setUsers(users.map(user=>(user.id!==id? user: {
+        ...user,
+        role: role
+      })))
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t("Changing Role of Role Success")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setIsloading(false);
   }
 
   return (
