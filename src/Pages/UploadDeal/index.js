@@ -30,7 +30,7 @@ const UploadDeal = () => {
         try {
             // Send a POST request to your server
             setLoading(true)
-            const response = await fetch('https://localhost/api/deal/upload', {
+            const response = await fetch('https://chollitos.net/api/deal/upload', {
                 method: 'POST',
                 body: formData,
                 headers: {

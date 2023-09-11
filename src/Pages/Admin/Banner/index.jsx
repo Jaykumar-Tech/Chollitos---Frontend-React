@@ -3,13 +3,14 @@ import { Helmet } from "react-helmet";
 import {
   Box,
   Button,
-  Icon,
   Progress,
-  Badge,
   Heading,
   useToast,
+  Flex,
+  Spacer,
 } from '@chakra-ui/react';
 import ReactQuill from 'react-quill';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
 import { getBannerService, saveBannerService } from "../../../Services/Banner";
@@ -17,8 +18,10 @@ import { getBannerService, saveBannerService } from "../../../Services/Banner";
 const Banner = () => {
   const [banner, setBanner] = useState('');
   const [isloading, setIsloading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { t } = useTranslation();
-  const toast = useToast() ;
+  const history = useHistory();
+  const toast = useToast();
 
   const modules = {
     toolbar: {
@@ -26,6 +29,7 @@ const Banner = () => {
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         ['link'],
+        [{ image: 'image' }],
         [{ align: [] }],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
@@ -42,6 +46,7 @@ const Banner = () => {
     'underline',
     'strike',
     'link',
+    'image',
     'align',
     'list',
     'ordered',
@@ -59,11 +64,15 @@ const Banner = () => {
   };
 
   const handleBannerSave = async () => {
+    setIsUpdating(true);
     var result = await saveBannerService(banner);
-    if ( result.status == 200 ) {
+    setIsUpdating(false);
+    if (result.status == 200) {
+      sessionStorage.setItem('banner', 'show');
+      history.push('/');
       toast({
         title: t(_t('Save Success.')),
-        description: t(_t("Saved a banner successfully.")),
+        description: t(_t("Successfully updated!")),
         position: 'top',
         status: 'success',
         duration: 3000,
@@ -118,11 +127,12 @@ const Banner = () => {
             onChange={(content) => setBanner(content)}
           />
         </Box>
-        <Button variant="contained"
-        onClick={handleBannerSave}
-         color="primary">
-          Save
-        </Button>
+        <Flex>
+          <Spacer />
+          <Button isLoading={isUpdating} colorScheme="blue" onClick={handleBannerSave} m={2}>
+            {t(_t('Save'))}
+          </Button>
+        </Flex>
       </Box>
     </>
   )
