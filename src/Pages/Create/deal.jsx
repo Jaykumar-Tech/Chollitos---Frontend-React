@@ -388,6 +388,7 @@ export default function CreateDeal() {
             name="category"
             placeholder={t(_t("Select Category"))}
             isSearchable={true}
+            menuPortalTarget={document.body}
             options={categoryOptions}
             value={categoryOptions.find((category) => category.value === categoryId.name)}
             onChange={(e) => setCategoryId({

@@ -62,6 +62,7 @@ const User = () => {
             size={'sm'}
             options={options}
             isSearchable={true}
+            menuPortalTarget={document.body}
             value={options.find(option => option.value === value)}
             onChange={(e) => {
               setUserRole(row.original.id, e.value)

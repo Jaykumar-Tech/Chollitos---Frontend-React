@@ -62,8 +62,8 @@ const getCountDealsService = async (catIds) => {
   try {
     const data = { category_id: catIds };
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-    // if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
-    if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
+    if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
+    // if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
     const response = await api.post('deal/count', data);
     return response.data.data;
@@ -76,8 +76,8 @@ const getCountDealsService = async (catIds) => {
 const getDealByFilter = async (data) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-    // if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
-    if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
+    if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
+    // if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
 
     var headers = {};
