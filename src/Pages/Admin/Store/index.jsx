@@ -12,23 +12,26 @@ import {
   Heading,
   Flex,
   Spacer,
+  useToast,
 } from '@chakra-ui/react';
-import { getStoresService } from "../../../Services/Store";
+import { activateStoreService, getStoresService } from "../../../Services/Store";
 import CreateOrUpdateStore from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { deactivateCategoryService } from "../../../Services/Category";
 
 const AdminStore = () => {
   const { globalProps } = useContext(GlobalContext);
-  const { _setStores } = globalProps;
-  const [stores, setStores] = useState([]);
+  const { stores, _setStores } = globalProps;
+  // const [stores, _setStores] = useState([]);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
   const [isloading, setIsloading] = useState(false);
   const [storeId, setStoreId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+  const toast = useToast()
 
   const columns = [
     {
@@ -104,27 +107,73 @@ const AdminStore = () => {
     },
   ];
 
-  const getStores = async () => {
-    setIsloading(true);
-    const data = await getStoresService();
-    setStores(data);
-    setIsloading(false);
-  };
+  // const getStores = async () => {
+  //   // setIsloading(true);
+  //   // const data = await getStoresService();
+  //   // _setStores(data);
+  //   // setIsloading(false);
+  // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await getStores();
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await getStores();
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  const activateStore = (id) => {
-    alert(id);
+  const activateStore = async (id) => {
+    var response = await activateStoreService(id);
+    if (response.status == 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Activating Store success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      _setStores(stores.map(store => (store.id != id ? store : {
+        ...store,
+        status: 1
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
-  const deactivateStore = (id) => {
-    alert(id);
+  const deactivateStore = async (id) => {
+    var response = await deactivateCategoryService(id);
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deactivating store success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      _setStores(stores.map(store => (store.id !== id ? store : {
+        ...store,
+        status: 0
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   const openCreateOrEditStoreModal = (id) => {
@@ -150,7 +199,7 @@ const AdminStore = () => {
           :
           <Box p={'2px'} />
         }
-        {stores?.length > 0 ?
+        {stores?.length > 0 &&
           <Box
             bg={'white'}
             borderRadius={5}
@@ -169,17 +218,6 @@ const AdminStore = () => {
               size={tableSize}
               setSize={setTableSize}
             />
-          </Box>
-          : !isloading &&
-          <Box
-            bg={'white'}
-            borderRadius={5}
-            p={'20px'}
-            shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
-            textAlign={'center'}
-            fontWeight={600}
-          >
-            {t(_t('No Data'))}
           </Box>
         }
         <CreateOrUpdateStore isModalOpen={isOpen} onCloseModal={onCloseModal} id={storeId} />

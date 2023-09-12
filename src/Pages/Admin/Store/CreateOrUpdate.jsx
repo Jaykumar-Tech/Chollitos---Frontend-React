@@ -12,12 +12,15 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getStoreByIdService } from "../../../Services/Store";
+import { createStoreService, getStoreByIdService, updateStoreService } from "../../../Services/Store";
 import ReactQuill from 'react-quill';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { useContext } from "react";
+import { GlobalContext } from "../../../Components/GlobalContext";
 
 const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
   const { t } = useTranslation();
@@ -26,6 +29,9 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
   const [url, setUrl] = useState('');
   const [image, setImage] = useState('');
   const [blog, setBlog] = useState('');
+  const { globalProps } = useContext(GlobalContext);
+  const { stores, _setStores } = globalProps;
+  const toast = useToast()
 
   const modules = {
     toolbar: {
@@ -83,6 +89,71 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
 
   const handleCreateStore = async (e) => {
     e.preventDefault()
+    const data = {
+      name: name,
+      url: url,
+      image: image,
+      blog: blog
+    }
+    if (id === 0) {
+      var response = await createStoreService(data)
+      if ( response.status === 200 ) {
+        toast({
+          title: t(_t('Success.')),
+          description: t(_t('Creating store success')),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        _setStores([...stores, {
+          id: response.data.data,
+          status: 1,
+          ...data
+        }].sort((a,b)=>(a.name.localeCompare(b.name))))
+        onCloseModal(false)
+      } else {
+        toast({
+          title: t(_t('Error.')),
+          description: response?.response?.data?.message,
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    } else {
+      var response = await updateStoreService({
+        id: id,
+        ...data,
+        status: stores.find(store => (store.id == id)).status
+      })
+      if ( response.status === 200 ) {
+        toast({
+          title: t(_t('Success.')),
+          description: t(_t('Updating store success')),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        _setStores(stores.map(store=>(store.id!=id?store:{
+          id: id,
+          status: store.status,
+        ...data
+        })).sort((a,b)=>(a.name.localeCompare(b.name))))
+        onCloseModal(false)
+      } else {
+        toast({
+          title: t(_t('Error.')),
+          description: response?.response?.data?.message,
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    }
     console.log(name, url, image, blog)
   }
 

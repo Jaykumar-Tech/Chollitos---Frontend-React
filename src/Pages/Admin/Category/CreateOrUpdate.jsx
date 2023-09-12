@@ -91,7 +91,8 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
     } else {
       var response = await editCategoryService({
         id: id,
-        ...data
+        ...data,
+        status: categories.find(category => (category.id == id)).status
       })
       if ( response.status == 200 ) {
         toast({
@@ -104,7 +105,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
         })
         setCategories(categories.map(category=>(category.id!=id?category:{
           id: id,
-          status: 1,
+          status: category.status,
         ...data
         })).sort((a,b)=>(a.name.localeCompare(b.name))))
         onCloseModal(false)

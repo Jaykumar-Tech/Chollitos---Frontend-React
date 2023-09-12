@@ -22,10 +22,10 @@ import { _t } from "../../../Utils/_t";
 
 const AdminCategory = () => {
   const { globalProps } = useContext(GlobalContext);
-  const { _setCategories } = globalProps;
+  const { categories, _setCategories } = globalProps;
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
-  const [categories, setCategories] = useState([]);
+  // const [categories, _setCategories] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +106,7 @@ const AdminCategory = () => {
   const getCategories = async () => {
     setIsloading(true);
     const data = await getCategoriesService();
-    setCategories(data);
+    _setCategories(data);
     setIsloading(false);
   };
 
@@ -129,7 +129,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      setCategories(categories.map(category => (category.id != id ? category : {
+      _setCategories(categories.map(category => (category.id != id ? category : {
         ...category,
         status: 1
       })))
@@ -156,7 +156,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      setCategories(categories.map(category => (category.id != id ? category : {
+      _setCategories(categories.map(category => (category.id != id ? category : {
         ...category,
         status: 0
       })))
@@ -195,7 +195,7 @@ const AdminCategory = () => {
           :
           <Box p={'2px'} />
         }
-        {categories?.length > 0 ?
+        {categories?.length > 0 &&
           <Box
             bg={'white'}
             borderRadius={5}
@@ -215,17 +215,7 @@ const AdminCategory = () => {
               setSize={setTableSize}
             />
           </Box>
-          : !isloading &&
-          <Box
-            bg={'white'}
-            borderRadius={5}
-            p={'20px'}
-            shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
-            textAlign={'center'}
-            fontWeight={600}
-          >
-            {t(_t('No Data'))}
-          </Box>
+
         }
         <CreateOrUpdateCategory
           key={"modalcreateupdate" + categoryId}
@@ -233,7 +223,7 @@ const AdminCategory = () => {
           onCloseModal={onCloseModal}
           id={categoryId}
           categories={categories}
-          setCategories={setCategories}
+          setCategories={_setCategories}
         />
       </Box>
     </>
