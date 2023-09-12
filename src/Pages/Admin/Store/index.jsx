@@ -45,7 +45,7 @@ const AdminStore = () => {
     {
       Header: t(_t('URL')), accessor: 'url',
       Cell: ({ value }) => (
-        <a href={`https://${value}`} target="_blank">
+        <a href={value.startsWith("http") ? value : `https://${value}`} target="_blank">
           <Box color={'blue.500'}>
             {value}
           </Box>

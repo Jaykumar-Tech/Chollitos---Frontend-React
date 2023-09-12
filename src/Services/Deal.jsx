@@ -9,6 +9,7 @@ const getDealsService = async () => {
   try {
     const data = { start_at: 0, length: 100 };
     const response = await api.post('deal/find', data);
+    console.log('getDealsService');
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -35,6 +36,7 @@ const getFilterDealsService = async (catIds) => {
   try {
     const data = { start_at: 0, length: 100, category_id: catIds };
     const response = await api.post('deal/find', data);
+    console.log('getFilterDealsService');
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -86,11 +88,8 @@ const getDealByFilter = async (data) => {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       };
     }
-
-    const response = await api.post('deal/find', data,
-      {
-        headers: headers
-      });
+ 
+    const response = await api.post('deal/find', data, { headers: headers });
     return response.data.data;
   } catch (error) {
     console.log(error);

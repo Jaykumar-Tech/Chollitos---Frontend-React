@@ -58,10 +58,11 @@ export default function SearchBar({ appMode }) {
   }
 
   const getUrlFromTitle = (title) => {
-    title.replace(/[^a-zA-Z0-9-]/g, "-");
-    title.toLowerCase();
-    title.slice(0, 30);
-    return title;
+    const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+    if (_title.length > 30) {
+      return _title.slice(0, 30) + "...";
+    }
+    return _title;
   }
 
   const handleKeyPress = (event) => {

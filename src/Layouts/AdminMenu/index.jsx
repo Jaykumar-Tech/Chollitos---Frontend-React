@@ -38,6 +38,9 @@ const AdminMenu = () => {
         <Link to="/admin/users">
           <MenuItem>{t(_t("Users"))}</MenuItem>
         </Link>
+        <Link to="/admin/deals">
+          <MenuItem>{t(_t("Deals"))}</MenuItem>
+        </Link>
         <Link to="/admin/categories">
           <MenuItem>{t(_t("Categories"))}</MenuItem>
         </Link>

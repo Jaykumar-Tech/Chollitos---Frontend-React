@@ -5,7 +5,7 @@ import { InfoIcon } from "@chakra-ui/icons";
 
 const Banner = () => {
   const [isOpen, setIsOpen] = useState(sessionStorage.getItem('banner') === 'show');
-  const [banner, setBanner] = useState(null);
+  const [banner, setBanner] = useState('');
 
   const getBanner = async () => {
     const data = await getBannerService();
@@ -22,7 +22,7 @@ const Banner = () => {
   }, []);
 
   return (
-    isOpen && banner &&
+    isOpen &&
     <Box
       p={2}
       mb={5}

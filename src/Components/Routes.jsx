@@ -17,6 +17,7 @@ import UploadDeal from "../Pages/UploadDeal";
 import User from "../Pages/Admin/User";
 import AdminCategory from "../Pages/Admin/Category";
 import AdminStore from "../Pages/Admin/Store";
+import AdminDeal from "../Pages/Admin/Deal";
 import Banner from "../Pages/Admin/Banner";
 
 
@@ -48,6 +49,7 @@ function Routes() {
             <Route exact path="/admin/users" component={User} />
             <Route exact path="/admin/categories" component={AdminCategory} />
             <Route exact path="/admin/shops" component={AdminStore} />
+            <Route exact path="/admin/deals" component={AdminDeal} />
             <Route component={Page404} />
           </Switch>
         }
