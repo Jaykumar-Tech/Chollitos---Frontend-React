@@ -50,7 +50,7 @@ import AdminMenu from "./AdminMenu";
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { resendCodeService, signInService, signUpService, verifyCodeService } from "../Services/User";
+import { changePasswordService, resendCodeService, signInService, signUpService, verifyCodeService } from "../Services/User";
 import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
@@ -150,8 +150,51 @@ export default function Navbar() {
     window.location.reload();
   }
 
-  const handleChangePassword = () => {
-    alert('change password');
+  const handleChangePassword = async (e) => {
+    e.preventDefault()
+    console.log(email)
+    if ( newPWD !== confirmPWD ) {
+      toast({
+        title: t(_t('Error.')),
+        description: t(_t("New password doesn't match")),
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      return ;
+    } 
+
+    var user = JSON.parse ( localStorage.getItem("authToken") ).user
+
+    var response = await changePasswordService({
+      email: user.email,
+      old_password: oldPWD,
+      new_password: newPWD
+    })
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t("Changing password success")),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setOldPWD("")
+      setNewPWD("")
+      setConfirmPWD("")
+      setIsChangePWD(false)
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: t(_t("Your password is incorrect.")),
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   const toSignUp = () => {

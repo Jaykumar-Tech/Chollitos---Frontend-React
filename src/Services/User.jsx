@@ -150,6 +150,22 @@ const activateUserService = async (id) => {
   }
 }
 
+const changePasswordService = async (data) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.post(`user/change_password`,
+      data,
+      {
+        headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+        }
+      });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   signInService,
   signUpService,
@@ -161,4 +177,5 @@ export {
   activateUserService,
   deactivateUserService,
   updateRoleService,
+  changePasswordService,
 };
