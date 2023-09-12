@@ -575,8 +575,8 @@ export default function Navbar() {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button type="submit" colorScheme="blue" mr={3}>Save</Button>
-              <Button onClick={() => setIsChangePWD(false)}>Cancel</Button>
+              <Button type="submit" colorScheme="blue" mr={3}>{t(_t('Save'))}</Button>
+              <Button onClick={() => setIsChangePWD(false)}>{t(_t('Cancel'))}</Button>
             </ModalFooter>
           </form>
         </ModalContent>

@@ -3,6 +3,8 @@ import { GlobalContext } from "../../../Components/GlobalContext";
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
+  Flex,
+  Spacer,
   Box,
   Button,
   Icon,
@@ -12,6 +14,7 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import { getCategoriesService } from "../../../Services/Category";
+import CreateOrUpdateCategory from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
@@ -21,6 +24,8 @@ const AdminCategory = () => {
   const { _setCategories } = globalProps;
   const [categories, setCategories] = useState([]);
   const [isloading, setIsloading] = useState(false);
+  const [categoryId, setCategoryId] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 
   const columns = [
@@ -87,7 +92,7 @@ const AdminCategory = () => {
             ml={1}
             cursor={'pointer'}
             title={t(_t('edit'))}
-            onClick={() => createOrEditCategory(row.original.id)}
+            onClick={() => openCreateOrEditCategoryModal(row.original.id)}
           />
         </>
       ),
@@ -117,9 +122,14 @@ const AdminCategory = () => {
     alert(id);
   }
 
-  const createOrEditCategory = (id) => {
-    alert(id);
+  const openCreateOrEditCategoryModal = (id) => {
+    setCategoryId(id);
+    setIsOpen(true);
   }
+
+  const onCloseModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -142,6 +152,10 @@ const AdminCategory = () => {
             p={'20px'}
             shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
           >
+            <Flex mb={2}>
+              <Spacer />
+              <Button colorScheme="blue" onClick={() => openCreateOrEditCategoryModal(0)}>{t(_t('Create Category'))}</Button>
+            </Flex>
             <ChollitosTable
               columns={columns}
               data={categories}
@@ -159,6 +173,7 @@ const AdminCategory = () => {
             {t(_t('No Data'))}
           </Box>
         }
+        <CreateOrUpdateCategory isModalOpen={isOpen} onCloseModal={onCloseModal} id={categoryId} categories={categories} />
       </Box>
     </>
   )

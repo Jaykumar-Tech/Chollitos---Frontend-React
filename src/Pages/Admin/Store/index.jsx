@@ -10,8 +10,11 @@ import {
   Badge,
   Avatar,
   Heading,
+  Flex,
+  Spacer,
 } from '@chakra-ui/react';
 import { getStoresService } from "../../../Services/Store";
+import CreateOrUpdateStore from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
@@ -21,6 +24,8 @@ const AdminStore = () => {
   const { _setStores } = globalProps;
   const [stores, setStores] = useState([]);
   const [isloading, setIsloading] = useState(false);
+  const [storeId, setStoreId] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 
   const columns = [
@@ -90,7 +95,7 @@ const AdminStore = () => {
             ml={1}
             cursor={'pointer'}
             title={t(_t('edit'))}
-            onClick={() => createOrEditStore(row.original.id)}
+            onClick={() => openCreateOrEditStoreModal(row.original.id)}
           />
         </>
       ),
@@ -120,9 +125,14 @@ const AdminStore = () => {
     alert(id);
   }
 
-  const createOrEditStore = (id) => {
-    alert(id);
+  const openCreateOrEditStoreModal = (id) => {
+    setStoreId(id);
+    setIsOpen(true);
   }
+
+  const onCloseModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -145,6 +155,10 @@ const AdminStore = () => {
             p={'20px'}
             shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
           >
+            <Flex mb={2}>
+              <Spacer />
+              <Button colorScheme="blue" onClick={() => openCreateOrEditStoreModal(0)}>{t(_t('Create Store'))}</Button>
+            </Flex>
             <ChollitosTable
               columns={columns}
               data={stores}
@@ -162,6 +176,7 @@ const AdminStore = () => {
             {t(_t('No Data'))}
           </Box>
         }
+        <CreateOrUpdateStore isModalOpen={isOpen} onCloseModal={onCloseModal} id={storeId} />
       </Box>
     </>
   )

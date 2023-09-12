@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { activateUserService, deactivateUserService, deleteUserService, getAllUserService, updateRoleService } from "../../../Services/User"
+import {
+  activateUserService,
+  deactivateUserService,
+  deleteUserService,
+  getAllUserService,
+  updateRoleService
+} from "../../../Services/User"
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
@@ -144,8 +150,8 @@ const User = () => {
   const activateUser = async (id) => {
     setIsloading(true);
     const response = await activateUserService(id);
-    if ( response.status === 200 ) {
-      setUsers(users.map(user=>(user.id!=id?user:{
+    if (response.status === 200) {
+      setUsers(users.map(user => (user.id != id ? user : {
         ...user,
         status: 1
       })))
@@ -173,8 +179,8 @@ const User = () => {
   const deactivateUser = async (id) => {
     setIsloading(true);
     const response = await deactivateUserService(id);
-    if ( response.status === 200 ) {
-      setUsers(users.map(user=>(user.id!=id?user:{
+    if (response.status === 200) {
+      setUsers(users.map(user => (user.id != id ? user : {
         ...user,
         status: 0
       })))
@@ -202,8 +208,8 @@ const User = () => {
   const deleteUser = async (id) => {
     setIsloading(true);
     const response = await deleteUserService(id);
-    if ( response.status === 200 ) {
-      setUsers(users.filter(user=>(user.id!= id)))
+    if (response.status === 200) {
+      setUsers(users.filter(user => (user.id != id)))
       toast({
         title: t(_t('Success.')),
         description: t(_t("Deleting User Success")),
@@ -228,8 +234,8 @@ const User = () => {
   const setUserRole = async (id, role) => {
     setIsloading(true);
     const response = await updateRoleService(id, role);
-    if ( response.status === 200 ) {
-      setUsers(users.map(user=>(user.id!==id? user: {
+    if (response.status === 200) {
+      setUsers(users.map(user => (user.id !== id ? user : {
         ...user,
         role: role
       })))

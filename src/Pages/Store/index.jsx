@@ -24,7 +24,6 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { getStoreByNameService } from "../../Services/Store";
-import { getTimeDiff } from "../../Helpers";
 import { getDealByFilter } from "../../Services/Deal";
 import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";

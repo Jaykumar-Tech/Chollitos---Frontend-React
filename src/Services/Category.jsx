@@ -18,7 +18,7 @@ const getCategoriesService = async () => {
 const getCategoryBySlugService = async (slug) => {
   try {
     const response = await api.get('category/getbyslug/' + slug);
-    return response.data.data;
+    return response.data.data[0];
   } catch (error) {
     console.log(error);
     throw error;
@@ -28,7 +28,7 @@ const getCategoryBySlugService = async (slug) => {
 const getCategoryByIdService = async (id) => {
   try {
     const response = await api.get('category/getbyid/' + id);
-    return response.data.data;
+    return response.data.data[0];
   } catch (error) {
     console.log(error);
     throw error;
