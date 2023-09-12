@@ -30,7 +30,6 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
   const toast = useToast();
 
   const blackList = getAllChildren() ;
-  console.log(blackList)
 
   var categoryOptions = categories.map((category) => ({
     value: category.id,
@@ -44,11 +43,8 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
   })
   categoryOptions = categoryOptions.filter(category=>(blackList.indexOf(category.id) === -1))
   
-
-  console.log(categoryOptions)
-
   const getSlug = (_name) => {
-    let _slug = _name.replace(/[^a-zA-Z0-9]+/g, "-");
+    let _slug = _name.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase();
     return _slug;
   }
 

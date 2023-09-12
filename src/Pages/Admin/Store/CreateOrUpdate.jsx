@@ -81,6 +81,11 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
     id > 0 ? fetchData() : setData();
   }, [id]);
 
+  const handleCreateStore = async (e) => {
+    e.preventDefault()
+    console.log(name, url, image, blog)
+  }
+
   return (
     !isloading &&
     <Modal isOpen={isModalOpen} onClose={onCloseModal} closeOnOverlayClick={false} size={'4xl'}>
@@ -88,38 +93,40 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
       <ModalContent>
         <ModalHeader>{id > 0 ? t(_t('Edit Store')) : t(_t('Create Store'))}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <FormControl mt={5} isRequired>
-            <FormLabel>{t(_t('Name'))}</FormLabel>
-            <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }} />
-          </FormControl>
-          <FormControl mt={5} isRequired>
-            <FormLabel>{t(_t('URL'))}</FormLabel>
-            <Input type="text" value={url} onChange={(e) => { setUrl(e.target.value) }} />
-          </FormControl>
-          <FormControl mt={5}>
-            <FormLabel>{t(_t('Image URL'))}</FormLabel>
-            <Input type="text" value={image} onChange={(e) => { setImage(e.target.value) }} />
-            <Flex justifyContent="center" alignItems="center" h="120px">
-              <Image src={image} alt={name} h={'100px'} w={'auto'} />
-            </Flex>
-          </FormControl>
-          <FormControl mt={5}>
-            <FormLabel>{t(_t('Info HTML'))}</FormLabel>
-            <ReactQuill
-              name="info_html"
-              theme="snow"
-              modules={modules}
-              formats={formats}
-              value={blog}
-              onChange={(content) => setBlog(content)}
-            />
-          </FormControl>
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={onCloseModal}>{t(_t('Cancel'))}</Button>
-          <Button type="submit" colorScheme="blue" ml={3}>{t(_t('Update'))}</Button>
-        </ModalFooter>
+        <form onSubmit={handleCreateStore}>
+          <ModalBody>
+            <FormControl mt={5} isRequired>
+              <FormLabel>{t(_t('Name'))}</FormLabel>
+              <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }} />
+            </FormControl>
+            <FormControl mt={5} isRequired>
+              <FormLabel>{t(_t('URL'))}</FormLabel>
+              <Input type="text" value={url} onChange={(e) => { setUrl(e.target.value) }} />
+            </FormControl>
+            <FormControl mt={5}>
+              <FormLabel>{t(_t('Image URL'))}</FormLabel>
+              <Input type="text" value={image} onChange={(e) => { setImage(e.target.value) }} />
+              <Flex justifyContent="center" alignItems="center" h="120px">
+                <Image src={image} alt={t(_t("Image Not Found"))} h={'100px'} w={'auto'} />
+              </Flex>
+            </FormControl>
+            <FormControl mt={5}>
+              <FormLabel>{t(_t('Info HTML'))}</FormLabel>
+              <ReactQuill
+                name="info_html"
+                theme="snow"
+                modules={modules}
+                formats={formats}
+                value={blog}
+                onChange={(content) => setBlog(content)}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onCloseModal}>{t(_t('Cancel'))}</Button>
+            <Button type="submit" colorScheme="blue" ml={3}>{id > 0? t(_t('Update')): t(_t('Create'))}</Button>
+          </ModalFooter>
+        </form>
       </ModalContent>
     </Modal>
   )

@@ -37,8 +37,52 @@ const getStoreByNameService = async (name) => {
   }
 };
 
+const activateStoreService = async ( id ) => {
+  try {
+    const response = await api.get('store/activate/' + id);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const deactivateStoreService = async ( id ) => {
+  try {
+    const response = await api.get('store/deactivate/' + id);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const createStoreService = async ( data ) => {
+  try {
+    const response = await api.post('store/add', data);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const updateStoreService = async ( data ) => {
+  try {
+    const response = await api.post('store/edit', data);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
 export {
   getStoresService,
   getStoreByIdService,
-  getStoreByNameService
+  getStoreByNameService,
+  activateStoreService,
+  deactivateStoreService,
+  createStoreService,
+  updateStoreService,
 };
