@@ -31,6 +31,8 @@ const AdminDeal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deals, setDeals] = useState([]);
   const [deleteDealId, setDeleteDealId] = useState(0);
+  const [tableIndex, setTableIndex] = useState(0);
+  const [tableSize, setTableSize] = useState(5);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
   const { t } = useTranslation();
@@ -235,6 +237,10 @@ const AdminDeal = () => {
             <ChollitosTable
               columns={columns}
               data={deals}
+              index={tableIndex}
+              setIndex={setTableIndex}
+              size={tableSize}
+              setSize={setTableSize}
             />
           </Box>
           : !isloading &&

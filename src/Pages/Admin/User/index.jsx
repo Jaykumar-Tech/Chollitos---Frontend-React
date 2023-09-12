@@ -35,6 +35,8 @@ const User = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [users, setUsers] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(0);
+  const [tableIndex, setTableIndex] = useState(0);
+  const [tableSize, setTableSize] = useState(5);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
   const { t } = useTranslation();
@@ -284,6 +286,10 @@ const User = () => {
             <ChollitosTable
               columns={columns}
               data={users}
+              index={tableIndex}
+              setIndex={setTableIndex}
+              size={tableSize}
+              setSize={setTableSize}
             />
           </Box>
           : !isloading &&

@@ -23,12 +23,14 @@ import { _t } from "../../../Utils/_t";
 const AdminCategory = () => {
   const { globalProps } = useContext(GlobalContext);
   const { _setCategories } = globalProps;
+  const [tableIndex, setTableIndex] = useState(0);
+  const [tableSize, setTableSize] = useState(5);
   const [categories, setCategories] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
-  const toast = useToast()
+  const toast = useToast();
 
   const columns = [
     {
@@ -117,8 +119,8 @@ const AdminCategory = () => {
   }, []);
 
   const activateCategory = async (id) => {
-    var response = await activateCategoryService(id) ;
-    if ( response.status == 200 ) {
+    var response = await activateCategoryService(id);
+    if (response.status == 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Activating category success')),
@@ -127,7 +129,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      setCategories(categories.map(category=>(category.id!=id? category: {
+      setCategories(categories.map(category => (category.id != id ? category : {
         ...category,
         status: 1
       })))
@@ -144,8 +146,8 @@ const AdminCategory = () => {
   }
 
   const deactivateCategory = async (id) => {
-    var response = await deactivateCategoryService(id) ;
-    if ( response.status == 200 ) {
+    var response = await deactivateCategoryService(id);
+    if (response.status == 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Deactivating category success')),
@@ -154,7 +156,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      setCategories(categories.map(category=>(category.id!=id? category: {
+      setCategories(categories.map(category => (category.id != id ? category : {
         ...category,
         status: 0
       })))
@@ -207,6 +209,10 @@ const AdminCategory = () => {
             <ChollitosTable
               columns={columns}
               data={categories}
+              index={tableIndex}
+              setIndex={setTableIndex}
+              size={tableSize}
+              setSize={setTableSize}
             />
           </Box>
           : !isloading &&
@@ -221,7 +227,14 @@ const AdminCategory = () => {
             {t(_t('No Data'))}
           </Box>
         }
-        <CreateOrUpdateCategory key={"modalcreateupdate" + categoryId} isModalOpen={isOpen} onCloseModal={onCloseModal} id={categoryId} categories={categories} setCategories={setCategories}/>
+        <CreateOrUpdateCategory
+          key={"modalcreateupdate" + categoryId}
+          isModalOpen={isOpen}
+          onCloseModal={onCloseModal}
+          id={categoryId}
+          categories={categories}
+          setCategories={setCategories}
+        />
       </Box>
     </>
   )

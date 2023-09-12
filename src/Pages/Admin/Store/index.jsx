@@ -23,6 +23,8 @@ const AdminStore = () => {
   const { globalProps } = useContext(GlobalContext);
   const { _setStores } = globalProps;
   const [stores, setStores] = useState([]);
+  const [tableIndex, setTableIndex] = useState(0);
+  const [tableSize, setTableSize] = useState(5);
   const [isloading, setIsloading] = useState(false);
   const [storeId, setStoreId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -162,6 +164,10 @@ const AdminStore = () => {
             <ChollitosTable
               columns={columns}
               data={stores}
+              index={tableIndex}
+              setIndex={setTableIndex}
+              size={tableSize}
+              setSize={setTableSize}
             />
           </Box>
           : !isloading &&
