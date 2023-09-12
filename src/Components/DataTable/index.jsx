@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import {
   Box,
@@ -20,9 +21,14 @@ import {
 } from '@chakra-ui/icons';
 
 const paginationOptions = [5, 10, 20, 50];
+
 const ChollitosTable = ({
   data,
   columns,
+  index = 0,
+  setIndex,
+  size = 5,
+  setSize,
 }) => {
   const {
     getTableProps,
@@ -42,7 +48,7 @@ const ChollitosTable = ({
     {
       columns: columns,
       data: data,
-      initialState: { pageIndex: 0, pageSize: 5 },
+      initialState: { pageIndex: index, pageSize: size },
     },
     useGlobalFilter,
     useSortBy,
@@ -50,6 +56,14 @@ const ChollitosTable = ({
   );
   const { globalFilter, pageIndex, pageSize } = state;
   const pageCount = pageOptions.length;
+
+  useEffect(() => {
+    setIndex(pageIndex);
+  }, [pageIndex]);
+
+  useEffect(() => {
+    setSize(pageSize);
+  }, [pageSize]);
 
   return (
     <Box>
@@ -59,7 +73,7 @@ const ChollitosTable = ({
             <strong>
               {data.length}
             </strong>
-            {' '}Records in Total
+            {' '} Records in Total
           </span>
         </Box>
         <Spacer />
