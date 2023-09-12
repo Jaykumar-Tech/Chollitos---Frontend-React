@@ -12,8 +12,9 @@ import {
   Badge,
   Avatar,
   Heading,
+  useToast,
 } from '@chakra-ui/react';
-import { getCategoriesService } from "../../../Services/Category";
+import { activateCategoryService, deactivateCategoryService, getCategoriesService } from "../../../Services/Category";
 import CreateOrUpdateCategory from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ const AdminCategory = () => {
   const [categoryId, setCategoryId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+  const toast = useToast()
 
   const columns = [
     {
@@ -46,7 +48,7 @@ const AdminCategory = () => {
     {
       Header: t(_t('Parent')), accessor: 'parent_id',
       Cell: ({ value }) => (
-        categories.find(category => (category.id === value))?.name
+        categories.find(category => (category.id === value))?.name ?? "root"
       ),
     },
     {
@@ -114,12 +116,58 @@ const AdminCategory = () => {
     fetchData();
   }, []);
 
-  const activateCategory = (id) => {
-    alert(id);
+  const activateCategory = async (id) => {
+    var response = await activateCategoryService(id) ;
+    if ( response.status == 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Activating category success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setCategories(categories.map(category=>(category.id!=id? category: {
+        ...category,
+        status: 1
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
-  const deactivateCategory = (id) => {
-    alert(id);
+  const deactivateCategory = async (id) => {
+    var response = await deactivateCategoryService(id) ;
+    if ( response.status == 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deactivating category success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setCategories(categories.map(category=>(category.id!=id? category: {
+        ...category,
+        status: 0
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   const openCreateOrEditCategoryModal = (id) => {
@@ -173,7 +221,7 @@ const AdminCategory = () => {
             {t(_t('No Data'))}
           </Box>
         }
-        <CreateOrUpdateCategory isModalOpen={isOpen} onCloseModal={onCloseModal} id={categoryId} categories={categories} />
+        <CreateOrUpdateCategory key={"modalcreateupdate" + categoryId} isModalOpen={isOpen} onCloseModal={onCloseModal} id={categoryId} categories={categories} setCategories={setCategories}/>
       </Box>
     </>
   )

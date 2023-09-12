@@ -8,9 +8,20 @@ import enTranslation from './Lang/en.json';
 import esTranslation from './Lang/es.json';
 import { _t } from './Utils/_t';
 import { useEffect, useState } from 'react';
+import { changeLangService, getLangService } from './Services/Lang';
 
 function App() {
   const [language, setLanguage] = useState('en');
+  const [isLoading, setLoading] = useState(true)
+
+  useEffect(()=>{
+    const getLangFunc = async () => {
+      var response = await getLangService();
+      setLanguage(response.data.data)
+      setLoading(false)
+    } 
+    getLangFunc();
+  }, [])
 
   i18n
     .use(initReactI18next)
@@ -24,17 +35,21 @@ function App() {
         },
       },
       lng: language, // Default language
-      fallbackLng: 'en', // Fallback language if translation is missing
+      fallbackLng: language, // Fallback language if translation is missing
       interpolation: {
         escapeValue: false, // React already escapes values by default
       },
     });
 
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes />
-    </BrowserRouter>
+    <>
+    {
+      !isLoading && <BrowserRouter>
+        <Navbar />
+        <Routes />
+      </BrowserRouter>
+    }
+    </>
   );
 }
 
