@@ -11,9 +11,15 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { changeLangService } from "../../Services/Lang";
 
 const AdminMenu = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  const handleChangeLanguage = (lang) => {
+    i18n.changeLanguage(lang)
+    changeLangService(lang)
+  }
 
   return (
     <Menu>
@@ -58,8 +64,12 @@ const AdminMenu = () => {
             </Flex>
           </MenuButton>
           <MenuList>
-            <MenuItem>English</MenuItem>
-            <MenuItem>Español</MenuItem>
+            <MenuItem onClick={() => handleChangeLanguage("en")}>
+              English
+            </MenuItem>
+            <MenuItem onClick={() => handleChangeLanguage("es")}>
+              Español
+            </MenuItem>
           </MenuList>
         </Menu>
       </MenuList>

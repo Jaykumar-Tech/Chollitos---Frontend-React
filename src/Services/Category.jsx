@@ -35,8 +35,52 @@ const getCategoryByIdService = async (id) => {
   }
 };
 
+const activateCategoryService = async (id) => {
+  try {
+    const response = await api.get('category/activate/' + id);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+const deactivateCategoryService = async (id) => {
+  try {
+    const response = await api.get('category/deactivate/' + id);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+const createCategoryService = async (data) => {
+  try {
+    const response = await api.post('category/add', data);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+const editCategoryService = async (data) => {
+  try {
+    const response = await api.post('category/edit', data);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export {
   getCategoriesService,
   getCategoryBySlugService,
   getCategoryByIdService,
+  activateCategoryService,
+  deactivateCategoryService,
+  createCategoryService,
+  editCategoryService,
 };
