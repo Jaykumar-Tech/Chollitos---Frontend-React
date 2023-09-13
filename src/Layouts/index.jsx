@@ -350,6 +350,25 @@ export default function Navbar() {
 
           {authToken?.user?.role === "admin" && <AdminMenu />}
 
+          {(authToken?.user?.role === "vip" || authToken?.user?.role === "customer") &&
+            <Link to="/deals">
+              <Button
+                className="btnRes"
+                border={`solid white 2px`}
+                bg={themeColor}
+                fontWeight={'normal'}
+                color={'white'}
+                _hover={{
+                  color: themeColor,
+                  bg: 'white',
+                }}
+                ml={'10px'}
+              >
+                {t(_t('My Deals'))}
+              </Button>
+            </Link>
+          }
+
           < Spacer />
 
           <SearchBar appMode={appMode} />
@@ -509,7 +528,7 @@ export default function Navbar() {
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
-                    // justify={"space-between"}
+                  // justify={"space-between"}
                   >
                     <Checkbox>{t(_t("Remember me"))}</Checkbox>
                     <Spacer />
@@ -661,7 +680,7 @@ export default function Navbar() {
                 onChange={(e) => setCode(e.target.value)} />
             </FormControl>
             <Flex>
-              {isPWDLoading && <Spinner color="blue.500" mr={2}/>}
+              {isPWDLoading && <Spinner color="blue.500" mr={2} />}
               <Text
                 onClick={handleResendCode}
                 color={'blue.400'}

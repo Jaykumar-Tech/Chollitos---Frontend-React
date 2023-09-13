@@ -17,7 +17,7 @@ import UploadDeal from "../Pages/UploadDeal";
 import User from "../Pages/Admin/User";
 import AdminCategory from "../Pages/Admin/Category";
 import AdminStore from "../Pages/Admin/Store";
-import AdminDeal from "../Pages/Admin/Deal";
+import ManageDeal from "../Pages/Admin/Deal";
 import Banner from "../Pages/Admin/Banner";
 
 
@@ -33,23 +33,23 @@ function Routes() {
     <Box minH={'calc(100vh - 54px)'} bg={'gray.100'}>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/create/deal" component={CreateOrUpdateDeal} />
-        <Route exact path="/create/discount" component={CreateOrUpdateDiscount} />
+        {authToken && <Route exact path="/create/deal" component={CreateOrUpdateDeal} />}
+        {authToken && <Route exact path="/create/discount" component={CreateOrUpdateDiscount} />}
         <Route exact path="/categories" component={AllCategories} />
         <Route path="/category/:categorySlug" component={Category} />
         <Route exact path="/shops" component={AllShops} />
         <Route path="/shop/:store_name" component={Store} />
+        {authToken && <Route exact path="/deals" component={ManageDeal} />}
         <Route path="/deal/:dealTitle" component={Deal} />
         <Route exact path="/free" component={Free} />
-        <Route exact path="/vip" component={Vip} />
-        <Route exact path="/upload" component={UploadDeal} />
+        {(authToken?.user?.role === 'vip' || authToken?.user?.role === 'admin') && <Route exact path="/vip" component={Vip} />}
+        {authToken?.user?.role === 'admin' && <Route exact path="/upload" component={UploadDeal} />}
         {authToken?.user?.role === 'admin' &&
           <Switch>
             <Route exact path="/admin/banner" component={Banner} />
             <Route exact path="/admin/users" component={User} />
             <Route exact path="/admin/categories" component={AdminCategory} />
             <Route exact path="/admin/shops" component={AdminStore} />
-            <Route exact path="/admin/deals" component={AdminDeal} />
             <Route component={Page404} />
           </Switch>
         }

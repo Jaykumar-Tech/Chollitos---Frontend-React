@@ -23,15 +23,14 @@ import {
 import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaEdit, FaCrown, FaUser } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getAllService, getDealByFilter, setVipService, unsetVipService, updateDealService } from '../../../Services/Deal';
+import { activateDealService, deleteDealService, getAllService, setVipService, unsetVipService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';
 import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
-import { convertUTC } from '../../../Utils/date';
 
-const AdminDeal = () => {
+const ManageDeal = () => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const [deals, setDeals] = useState([]);
@@ -40,8 +39,14 @@ const AdminDeal = () => {
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
   const [isloading, setIsloading] = useState(false);
+  const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
   const toast = useToast();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (localStorage.getItem('authToken'))
+      setAuthToken(JSON.parse(localStorage.getItem('authToken')));
+  }, []);
 
   const columns = [
     {
@@ -143,24 +148,26 @@ const AdminDeal = () => {
       id: 'actions',
       Cell: ({ value, row }) => (
         <>
-          {row.original.vip ?
-            <Icon
-            onClick={()=>handleUnsetVip(row.original.id)}
-            as={FaUser}
-              color="gray.500"
-              boxSize={5}
-              cursor={'pointer'}
-              title={t(_t('Unset VIP'))}
-            />
-            :
-            <Icon
-              onClick={()=>handleSetVip(row.original.id)}
-              as={FaCrown}
-              color="yellow.500"
-              boxSize={5}
-              cursor={'pointer'}
-              title={t(_t('Set VIP'))}
-            />
+          {authToken?.user?.role === 'admin' &&
+            (value === 0 && row.original.vip ?
+              <Icon
+                onClick={() => handleUnsetVip(row.original.id)}
+                as={FaUser}
+                color="gray.500"
+                boxSize={5}
+                cursor={'pointer'}
+                title={t(_t('Unset VIP'))}
+              />
+              :
+              <Icon
+                onClick={() => handleSetVip(row.original.id)}
+                as={FaCrown}
+                color="yellow.500"
+                boxSize={5}
+                cursor={'pointer'}
+                title={t(_t('Set VIP'))}
+              />
+            )
           }
           <Icon
             as={FaEdit}
@@ -176,26 +183,27 @@ const AdminDeal = () => {
               }, 0);
             }}
           />
-          <Icon
-            as={AiOutlineDelete}
-            color="red.500"
-            boxSize={5}
-            cursor={'pointer'}
-            title={t(_t('delete'))}
-            onClick={() => {
-              setDeleteDealId(row.original.id);
-              onDeleteOpen();
-            }}
-          />
-          {value === 0 &&
+          {authToken?.user?.role === 'admin' &&
             <Icon
-              onClick={()=>handleActivateDeal(row.original.id)}
+              as={AiOutlineDelete}
+              color="red.500"
+              boxSize={5}
+              cursor={'pointer'}
+              title={t(_t('delete'))}
+              onClick={() => {
+                setDeleteDealId(row.original.id);
+                onDeleteOpen();
+              }}
+            />
+          }
+          {authToken?.user?.role === 'admin' && value === 0 &&
+            <Icon
+              onClick={() => handleActivateDeal(row.original.id)}
               as={FaCheckCircle}
               color="green.500"
               boxSize={5}
               cursor={'pointer'}
               title={t(_t('activate'))}
-            // onClick={() => activateDeal(row.original.id)}
             />
           }
         </>
@@ -220,19 +228,14 @@ const AdminDeal = () => {
 
   const getAllLightDeals = async () => {
     setIsloading(true);
-    // const data = await getDealByFilter({
-    //   start_at: 0,
-    //   length: 100000,
-    //   type: "all"
-    // });
-    const data = await getAllService() 
+    const data = await getAllService()
     setIsloading(false);
     setDeals(data);
   };
 
   const deleteDeal = async (deleteDealId) => {
-    var response = await deleteDealService(deleteDealId) 
-    if ( response.status === 200 ) {
+    var response = await deleteDealService(deleteDealId)
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Deleting deal success')),
@@ -255,8 +258,8 @@ const AdminDeal = () => {
   }
 
   const handleSetVip = async (id) => {
-    var response = await setVipService(id) 
-    if ( response.status === 200 ) {
+    var response = await setVipService(id)
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Setting VIP success')),
@@ -282,8 +285,8 @@ const AdminDeal = () => {
   }
 
   const handleUnsetVip = async (id) => {
-    var response = await unsetVipService(id) 
-    if ( response.status === 200 ) {
+    var response = await unsetVipService(id)
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Unsetting VIP success')),
@@ -309,8 +312,8 @@ const AdminDeal = () => {
   }
 
   const handleActivateDeal = async (dealId) => {
-  var response = await activateDealService(dealId) 
-    if ( response.status === 200 ) {
+    var response = await activateDealService(dealId)
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Activating deal success')),
@@ -335,9 +338,9 @@ const AdminDeal = () => {
     }
   }
 
-  const handleUpdateDeal = async ( _deal ) => {
+  const handleUpdateDeal = async (_deal) => {
     setDeals(deals.map(deal => {
-      if ( deal.id === _deal.id ) {
+      if (deal.id === _deal.id) {
         return {
           ...deal,
           ..._deal
@@ -429,23 +432,13 @@ const AdminDeal = () => {
             {deal.type === 'deal' ?
               <CreateOrUpdateDeal deal={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
               :
-              <CreateOrUpdateDiscount discount={deal}  onClose={onEditClose} onUpdate={handleUpdateDeal}/>
+              <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
             }
           </ModalBody>
-          {/* <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onEditClose}>
-              {t(_t("Cancel"))}
-            </Button>
-            <Button colorScheme="blue" onClick={() => {
-              onEditClose();
-            }}>
-              {t(_t("Update"))}
-            </Button>
-          </ModalFooter> */}
         </ModalContent>
       </Modal>
     </>
   )
 }
 
-export default AdminDeal;
+export default ManageDeal;
