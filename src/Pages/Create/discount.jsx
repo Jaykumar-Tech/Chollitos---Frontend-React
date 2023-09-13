@@ -196,15 +196,15 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
 
   return (
     <Box id="create_or_update_discount"
-      maxW={discount ? 'auto' : '800px'}
+      maxW={discount.id ? 'auto' : '800px'}
       m={'auto'}
     >
-      {!discount &&
+      {!discount.id &&
         <Helmet>
           <title>{t(_t("Chollitos"))} - {t(_t("Share discounts"))}</title>
         </Helmet>
       }
-      {!discount &&
+      {!discount.id &&
         <Text
           fontSize={'2em'}
           textAlign={'center'}
@@ -218,8 +218,8 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
         bg={'white'}
         borderWidth={discount ? "0px" : "1px"}
         rounded="lg"
-        shadow={discount ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
-        p={discount ? 0 : 6}
+        shadow={discount.id ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
+        p={discount.id ? 0 : 6}
         m="10px auto"
         as="form"
       >
@@ -495,7 +495,7 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
           />
         </FormControl>
 
-        {!discount &&
+        {!discount.id &&
           <ButtonGroup mt="5%" w="100%">
             <Flex w="100%" justifyContent="space-between">
               <Button

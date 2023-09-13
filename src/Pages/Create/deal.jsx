@@ -193,15 +193,15 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
   return (
     <Box
       id="create_or_update_deal"
-      maxW={deal ? 'auto' : '800px'}
+      maxW={deal.id ? 'auto' : '800px'}
       m={'auto'}
     >
-      {!deal &&
+      {!deal.id &&
         <Helmet>
           <title>{t(_t("Chollitos"))} - {t(_t("Share deals"))}</title>
         </Helmet>
       }
-      {!deal &&
+      {!deal.id &&
         <Text
           fontSize={'2em'}
           textAlign={'center'}
@@ -213,10 +213,10 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
       }
       <Box
         bg={'white'}
-        borderWidth={deal ? "0px" : "1px"}
+        borderWidth={deal.id ? "0px" : "1px"}
         rounded="lg"
-        shadow={deal ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
-        p={deal ? 0 : 6}
+        shadow={deal.id ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
+        p={deal.id ? 0 : 6}
         m="10px auto"
         as="form"
       >
@@ -439,7 +439,7 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
           />
         </FormControl>
 
-        {!deal &&
+        {!deal.id &&
           <ButtonGroup mt="5%" w="100%">
             <Flex w="100%" justifyContent="space-between">
               <Button

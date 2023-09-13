@@ -19,6 +19,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
+import { useTranslation } from 'react-i18next';
+import { _t } from "../../Utils/_t";
 
 const paginationOptions = [5, 10, 20, 50];
 
@@ -56,6 +58,7 @@ const ChollitosTable = ({
   );
   const { globalFilter, pageIndex, pageSize } = state;
   const pageCount = pageOptions.length;
+  const { t } = useTranslation();
 
   useEffect(() => {
     setIndex(pageIndex);
@@ -73,7 +76,7 @@ const ChollitosTable = ({
             <strong>
               {data.length}
             </strong>
-            {' '} Records in Total
+            {' ' + t(_t('Records'))}
           </span>
         </Box>
         <Spacer />
@@ -82,7 +85,7 @@ const ChollitosTable = ({
           maxWidth={'300px'}
           value={globalFilter || ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          placeholder="Search..."
+          placeholder={t(_t('Search')) + '...'}
           mb={4}
         />
       </Flex>
@@ -123,7 +126,7 @@ const ChollitosTable = ({
       </Box>
       <HStack spacing={2} mt={'12px'}>
         <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage} size={'sm'}>
-          First
+          {t(_t('First'))}
         </Button>
         <Button onClick={() => previousPage()} disabled={!canPreviousPage} size={'sm'}>
           <ChevronLeftIcon />
@@ -139,18 +142,19 @@ const ChollitosTable = ({
           <ChevronRightIcon />
         </Button>
         <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} size={'sm'}>
-          Last
+          {t(_t('Last'))}
         </Button>
         <span>
-          Page{' '}
+          {t(_t('Page')) + ' '}
           <strong>
             {pageIndex} / {Math.ceil(data.length / pageSize) - 1}
           </strong>
         </span>
         <Spacer />
+        <span>{t(_t('Show'))}</span>
         <Select
           size={'sm'}
-          maxWidth={'125px'}
+          width={'64px'}
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
@@ -158,7 +162,7 @@ const ChollitosTable = ({
         >
           {paginationOptions.map((value) => (
             <option key={value} value={value}>
-              Show {value}
+              {value}
             </option>
           ))}
         </Select>
