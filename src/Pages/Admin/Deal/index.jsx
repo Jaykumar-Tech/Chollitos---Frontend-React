@@ -24,12 +24,17 @@ import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaEdit, FaCrown, FaUser } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import { getDealByFilter } from '../../../Services/Deal';
+import CreateOrUpdateDeal from '../../Create/deal';
+import CreateOrUpdateDiscount from '../../Create/discount';
+import { getDealByIdService } from '../../../Services/Deal';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
 
 const AdminDeal = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const [deals, setDeals] = useState([]);
+  const [deal, setDeal] = useState({});
   const [deleteDealId, setDeleteDealId] = useState(0);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
@@ -61,11 +66,14 @@ const AdminDeal = () => {
     {
       Header: t(_t('URL')), accessor: 'deal_url',
       Cell: ({ value }) => (
-        <a href={value.startsWith("http") ? value : `https://${value}`} target="_blank">
-          <Box color={'blue.500'}>
-            {value}
-          </Box>
-        </a>
+        value ?
+          <a href={value?.startsWith("http") ? value : `https://${value}`} target="_blank" rel="noreferrer">
+            <Box color={'blue.500'}>
+              {value}
+            </Box>
+          </a>
+          :
+          <></>
       ),
     },
     {
@@ -158,7 +166,12 @@ const AdminDeal = () => {
             ml={1}
             cursor={'pointer'}
             title={t(_t('edit'))}
-          // onClick={() => openCreateOrEditStoreModal(row.original.id)}
+            onClick={async () => {
+              await getDealById(row.original.id);
+              setTimeout(() => {
+                onEditOpen();
+              }, 0);
+            }}
           />
           <Icon
             as={AiOutlineDelete}
@@ -168,7 +181,7 @@ const AdminDeal = () => {
             title={t(_t('delete'))}
             onClick={() => {
               setDeleteDealId(row.original.id);
-              onOpen();
+              onDeleteOpen();
             }}
           />
           {value === 0 &&
@@ -185,6 +198,13 @@ const AdminDeal = () => {
       ),
     },
   ];
+
+  const getDealById = async (id) => {
+    setIsloading(true);
+    const data = await getDealByIdService(id);
+    setDeal(data);
+    setIsloading(false);
+  };
 
   const getUrlFromTitle = (title) => {
     const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
@@ -204,6 +224,10 @@ const AdminDeal = () => {
     setIsloading(false);
     setDeals(data);
   };
+
+  const deleteDeal = async (deleteDealId) => {
+
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -256,7 +280,7 @@ const AdminDeal = () => {
           </Box>
         }
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("Delete Deal"))}</ModalHeader>
@@ -265,14 +289,38 @@ const AdminDeal = () => {
             {t(_t("Are you sure?"))}
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={onClose}>
+            <Button variant="ghost" mr={3} onClick={onDeleteClose}>
               {t(_t("Cancel"))}
             </Button>
             <Button colorScheme="red" onClick={() => {
-              // deleteDeal(deleteDealId);
-              onClose();
+              deleteDeal(deleteDealId);
+              onDeleteClose();
             }}>
               {t(_t("Delete"))}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isEditOpen} onClose={onEditClose} closeOnOverlayClick={false} size={'4xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("Edit Deal"))}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {deal.type === 'deal' ?
+              <CreateOrUpdateDeal deal={deal} />
+              :
+              <CreateOrUpdateDiscount discount={deal} />
+            }
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="gray" mr={3} onClick={onEditClose}>
+              {t(_t("Cancel"))}
+            </Button>
+            <Button colorScheme="blue" onClick={() => {
+              onEditClose();
+            }}>
+              {t(_t("Update"))}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -3,8 +3,8 @@ import { Switch, Route } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 
 import Home from "../Pages/Home";
-import CreateDeal from "../Pages/Create/deal";
-import CreateDiscount from "../Pages/Create/discount";
+import CreateOrUpdateDeal from "../Pages/Create/deal";
+import CreateOrUpdateDiscount from "../Pages/Create/discount";
 import Deal from "../Pages/Deal";
 import Store from "../Pages/Store";
 import AllShops from "../Pages/Store/all";
@@ -25,7 +25,7 @@ function Routes() {
   const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
 
   useEffect(() => {
-    if (localStorage.getItem(authToken))
+    if (localStorage.getItem('authToken'))
       setAuthToken(JSON.parse(localStorage.getItem('authToken')));
   }, []);
 
@@ -33,8 +33,8 @@ function Routes() {
     <Box minH={'calc(100vh - 54px)'} bg={'gray.100'}>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/create/deal" component={CreateDeal} />
-        <Route exact path="/create/discount" component={CreateDiscount} />
+        <Route exact path="/create/deal" component={CreateOrUpdateDeal} />
+        <Route exact path="/create/discount" component={CreateOrUpdateDiscount} />
         <Route exact path="/categories" component={AllCategories} />
         <Route path="/category/:categorySlug" component={Category} />
         <Route exact path="/shops" component={AllShops} />

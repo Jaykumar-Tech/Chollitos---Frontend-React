@@ -120,7 +120,7 @@ const AdminCategory = () => {
 
   const activateCategory = async (id) => {
     var response = await activateCategoryService(id);
-    if (response.status == 200) {
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Activating category success')),
@@ -129,7 +129,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      _setCategories(categories.map(category => (category.id != id ? category : {
+      _setCategories(categories.map(category => (category.id !== id ? category : {
         ...category,
         status: 1
       })))
@@ -147,7 +147,7 @@ const AdminCategory = () => {
 
   const deactivateCategory = async (id) => {
     var response = await deactivateCategoryService(id);
-    if (response.status == 200) {
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Deactivating category success')),
@@ -156,7 +156,7 @@ const AdminCategory = () => {
         duration: 3000,
         isClosable: true,
       })
-      _setCategories(categories.map(category => (category.id != id ? category : {
+      _setCategories(categories.map(category => (category.id !== id ? category : {
         ...category,
         status: 0
       })))

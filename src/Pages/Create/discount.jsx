@@ -16,7 +16,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  Checkbox,
 } from '@chakra-ui/react'
 import Select from "react-select";
 import { useDropzone } from 'react-dropzone';
@@ -29,28 +28,26 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
-export default function CreateDiscount() {
+export default function CreateOrUpdateDiscount({ discount = {} }) {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
+  const typeStr = ["discount_percent", "discount_fixed", "free"];
 
-  const [url, setUrl] = useState('');
-  const [images, setImages] = useState([]);
-  const [type, setType] = useState(0);
-  const [price, setPrice] = useState("0");
-  const [shipPrice, setShipPrice] = useState("0");
-  const [ship, setShip] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [url, setUrl] = useState(discount?.deal_url ?? '');
+  const [images, setImages] = useState(discount?.image_urls ? JSON.parse(discount?.image_urls) : []);
+  const [type, setType] = useState(discount?.type ? typeStr.indexOf(discount.type) : 0);
+  const [price, setPrice] = useState(discount?.price_new ?? "0");
+  const [title, setTitle] = useState(discount?.title ?? '');
+  const [description, setDescription] = useState(discount?.description ?? '');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(discount?.start_data ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
+  const [endDate, setEndDate] = useState(discount?.expires ?? '');
   const [isloading, setIsloading] = useState(false);
   const [isuploading, setIsuploading] = useState(false);
-  const [code, setCode] = useState("")
+  const [code, setCode] = useState(discount?.code ?? "");
   const toast = useToast();
-  const typeStr = ["discount_percent", "discount_fixed", "free"];
 
   const modules = {
     toolbar: {
@@ -157,8 +154,6 @@ export default function CreateDiscount() {
     if (type <= 2) {
       sendData.type = typeStr[type];
       sendData.price_new = price;
-      if (!ship) sendData.price_ship = "0";
-      else sendData.price_ship = shipPrice;
     }
     if (categoryId.id !== -1) sendData.category_id = categoryId.id;
     if (storeId !== -1) sendData.store_id = storeId.id;
@@ -172,14 +167,13 @@ export default function CreateDiscount() {
       setUrl("");
       setImages([]);
       setPrice("0");
-      setShipPrice("0");
-      setTitle("")
-      setDescription("")
-      setCategoryId({ name: "", id: -1 })
-      setStoreId({ name: "", id: -1 })
+      setTitle("");
+      setDescription("");
+      setCategoryId({ name: "", id: -1 });
+      setStoreId({ name: "", id: -1 });
       setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
       setEndDate('');
-      setCode("")
+      setCode("");
       toast({
         title: t(_t('Deal created.')),
         description: t(_t("We've created your deal.")),
@@ -201,28 +195,34 @@ export default function CreateDiscount() {
   }
 
   return (
-    <Box id="Create" maxW={'800px'} m={'auto'}>
-      <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("Share discounts"))}</title>
-      </Helmet>
-      <Text
-        fontSize={'2em'}
-        textAlign={'center'}
-        fontWeight={600}
-        p={5}
-      >
-        {t(_t("Discount Info"))}
-      </Text>
+    <Box id="create_or_update_discount"
+      maxW={discount ? 'auto' : '800px'}
+      m={'auto'}
+    >
+      {!discount &&
+        <Helmet>
+          <title>{t(_t("Chollitos"))} - {t(_t("Share discounts"))}</title>
+        </Helmet>
+      }
+      {!discount &&
+        <Text
+          fontSize={'2em'}
+          textAlign={'center'}
+          fontWeight={600}
+          p={5}
+        >
+          {t(_t("Discount Info"))}
+        </Text>
+      }
       <Box
         bg={'white'}
-        borderWidth="1px"
+        borderWidth={discount ? "0px" : "1px"}
         rounded="lg"
-        shadow="1px 1px 3px rgba(0,0,0,0.3)"
-        p={6}
+        shadow={discount ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
+        p={discount ? 0 : 6}
         m="10px auto"
         as="form"
       >
-
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
             fontWeight={600}
@@ -319,7 +319,7 @@ export default function CreateDiscount() {
           mt="2%">
           {t(_t("Discount Type"))}
         </FormLabel>
-        <Tabs>
+        <Tabs defaultIndex={type}>
           <TabList
             as={Flex}
             border={'solid 1px'}
@@ -382,29 +382,6 @@ export default function CreateDiscount() {
             />
           </FormControl>
         }
-
-        {type !== 2 && !ship &&
-          <FormControl as={GridItem} colSpan={6}>
-            <FormLabel
-              fontWeight={600}
-              htmlFor="price_shipment"
-              mt="2%">
-              {t(_t("Price of shipment"))}
-            </FormLabel>
-            <Input
-              type="text"
-              name="price_shipment"
-              id="price_shipment"
-              size="sm"
-              value={shipPrice}
-              onChange={(e) => setShipPrice(e.target.value)}
-            />
-          </FormControl>
-        }
-
-        <Checkbox m={'10px 0'} onChange={() => setShip(!ship)}>
-          {t(_t("Free Shipment"))}
-        </Checkbox>
 
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
@@ -518,28 +495,30 @@ export default function CreateDiscount() {
           />
         </FormControl>
 
-        <ButtonGroup mt="5%" w="100%">
-          <Flex w="100%" justifyContent="space-between">
-            <Button
-              colorScheme="teal"
-              variant="outline"
-              w="6rem"
-              mr="5%"
-              onClick={() => window.history.back()}
-            >
-              {t(_t("Back"))}
-            </Button>
-            <Button
-              isLoading={isloading}
-              w="6rem"
-              colorScheme="blue"
-              variant="solid"
-              onClick={handleCreate}
-            >
-              {t(_t("Create"))}
-            </Button>
-          </Flex>
-        </ButtonGroup>
+        {!discount &&
+          <ButtonGroup mt="5%" w="100%">
+            <Flex w="100%" justifyContent="space-between">
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                w="6rem"
+                mr="5%"
+                onClick={() => window.history.back()}
+              >
+                {t(_t("Back"))}
+              </Button>
+              <Button
+                isLoading={isloading}
+                w="6rem"
+                colorScheme="blue"
+                variant="solid"
+                onClick={handleCreate}
+              >
+                {t(_t("Create"))}
+              </Button>
+            </Flex>
+          </ButtonGroup>
+        }
       </Box>
     </Box>
   )

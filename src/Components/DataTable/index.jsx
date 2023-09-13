@@ -86,7 +86,7 @@ const ChollitosTable = ({
           mb={4}
         />
       </Flex>
-      <Box overflowX='auto'>
+      <Box overflow='auto' maxH={'calc(100vh - 330px)'}>
         <Table {
           ...getTableProps()}
           size={'sm'}

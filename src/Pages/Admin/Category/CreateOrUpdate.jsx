@@ -16,20 +16,19 @@ import {
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { useEffect, useState } from "react";
-import { createCategoryService, editCategoryService, getCategoryByIdService } from "../../../Services/Category";
+import { createCategoryService, editCategoryService } from "../../../Services/Category";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
 
 const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories, setCategories }) => {
   const { t } = useTranslation();
-  const [isloading, setIsloading] = useState(false);
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [parentId, setParentId] = useState(-1);
   const [imageUrl, setImageUrl] = useState('');
   const toast = useToast();
 
-  const blackList = getAllChildren() ;
+  const blackList = getAllChildren();
 
   var categoryOptions = categories.map((category) => ({
     value: category.id,
@@ -41,8 +40,8 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
     label: "root",
     id: -1
   })
-  categoryOptions = categoryOptions.filter(category=>(blackList.indexOf(category.id) === -1))
-  
+  categoryOptions = categoryOptions.filter(category => (blackList.indexOf(category.id) === -1))
+
   const getSlug = (_name) => {
     let _slug = _name.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase();
     return _slug;
@@ -61,9 +60,9 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
       parent_id: parentId,
       image_url: imageUrl
     }
-    if (id == 0) {
+    if (id === 0) {
       var response = await createCategoryService(data)
-      if ( response.status == 200 ) {
+      if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
           description: t(_t('Creating category success')),
@@ -76,7 +75,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
           id: response.data.data,
           status: 1,
           ...data
-        }].sort((a,b)=>(a.name.localeCompare(b.name))))
+        }].sort((a, b) => (a.name.localeCompare(b.name))))
         onCloseModal(false)
       } else {
         toast({
@@ -89,12 +88,12 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
         })
       }
     } else {
-      var response = await editCategoryService({
+      let response = await editCategoryService({
         id: id,
         ...data,
-        status: categories.find(category => (category.id == id)).status
+        status: categories.find(category => (category.id === id)).status
       })
-      if ( response.status == 200 ) {
+      if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
           description: t(_t('Updating category success')),
@@ -103,11 +102,11 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
           duration: 3000,
           isClosable: true,
         })
-        setCategories(categories.map(category=>(category.id!=id?category:{
+        setCategories(categories.map(category => (category.id !== id ? category : {
           id: id,
           status: category.status,
-        ...data
-        })).sort((a,b)=>(a.name.localeCompare(b.name))))
+          ...data
+        })).sort((a, b) => (a.name.localeCompare(b.name))))
         onCloseModal(false)
       } else {
         toast({
@@ -127,7 +126,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
     // var res = [];
     var que = [id];
     var index = 0;
-    while ( index < que.length ) {
+    while (index < que.length) {
       var cur = que[index];
       // var isParent = false;
       for (let i = 0; i < categories.length; i++) {
@@ -138,14 +137,14 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
       }
       // if (!isParent)
       //   res.push(cur);
-      index ++ ;
+      index++;
     }
     return que;
   }
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = categories.find(category => (category.id == id));
+      const data = categories.find(category => (category.id === id));
       setName(data?.name ?? '');
       setSlug(data?.slug ?? '');
       setParentId(data?.parent_id ?? -1);
@@ -176,7 +175,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
             </FormControl>
             <FormControl mt={5} isRequired>
               <FormLabel>{t(_t('Slug'))}</FormLabel>
-              <Input type="text" value={slug} isReadOnly/>
+              <Input type="text" value={slug} isReadOnly />
             </FormControl>
             <FormControl mt={5}>
               <FormLabel>{t(_t('Image URL'))}</FormLabel>

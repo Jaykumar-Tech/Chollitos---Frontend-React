@@ -97,7 +97,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
     }
     if (id === 0) {
       var response = await createStoreService(data)
-      if ( response.status === 200 ) {
+      if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
           description: t(_t('Creating store success')),
@@ -110,7 +110,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
           id: response.data.data,
           status: 1,
           ...data
-        }].sort((a,b)=>(a.name.localeCompare(b.name))))
+        }].sort((a, b) => (a.name.localeCompare(b.name))))
         onCloseModal(false)
       } else {
         toast({
@@ -123,12 +123,12 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
         })
       }
     } else {
-      var response = await updateStoreService({
+      let response = await updateStoreService({
         id: id,
         ...data,
-        status: stores.find(store => (store.id == id)).status
+        status: stores.find(store => (store.id === id)).status
       })
-      if ( response.status === 200 ) {
+      if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
           description: t(_t('Updating store success')),
@@ -137,11 +137,11 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
           duration: 3000,
           isClosable: true,
         })
-        _setStores(stores.map(store=>(store.id!=id?store:{
+        _setStores(stores.map(store => (store.id !== id ? store : {
           id: id,
           status: store.status,
-        ...data
-        })).sort((a,b)=>(a.name.localeCompare(b.name))))
+          ...data
+        })).sort((a, b) => (a.name.localeCompare(b.name))))
         onCloseModal(false)
       } else {
         toast({
@@ -195,7 +195,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
           </ModalBody>
           <ModalFooter>
             <Button onClick={onCloseModal}>{t(_t('Cancel'))}</Button>
-            <Button type="submit" colorScheme="blue" ml={3}>{id > 0? t(_t('Update')): t(_t('Create'))}</Button>
+            <Button type="submit" colorScheme="blue" ml={3}>{id > 0 ? t(_t('Update')) : t(_t('Create'))}</Button>
           </ModalFooter>
         </form>
       </ModalContent>

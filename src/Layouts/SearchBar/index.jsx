@@ -144,48 +144,50 @@ export default function SearchBar({ appMode }) {
                   } />
               </InputGroup>
               <Text m={5} fontSize={'1.2em'} fontWeight={600}>{t(_t("Deals"))}</Text>
-              <SimpleGrid
-                flex={1}
-                columns={appMode === 'lg' ? 2 : 1}
-                spacingX={2}
-                spacingY={5}
-                m={'20px 10px 20px'}
-                position={'relative'}
-              >
-                {deals && deals.map((deal) => (
-                  <Link
-                    key={deal.id}
-                    to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
-                    onClick={() => { setIsOpen(false) }}
-                  >
-                    <Flex fontSize={'0.9em'}>
-                      <Text mx={1} color={'red'} fontWeight={600}>{deal.cnt_like ?? 0}</Text>
-                      <Text mx={1} _hover={{ textDecoration: 'underline' }} >
-                        {deal.title}
-                        <span
-                          style={{
-                            marginLeft: '10px',
-                            fontWeight: 600,
-                            color: '#3182ce',
-                          }}
-                        >
-                          {
-                            (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
-                              t(_t("FREE")) :
-                              deal.type === 'deal' ? <span>{deal.price_low + "€ "}
-                                <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
-                                deal.type === 'discount_percent' ?
-                                  <span>-{deal.price_new}%</span> :
-                                  <span>-{deal.price_new}€</span>
-                          }
-                        </span>
-                      </Text>
-                    </Flex>
-                  </Link>
-                ))
-                }
-                {!deals && <Text p={5}>No Data</Text>}
-              </SimpleGrid>
+              {deals?.length > 0 &&
+                <SimpleGrid
+                  flex={1}
+                  columns={appMode === 'lg' ? 2 : 1}
+                  spacingX={2}
+                  spacingY={5}
+                  m={'20px 10px 20px'}
+                  position={'relative'}
+                >
+                  {deals && deals.map((deal) => (
+                    <Link
+                      key={deal.id}
+                      to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                      onClick={() => { setIsOpen(false) }}
+                    >
+                      <Flex fontSize={'0.9em'}>
+                        <Text mx={1} color={'red'} fontWeight={600}>{deal.cnt_like ?? 0}</Text>
+                        <Text mx={1} _hover={{ textDecoration: 'underline' }} >
+                          {deal.title}
+                          <span
+                            style={{
+                              marginLeft: '10px',
+                              fontWeight: 600,
+                              color: '#3182ce',
+                            }}
+                          >
+                            {
+                              (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
+                                t(_t("FREE")) :
+                                deal.type === 'deal' ? <span>{deal.price_low + "€ "}
+                                  <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
+                                  deal.type === 'discount_percent' ?
+                                    <span>-{deal.price_new}%</span> :
+                                    <span>-{deal.price_new}€</span>
+                            }
+                          </span>
+                        </Text>
+                      </Flex>
+                    </Link>
+                  ))
+                  }
+                  {!deals && <Text p={5}>No Data</Text>}
+                </SimpleGrid>
+              }
             </Box>
           </DrawerBody>
         </DrawerContent>

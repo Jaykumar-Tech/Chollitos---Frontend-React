@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { GlobalContext } from "../../../Components/GlobalContext";
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
@@ -14,7 +14,7 @@ import {
   Spacer,
   useToast,
 } from '@chakra-ui/react';
-import { activateStoreService, getStoresService } from "../../../Services/Store";
+import { activateStoreService } from "../../../Services/Store";
 import CreateOrUpdateStore from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,7 @@ const AdminStore = () => {
   // const [stores, _setStores] = useState([]);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
-  const [isloading, setIsloading] = useState(false);
+  const [isloading] = useState(false);
   const [storeId, setStoreId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
@@ -50,11 +50,14 @@ const AdminStore = () => {
     {
       Header: t(_t('URL')), accessor: 'url',
       Cell: ({ value }) => (
-        <a href={value.startsWith("http") ? value : `https://${value}`} target="_blank">
-          <Box color={'blue.500'}>
-            {value}
-          </Box>
-        </a>
+        value ?
+          <a href={value?.startsWith("http") ? value : `https://${value}`} target="_blank" rel="noreferrer">
+            <Box color={'blue.500'}>
+              {value}
+            </Box>
+          </a>
+          :
+          <></>
       ),
     },
     {
@@ -124,7 +127,7 @@ const AdminStore = () => {
 
   const activateStore = async (id) => {
     var response = await activateStoreService(id);
-    if (response.status == 200) {
+    if (response.status === 200) {
       toast({
         title: t(_t('Success.')),
         description: t(_t('Activating Store success')),
@@ -133,7 +136,7 @@ const AdminStore = () => {
         duration: 3000,
         isClosable: true,
       })
-      _setStores(stores.map(store => (store.id != id ? store : {
+      _setStores(stores.map(store => (store.id !== id ? store : {
         ...store,
         status: 1
       })))
