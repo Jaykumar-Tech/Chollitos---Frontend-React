@@ -6,20 +6,19 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enTranslation from './Lang/en.json';
 import esTranslation from './Lang/es.json';
-import { _t } from './Utils/_t';
 import { useEffect, useState } from 'react';
-import { changeLangService, getLangService } from './Services/Lang';
+import { getLangService } from './Services/Lang';
 
 function App() {
   const [language, setLanguage] = useState('en');
   const [isLoading, setLoading] = useState(true)
 
-  useEffect(()=>{
+  useEffect(() => {
     const getLangFunc = async () => {
       var response = await getLangService();
       setLanguage(response.data.data)
       setLoading(false)
-    } 
+    }
     getLangFunc();
   }, [])
 
@@ -43,12 +42,12 @@ function App() {
 
   return (
     <>
-    {
-      !isLoading && <BrowserRouter>
-        <Navbar />
-        <Routes />
-      </BrowserRouter>
-    }
+      {!isLoading &&
+        <BrowserRouter>
+          <Navbar />
+          <Routes />
+        </BrowserRouter>
+      }
     </>
   );
 }

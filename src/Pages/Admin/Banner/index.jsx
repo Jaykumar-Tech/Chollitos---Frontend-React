@@ -67,7 +67,7 @@ const Banner = () => {
     setIsUpdating(true);
     var result = await saveBannerService(banner);
     setIsUpdating(false);
-    if (result.status == 200) {
+    if (result.status === 200) {
       sessionStorage.setItem('banner', 'show');
       history.push('/');
       toast({

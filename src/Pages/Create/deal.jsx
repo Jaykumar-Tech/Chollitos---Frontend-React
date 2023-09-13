@@ -25,22 +25,21 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 
-export default function CreateDeal() {
+export default function CreateOrUpdateDeal({ deal = {} }) {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
 
-  const [url, setUrl] = useState('');
-  const [images, setImages] = useState([]);
-  const [price, setPrice] = useState("0");
-  const [lowPrice, setLowPrice] = useState("0");
-  const [ship, setShip] = useState("0");
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [url, setUrl] = useState(deal?.deal_url ?? '');
+  const [images, setImages] = useState(deal?.image_urls ? JSON.parse(deal?.image_urls) : []);
+  const [price, setPrice] = useState(deal?.price_new ?? "0");
+  const [lowPrice, setLowPrice] = useState(deal?.price_low ?? "0");
+  const [title, setTitle] = useState(deal?.title ?? '');
+  const [description, setDescription] = useState(deal?.description ?? '');
   const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
   const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(deal?.start_date ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
+  const [endDate, setEndDate] = useState(deal?.expires ?? '');
   const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
@@ -140,14 +139,12 @@ export default function CreateDeal() {
   });
 
   const handleCreate = async () => {
-    const auth_token = JSON.parse(localStorage.getItem('authToken'));
     var sendData = {
       title: title,
       description: description,
       type: "deal",
       price_new: price,
       price_low: lowPrice,
-      price_ship: ship,
       deal_url: url,
       image_urls: JSON.stringify(images),
     };
@@ -166,7 +163,6 @@ export default function CreateDeal() {
       setImages([]);
       setPrice("0");
       setLowPrice("0");
-      setShip("0");
       setTitle("")
       setDescription("")
       setCategoryId({ name: "", id: -1 })
@@ -195,28 +191,35 @@ export default function CreateDeal() {
   }
 
   return (
-    <Box id="Create" maxW={'800px'} m={'auto'}>
-      <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("Share deals"))}</title>
-      </Helmet>
-      <Text
-        fontSize={'2em'}
-        textAlign={'center'}
-        fontWeight={600}
-        p={5}
-      >
-        {t(_t("Deal Info"))}
-      </Text>
+    <Box
+      id="create_or_update_deal"
+      maxW={deal ? 'auto' : '800px'}
+      m={'auto'}
+    >
+      {!deal &&
+        <Helmet>
+          <title>{t(_t("Chollitos"))} - {t(_t("Share deals"))}</title>
+        </Helmet>
+      }
+      {!deal &&
+        <Text
+          fontSize={'2em'}
+          textAlign={'center'}
+          fontWeight={600}
+          p={5}
+        >
+          {t(_t("Deal Info"))}
+        </Text>
+      }
       <Box
         bg={'white'}
-        borderWidth="1px"
+        borderWidth={deal ? "0px" : "1px"}
         rounded="lg"
-        shadow="1px 1px 3px rgba(0,0,0,0.3)"
-        p={6}
+        shadow={deal ? "none" : "1px 1px 3px rgba(0,0,0,0.3)"}
+        p={deal ? 0 : 6}
         m="10px auto"
         as="form"
       >
-
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
             fontWeight={600}
@@ -321,23 +324,6 @@ export default function CreateDeal() {
             size="sm"
             value={lowPrice}
             onChange={(e) => setLowPrice(e.target.value)}
-          />
-        </FormControl>
-
-        <FormControl as={GridItem} colSpan={6}>
-          <FormLabel
-            fontWeight={600}
-            htmlFor="price_shipment"
-            mt="2%">
-            {t(_t("Price of shipment"))}
-          </FormLabel>
-          <Input
-            type="text"
-            name="price_shipment"
-            id="price_shipment"
-            size="sm"
-            value={ship}
-            onChange={(e) => setShip(e.target.value)}
           />
         </FormControl>
 
@@ -453,28 +439,30 @@ export default function CreateDeal() {
           />
         </FormControl>
 
-        <ButtonGroup mt="5%" w="100%">
-          <Flex w="100%" justifyContent="space-between">
-            <Button
-              colorScheme="teal"
-              variant="outline"
-              w="6rem"
-              mr="5%"
-              onClick={() => window.history.back()}
-            >
-              {t(_t("Back"))}
-            </Button>
-            <Button
-              isLoading={isloading}
-              w="6rem"
-              colorScheme="blue"
-              variant="solid"
-              onClick={handleCreate}
-            >
-              {t(_t("Create"))}
-            </Button>
-          </Flex>
-        </ButtonGroup>
+        {!deal &&
+          <ButtonGroup mt="5%" w="100%">
+            <Flex w="100%" justifyContent="space-between">
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                w="6rem"
+                mr="5%"
+                onClick={() => window.history.back()}
+              >
+                {t(_t("Back"))}
+              </Button>
+              <Button
+                isLoading={isloading}
+                w="6rem"
+                colorScheme="blue"
+                variant="solid"
+                onClick={handleCreate}
+              >
+                {t(_t("Create"))}
+              </Button>
+            </Flex>
+          </ButtonGroup>
+        }
       </Box>
     </Box>
   )
