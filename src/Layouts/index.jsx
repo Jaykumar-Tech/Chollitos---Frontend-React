@@ -30,6 +30,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -66,6 +67,7 @@ export default function Navbar() {
   const [authToken, setAuthToken] = useState(null);
   const [isSignInLoading, setIsSignInLoading] = useState(false);
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [isPWDLoading, setIsPWDLoading] = useState(false);
   const [isEmailVerify, setIsEmailVerify] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isChangePWD, setIsChangePWD] = useState(false);
@@ -166,12 +168,14 @@ export default function Navbar() {
       return;
     }
 
-
-    if ( isForgotProcessing ) {
+    if (isForgotProcessing) {
+      setIsPWDLoading(true);
       var response = await resetPasswordService({
         email: email,
         password: newPWD
       })
+      setIsPWDLoading(false);
+
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -197,13 +201,15 @@ export default function Navbar() {
         })
       }
     } else {
-      
-    var user = JSON.parse(localStorage.getItem("authToken")).user
+      setIsPWDLoading(true);
+      var user = JSON.parse(localStorage.getItem("authToken")).user
       var response = await changePasswordService({
         email: user.email,
         old_password: oldPWD,
         new_password: newPWD
-      })
+      });
+      setIsPWDLoading(false);
+
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -231,8 +237,10 @@ export default function Navbar() {
   }
 
   const handleForgotPassword = async () => {
-    var response = await resendCodeService(email) ;
-    if ( response.status === 200 ) {
+    setIsPWDLoading(true);
+    var response = await resendCodeService(email);
+    setIsPWDLoading(false);
+    if (response.status === 200) {
       setIsSignInOpen(false)
       setIsEmailVerify(true)
       setForgotProcessing(true)
@@ -263,7 +271,7 @@ export default function Navbar() {
     const response = await verifyCodeService(email, code);
     setIsVerifying(false);
     if (response.status === 200) {
-      if ( isForgotProcessing ) {
+      if (isForgotProcessing) {
         setIsChangePWD(true)
         setIsEmailVerify(false)
       } else {
@@ -298,7 +306,9 @@ export default function Navbar() {
   }
 
   const handleResendCode = async (e) => {
-    const response = await resendCodeService(email)
+    setIsPWDLoading(true);
+    const response = await resendCodeService(email);
+    setIsPWDLoading(false);
     if (response.status === 200) {
       toast({
         title: t(_t('Success')),
@@ -499,12 +509,15 @@ export default function Navbar() {
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
-                    justify={"space-between"}
+                    // justify={"space-between"}
                   >
                     <Checkbox>{t(_t("Remember me"))}</Checkbox>
+                    <Spacer />
+                    {isPWDLoading && <Spinner color="blue.500" />}
                     <Text
                       onClick={handleForgotPassword}
-                      color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}</Text>
+                      color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}
+                    </Text>
                   </Stack>
                   <Button
                     isLoading={isSignInLoading}
@@ -631,7 +644,7 @@ export default function Navbar() {
           </Box>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isEmailVerify} onClose={() => setIsEmailVerify(false)}>
+      <Modal isOpen={isEmailVerify} onClose={() => setIsEmailVerify(false)} closeOnOverlayClick={false}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t("OTP Verification"))}</ModalHeader>
@@ -642,11 +655,13 @@ export default function Navbar() {
             boxShadow={'lg'}
             p={8}
           >
+            <Text mb={5}>{t(_t('Verification code has been sent to your email.'))}</Text>
             <FormControl id="otp" mb={4} isRequired>
               <Input type="text" placeholder={t(_t("Enter OTP CODE"))} value={code}
                 onChange={(e) => setCode(e.target.value)} />
             </FormControl>
             <Flex>
+              {isPWDLoading && <Spinner color="blue.500" mr={2}/>}
               <Text
                 onClick={handleResendCode}
                 color={'blue.400'}
@@ -660,7 +675,7 @@ export default function Navbar() {
           </Box>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isChangePWD} onClose={() => setIsChangePWD(false)}>
+      <Modal isOpen={isChangePWD} onClose={() => setIsChangePWD(false)} closeOnOverlayClick={false}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{t(_t('Change Password'))}</ModalHeader>
@@ -668,7 +683,7 @@ export default function Navbar() {
           <form onSubmit={handleChangePassword}>
             <ModalBody>
               {
-                !isForgotProcessing && 
+                !isForgotProcessing &&
                 <FormControl mt={5} isRequired>
                   <FormLabel>{t(_t('Current Password'))}</FormLabel>
                   <Input type="password" value={oldPWD} onChange={(e) => { setOldPWD(e.target.value) }} />
@@ -684,8 +699,8 @@ export default function Navbar() {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button type="submit" colorScheme="blue" mr={3}>{t(_t('Save'))}</Button>
-              <Button onClick={() => setIsChangePWD(false)}>{t(_t('Cancel'))}</Button>
+              <Button onClick={() => setIsChangePWD(false)} mr={3}>{t(_t('Cancel'))}</Button>
+              <Button isLoading={isPWDLoading} type="submit" colorScheme="blue">{t(_t('Change'))}</Button>
             </ModalFooter>
           </form>
         </ModalContent>
