@@ -561,8 +561,8 @@ const Deal = () => {
             </Box>
           </Box>
           <Box>
-            <PopularShops stores={stores} />
-            <PopularCategories categories={categories} />
+            <PopularShops _stores={stores} />
+            <PopularCategories _categories={categories} />
           </Box>
         </Box>
       </Box>

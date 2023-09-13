@@ -29,7 +29,7 @@ const AllShops = () => {
   };
 
   const filteredItems = stores.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    (item.status && item.name.toLowerCase().includes(searchTerm.toLowerCase()) )
   );
 
   return (

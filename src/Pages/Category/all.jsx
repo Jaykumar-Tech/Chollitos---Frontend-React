@@ -19,7 +19,7 @@ import { _t } from "../../Utils/_t";
 import { Helmet } from "react-helmet";
 
 const AllCategories = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories } = globalProps;
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,8 +28,9 @@ const AllCategories = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredItems = categories.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItems = categories.filter((item) => (
+    item.status && item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
   );
 
   return (

@@ -12,10 +12,11 @@ import { Link } from 'react-router-dom';
 import { _t } from "../../Utils/_t";
 import { useTranslation } from "react-i18next";
 
-const TreeViewCategories = ({ categories, categorySlug, filterDeals }) => {
+const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
   const { t } = useTranslation();
   const [treeData, setTreeData] = useState([]);
   const [filterData, setFilter] = useState([]);
+  const [categories, setCategories] = useState(_categories.filter(category=>(category.status)))
   const themeColor = 'blue.500';
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 

@@ -143,7 +143,7 @@ const Home = () => {
               >
                 <Banner />
                 <PopularShops stores={stores} />
-                <PopularCategories categories={categories} />
+                <PopularCategories _categories={categories} />
               </Box>
             }
           </Flex>

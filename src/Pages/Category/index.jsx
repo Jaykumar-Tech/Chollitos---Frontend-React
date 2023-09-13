@@ -109,7 +109,7 @@ const Category = () => {
               width={appMode === 'lg' ? '20%' : '0px'}
             >
               <TreeViewCategories
-                categories={categories}
+                _categories={categories}
                 categorySlug={categorySlug}
                 filterDeals={setCatIds}
               />

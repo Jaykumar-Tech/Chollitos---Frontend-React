@@ -23,7 +23,7 @@ import {
 import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaEdit, FaCrown, FaUser } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getDealByFilter, setVipService, unsetVipService, updateDealService } from '../../../Services/Deal';
+import { activateDealService, deleteDealService, getAllService, getDealByFilter, setVipService, unsetVipService, updateDealService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';
 import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
@@ -220,11 +220,12 @@ const AdminDeal = () => {
 
   const getAllLightDeals = async () => {
     setIsloading(true);
-    const data = await getDealByFilter({
-      start_at: 0,
-      length: 100000,
-      type: "all"
-    });
+    // const data = await getDealByFilter({
+    //   start_at: 0,
+    //   length: 100000,
+    //   type: "all"
+    // });
+    const data = await getAllService() 
     setIsloading(false);
     setDeals(data);
   };

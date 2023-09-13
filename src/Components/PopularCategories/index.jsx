@@ -3,12 +3,14 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { useState } from "react";
 
-const PopularCategories = ({ categories }) => {
+const PopularCategories = ({ _categories }) => {
   const { t } = useTranslation()
   const themeColor = 'blue.500';
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
+  const [categories, setCategories] = useState(_categories.filter(category=>(category.status)))
 
   return (
     <Box p={2}>

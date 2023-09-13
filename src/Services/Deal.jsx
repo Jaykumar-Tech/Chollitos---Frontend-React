@@ -161,7 +161,6 @@ const deleteDealService = async (id) => {
   }
 }
 
-
 const updateDealService = async (data) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -177,6 +176,21 @@ const updateDealService = async (data) => {
   }
 }
 
+const getAllService = async () => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/getall', {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 export {
   getDealsService,
   createDealService,
@@ -188,5 +202,6 @@ export {
   unsetVipService,
   deleteDealService,
   activateDealService,
-  updateDealService
+  updateDealService,
+  getAllService
 };
