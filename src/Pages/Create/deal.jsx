@@ -20,12 +20,13 @@ import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { getUrlUploadedService } from '../../Services/Resource';
-import { createDealService } from '../../Services/Deal';
+import { createDealService, updateDealService } from '../../Services/Deal';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { convertUTC } from "../../Utils/date";
 
-export default function CreateOrUpdateDeal({ deal = {} }) {
+export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
@@ -36,10 +37,10 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
   const [lowPrice, setLowPrice] = useState(deal?.price_low ?? "0");
   const [title, setTitle] = useState(deal?.title ?? '');
   const [description, setDescription] = useState(deal?.description ?? '');
-  const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
-  const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(deal?.start_date ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
-  const [endDate, setEndDate] = useState(deal?.expires ?? '');
+  const [categoryId, setCategoryId] = useState(deal?.category_id ?? -1);
+  const [storeId, setStoreId] = useState(deal?.store_id ?? -1);
+  const [startDate, setStartDate] = useState(convertUTC(deal.start_date));
+  const [endDate, setEndDate] = useState(deal?.expires ?? convertUTC(null));
   const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
@@ -148,8 +149,8 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
       deal_url: url,
       image_urls: JSON.stringify(images),
     };
-    if (categoryId.id !== -1) sendData.category_id = categoryId.id;
-    if (storeId !== -1) sendData.store_id = storeId.id;
+    if (categoryId !== -1) sendData.category_id = categoryId;
+    if (storeId !== -1) sendData.store_id = storeId;
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
@@ -165,8 +166,8 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
       setLowPrice("0");
       setTitle("")
       setDescription("")
-      setCategoryId({ name: "", id: -1 })
-      setStoreId({ name: "", id: -1 })
+      setCategoryId(-1)
+      setStoreId(-1)
       setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
       setEndDate('');
       toast({
@@ -182,6 +183,38 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
       toast({
         title: t(_t('Error.')),
         description: response.response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUpdate = async () => {
+    var sendData = {
+      deal_id: deal.id,
+      title: title,
+      description: description,
+      type: "deal",
+      price_new: ""+price,
+      price_low: ""+lowPrice,
+      deal_url: url,
+      image_urls: JSON.stringify(images),
+      category_id: categoryId,
+      store_id: storeId,
+      expires: endDate
+    };
+    var response = await updateDealService(sendData)
+    if (response.status === 200) {
+      delete sendData.deal_id
+      sendData.id = deal.id
+      onUpdate(sendData)
+      onClose(false)
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data.message,
         position: 'top',
         status: 'error',
         duration: 3000,
@@ -374,13 +407,9 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
             name="category"
             placeholder={t(_t("Select Category"))}
             isSearchable={true}
-            menuPortalTarget={document.body}
             options={categoryOptions}
-            value={categoryOptions.find((category) => category.value === categoryId.name)}
-            onChange={(e) => setCategoryId({
-              name: e.label,
-              id: parseInt(e.id)
-            })}
+            value={categoryOptions.find((category) => category.id === categoryId)}
+            onChange={(e) => setCategoryId(parseInt(e.id))}
           />
         </FormControl>
 
@@ -397,30 +426,31 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
             placeholder={t(_t("Select Store"))}
             isSearchable={true}
             options={storeOptions}
-            value={storeOptions.find((store) => store.value === storeId.name)}
-            onChange={(e) => setStoreId({
-              name: e.value,
-              id: parseInt(e.id)
-            })}
+            value={storeOptions.find((store) => store.id === storeId)}
+            onChange={(e) => setStoreId(parseInt(e.id))}
           />
         </FormControl>
 
-        <FormControl as={GridItem} colSpan={6}>
-          <FormLabel
-            fontWeight={600}
-            htmlFor="start_date"
-            mt="2%">
-            {t(_t("Start Date"))}
-          </FormLabel>
-          <Input
-            type="date"
-            name="start_date"
-            id="start_date"
-            size="sm"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </FormControl>
+        {
+          !deal.id &&
+          <FormControl as={GridItem} colSpan={6}>
+            <FormLabel
+              fontWeight={600}
+              htmlFor="start_date"
+              mt="2%">
+              {t(_t("Start Date"))}
+            </FormLabel>
+            <Input
+              type="date"
+              name="start_date"
+              id="start_date"
+              size="sm"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </FormControl>
+        }
+
 
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
@@ -439,7 +469,7 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
           />
         </FormControl>
 
-        {!deal.id &&
+        {!deal.id ?
           <ButtonGroup mt="5%" w="100%">
             <Flex w="100%" justifyContent="space-between">
               <Button
@@ -459,6 +489,28 @@ export default function CreateOrUpdateDeal({ deal = {} }) {
                 onClick={handleCreate}
               >
                 {t(_t("Create"))}
+              </Button>
+            </Flex>
+          </ButtonGroup> :
+          <ButtonGroup mt="5%" w="100%">
+            <Flex w="100%" justifyContent="space-between">
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                w="6rem"
+                mr="5%"
+                onClick={() => onClose(false)}
+              >
+                {t(_t("Cancel"))}
+              </Button>
+              <Button
+                isLoading={isloading}
+                w="6rem"
+                colorScheme="blue"
+                variant="solid"
+                onClick={handleUpdate}
+              >
+                {t(_t("Update"))}
               </Button>
             </Flex>
           </ButtonGroup>

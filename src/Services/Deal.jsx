@@ -97,11 +97,96 @@ const getDealByFilter = async (data) => {
   }
 }
 
+const activateDealService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/activate/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const setVipService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/set_vip/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const unsetVipService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/unset_vip/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const deleteDealService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/delete/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+
+const updateDealService = async (data) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.post('deal/edit', data, {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
 export {
   getDealsService,
   createDealService,
   getFilterDealsService,
   getDealByIdService,
   getCountDealsService,
-  getDealByFilter
+  getDealByFilter,
+  setVipService,
+  unsetVipService,
+  deleteDealService,
+  activateDealService,
+  updateDealService
 };

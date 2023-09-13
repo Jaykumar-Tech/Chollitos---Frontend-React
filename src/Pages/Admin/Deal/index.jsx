@@ -23,12 +23,13 @@ import {
 import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaEdit, FaCrown, FaUser } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { getDealByFilter } from '../../../Services/Deal';
+import { activateDealService, deleteDealService, getDealByFilter, setVipService, unsetVipService, updateDealService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';
 import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { convertUTC } from '../../../Utils/date';
 
 const AdminDeal = () => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -101,12 +102,12 @@ const AdminDeal = () => {
     {
       Header: t(_t('End Date')), accessor: 'expires',
       Cell: ({ value }) => {
-        const date = new Date(value);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-        return <span>{formattedDate}</span>;
+        // const date = new Date(value);
+        // const year = date.getFullYear();
+        // const month = String(date.getMonth() + 1).padStart(2, '0');
+        // const day = String(date.getDate()).padStart(2, '0');
+        // const formattedDate = `${year}-${month}-${day}`;
+        return <span>{value}</span>;
       },
     },
     {
@@ -144,7 +145,8 @@ const AdminDeal = () => {
         <>
           {row.original.vip ?
             <Icon
-              as={FaUser}
+            onClick={()=>handleUnsetVip(row.original.id)}
+            as={FaUser}
               color="gray.500"
               boxSize={5}
               cursor={'pointer'}
@@ -152,6 +154,7 @@ const AdminDeal = () => {
             />
             :
             <Icon
+              onClick={()=>handleSetVip(row.original.id)}
               as={FaCrown}
               color="yellow.500"
               boxSize={5}
@@ -186,6 +189,7 @@ const AdminDeal = () => {
           />
           {value === 0 &&
             <Icon
+              onClick={()=>handleActivateDeal(row.original.id)}
               as={FaCheckCircle}
               color="green.500"
               boxSize={5}
@@ -226,7 +230,121 @@ const AdminDeal = () => {
   };
 
   const deleteDeal = async (deleteDealId) => {
+    var response = await deleteDealService(deleteDealId) 
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deleting deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.filter(deal => (deal.id !== deleteDealId)))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
 
+  const handleSetVip = async (id) => {
+    var response = await setVipService(id) 
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Setting VIP success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal => (deal.id !== id ? deal : {
+        ...deal,
+        vip: 1
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUnsetVip = async (id) => {
+    var response = await unsetVipService(id) 
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Unsetting VIP success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal => (deal.id !== id ? deal : {
+        ...deal,
+        vip: 0
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleActivateDeal = async (dealId) => {
+  var response = await activateDealService(dealId) 
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Activating deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal => (deal.id !== dealId ? deal : {
+        ...deal,
+        status: 1
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUpdateDeal = async ( _deal ) => {
+    setDeals(deals.map(deal => {
+      if ( deal.id === _deal.id ) {
+        return {
+          ...deal,
+          ..._deal
+        }
+      } else {
+        return deal
+      }
+    }))
   }
 
   useEffect(() => {
@@ -308,12 +426,12 @@ const AdminDeal = () => {
           <ModalCloseButton />
           <ModalBody>
             {deal.type === 'deal' ?
-              <CreateOrUpdateDeal deal={deal} />
+              <CreateOrUpdateDeal deal={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
               :
-              <CreateOrUpdateDiscount discount={deal} />
+              <CreateOrUpdateDiscount discount={deal}  onClose={onEditClose} onUpdate={handleUpdateDeal}/>
             }
           </ModalBody>
-          <ModalFooter>
+          {/* <ModalFooter>
             <Button colorScheme="gray" mr={3} onClick={onEditClose}>
               {t(_t("Cancel"))}
             </Button>
@@ -322,7 +440,7 @@ const AdminDeal = () => {
             }}>
               {t(_t("Update"))}
             </Button>
-          </ModalFooter>
+          </ModalFooter> */}
         </ModalContent>
       </Modal>
     </>

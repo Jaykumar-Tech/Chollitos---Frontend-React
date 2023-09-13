@@ -23,12 +23,13 @@ import { FaFileImage } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { getUrlUploadedService } from '../../Services/Resource';
-import { createDealService } from '../../Services/Deal';
+import { createDealService, updateDealService } from '../../Services/Deal';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { convertUTC } from "../../Utils/date";
 
-export default function CreateOrUpdateDiscount({ discount = {} }) {
+export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdate }) {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
   const { categories, stores } = globalProps;
@@ -40,10 +41,10 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
   const [price, setPrice] = useState(discount?.price_new ?? "0");
   const [title, setTitle] = useState(discount?.title ?? '');
   const [description, setDescription] = useState(discount?.description ?? '');
-  const [categoryId, setCategoryId] = useState({ name: "", id: -1 });
-  const [storeId, setStoreId] = useState({ name: "", id: -1 });
-  const [startDate, setStartDate] = useState(discount?.start_data ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate() - 1).padStart(2, '0')}`);
-  const [endDate, setEndDate] = useState(discount?.expires ?? '');
+  const [categoryId, setCategoryId] = useState(discount?.category_id ?? -1);
+  const [storeId, setStoreId] = useState(discount?.store_id ?? -1);
+  const [startDate, setStartDate] = useState(convertUTC(discount.start_date));
+  const [endDate, setEndDate] = useState(discount?.expires ?? convertUTC(null));
   const [isloading, setIsloading] = useState(false);
   const [isuploading, setIsuploading] = useState(false);
   const [code, setCode] = useState(discount?.code ?? "");
@@ -186,6 +187,38 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
       toast({
         title: t(_t('Error.')),
         description: response.response?.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUpdate = async () => {
+    var sendData = {
+      deal_id: discount.id,
+      title: title,
+      description: description,
+      type: typeStr[type],
+      price_new: "" + price,
+      deal_url: url,
+      image_urls: JSON.stringify(images),
+      category_id: categoryId,
+      store_id: storeId,
+      expires: endDate,
+      code: code
+    };
+    var response = await updateDealService(sendData)
+    if (response.status === 200) {
+      delete sendData.deal_id
+      sendData.id = discount.id
+      onUpdate(sendData)
+      onClose(false)
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data.message,
         position: 'top',
         status: 'error',
         duration: 3000,
@@ -430,13 +463,9 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
             name="category"
             placeholder={t(_t("Select Category"))}
             isSearchable={true}
-            menuPortalTarget={document.body}
             options={categoryOptions}
-            value={categoryOptions.find((category) => category.value === categoryId.name)}
-            onChange={(e) => setCategoryId({
-              name: e.label,
-              id: parseInt(e.id)
-            })}
+            value={categoryOptions.find((category) => category.id === categoryId)}
+            onChange={(e) => setCategoryId(parseInt(e.id))}
           />
         </FormControl>
 
@@ -453,30 +482,29 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
             placeholder={t(_t("Select Store"))}
             isSearchable={true}
             options={storeOptions}
-            value={storeOptions.find((store) => store.value === storeId.name)}
-            onChange={(e) => setStoreId({
-              name: e.value,
-              id: parseInt(e.id)
-            })}
+            value={storeOptions.find((store) => store.id === storeId)}
+            onChange={(e) => setStoreId(parseInt(e.id))}
           />
         </FormControl>
-
-        <FormControl as={GridItem} colSpan={6}>
-          <FormLabel
-            fontWeight={600}
-            htmlFor="start_date"
-            mt="2%">
-            {t(_t("Start Date"))}
-          </FormLabel>
-          <Input
-            type="date"
-            name="start_date"
-            id="start_date"
-            size="sm"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </FormControl>
+        {
+          !discount.id &&
+          <FormControl as={GridItem} colSpan={6}>
+            <FormLabel
+              fontWeight={600}
+              htmlFor="start_date"
+              mt="2%">
+              {t(_t("Start Date"))}
+            </FormLabel>
+            <Input
+              type="date"
+              name="start_date"
+              id="start_date"
+              size="sm"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </FormControl>
+        }
 
         <FormControl as={GridItem} colSpan={6}>
           <FormLabel
@@ -495,7 +523,7 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
           />
         </FormControl>
 
-        {!discount.id &&
+        {!discount.id ?
           <ButtonGroup mt="5%" w="100%">
             <Flex w="100%" justifyContent="space-between">
               <Button
@@ -517,7 +545,29 @@ export default function CreateOrUpdateDiscount({ discount = {} }) {
                 {t(_t("Create"))}
               </Button>
             </Flex>
-          </ButtonGroup>
+          </ButtonGroup>:
+          <ButtonGroup mt="5%" w="100%">
+          <Flex w="100%" justifyContent="space-between">
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              w="6rem"
+              mr="5%"
+              onClick={() => onClose(false)}
+            >
+              {t(_t("Cancel"))}
+            </Button>
+            <Button
+              isLoading={isloading}
+              w="6rem"
+              colorScheme="blue"
+              variant="solid"
+              onClick={handleUpdate}
+            >
+              {t(_t("Update"))}
+            </Button>
+          </Flex>
+        </ButtonGroup>
         }
       </Box>
     </Box>
