@@ -50,7 +50,7 @@ import AdminMenu from "./AdminMenu";
 // import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { changePasswordService, resendCodeService, signInService, signUpService, verifyCodeService } from "../Services/User";
+import { changePasswordService, resendCodeService, resetPasswordService, signInService, signUpService, verifyCodeService } from "../Services/User";
 import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
 
@@ -73,6 +73,7 @@ export default function Navbar() {
   const [oldPWD, setOldPWD] = useState("");
   const [newPWD, setNewPWD] = useState("");
   const [confirmPWD, setConfirmPWD] = useState("");
+  const [isForgotProcessing, setForgotProcessing] = useState(0)
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = "blue.500";
@@ -132,6 +133,7 @@ export default function Navbar() {
 
     if (response.status === 200) {
       setIsSignUpOpen(false)
+      setForgotProcessing(false)
       setIsEmailVerify(true);
     } else {
       toast({
@@ -152,8 +154,7 @@ export default function Navbar() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault()
-    console.log(email)
-    if ( newPWD !== confirmPWD ) {
+    if (newPWD !== confirmPWD) {
       toast({
         title: t(_t('Error.')),
         description: t(_t("New password doesn't match")),
@@ -162,33 +163,83 @@ export default function Navbar() {
         duration: 3000,
         isClosable: true,
       })
-      return ;
-    } 
+      return;
+    }
 
-    var user = JSON.parse ( localStorage.getItem("authToken") ).user
 
-    var response = await changePasswordService({
-      email: user.email,
-      old_password: oldPWD,
-      new_password: newPWD
-    })
-    if ( response.status === 200 ) {
-      toast({
-        title: t(_t('Success.')),
-        description: t(_t("Changing password success")),
-        position: 'top',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+    if ( isForgotProcessing ) {
+      var response = await resetPasswordService({
+        email: email,
+        password: newPWD
       })
-      setOldPWD("")
-      setNewPWD("")
-      setConfirmPWD("")
-      setIsChangePWD(false)
+      if (response.status === 200) {
+        toast({
+          title: t(_t('Success.')),
+          description: t(_t("Resetting password success")),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        setOldPWD("")
+        setNewPWD("")
+        setConfirmPWD("")
+        setIsChangePWD(false)
+        setIsSignInOpen(true)
+      } else {
+        toast({
+          title: t(_t('Error.')),
+          description: t(_t("Resetting password failed")),
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    } else {
+      
+    var user = JSON.parse(localStorage.getItem("authToken")).user
+      var response = await changePasswordService({
+        email: user.email,
+        old_password: oldPWD,
+        new_password: newPWD
+      })
+      if (response.status === 200) {
+        toast({
+          title: t(_t('Success.')),
+          description: t(_t("Changing password success")),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        setOldPWD("")
+        setNewPWD("")
+        setConfirmPWD("")
+        setIsChangePWD(false)
+      } else {
+        toast({
+          title: t(_t('Error.')),
+          description: t(_t("Your password is incorrect.")),
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    var response = await resendCodeService(email) ;
+    if ( response.status === 200 ) {
+      setIsSignInOpen(false)
+      setIsEmailVerify(true)
+      setForgotProcessing(true)
     } else {
       toast({
         title: t(_t('Error.')),
-        description: t(_t("Your password is incorrect.")),
+        description: t(_t("Failed to send code")),
         position: 'top',
         status: 'error',
         duration: 3000,
@@ -207,22 +258,27 @@ export default function Navbar() {
     setIsSignInOpen(true);
   }
 
-  const handleverifyCodeService = async (e) => {
+  const handleVerifyCode = async (e) => {
     setIsVerifying(true);
     const response = await verifyCodeService(email, code);
     setIsVerifying(false);
     if (response.status === 200) {
-      toast({
-        title: t(_t('Email')),
-        description: t(_t("You have registered successfully.")),
-        position: 'top',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
-      setTimeout(() => {
-        handleSignIn(e);
-      }, 100);
+      if ( isForgotProcessing ) {
+        setIsChangePWD(true)
+        setIsEmailVerify(false)
+      } else {
+        toast({
+          title: t(_t('Email')),
+          description: t(_t("You have registered successfully.")),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        setTimeout(() => {
+          handleSignIn(e);
+        }, 100);
+      }
     } else {
       toast({
         title: t(_t('Error.')),
@@ -236,7 +292,12 @@ export default function Navbar() {
     }
   }
 
-  const handleresendCodeService = async (e) => {
+  const handleOpenChangePWD = async () => {
+    setIsChangePWD(true)
+    setForgotProcessing(false)
+  }
+
+  const handleResendCode = async (e) => {
     const response = await resendCodeService(email)
     if (response.status === 200) {
       toast({
@@ -350,7 +411,7 @@ export default function Navbar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => { setIsChangePWD(true) }}>{t(_t("Change Password"))}</MenuItem>
+                <MenuItem onClick={handleOpenChangePWD} >{t(_t("Change Password"))}</MenuItem>
                 <MenuItem onClick={handleSignOut}>{t(_t("Logout"))}</MenuItem>
               </MenuList>
             </Menu>
@@ -441,7 +502,9 @@ export default function Navbar() {
                     justify={"space-between"}
                   >
                     <Checkbox>{t(_t("Remember me"))}</Checkbox>
-                    <Text color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}</Text>
+                    <Text
+                      onClick={handleForgotPassword}
+                      color={"blue.400"} cursor={'pointer'}>{t(_t("Forgot password?"))}</Text>
                   </Stack>
                   <Button
                     isLoading={isSignInLoading}
@@ -585,14 +648,14 @@ export default function Navbar() {
             </FormControl>
             <Flex>
               <Text
-                onClick={handleresendCodeService}
+                onClick={handleResendCode}
                 color={'blue.400'}
                 cursor={'pointer'}
               >
                 {t(_t("Resend code"))}
               </Text>
               <Spacer />
-              <Button isLoading={isVerifying} colorScheme="blue" onClick={handleverifyCodeService}>{t(_t("Verify"))}</Button>
+              <Button isLoading={isVerifying} colorScheme="blue" onClick={handleVerifyCode}>{t(_t("Verify"))}</Button>
             </Flex>
           </Box>
         </ModalContent>
@@ -604,10 +667,13 @@ export default function Navbar() {
           <ModalCloseButton />
           <form onSubmit={handleChangePassword}>
             <ModalBody>
-              <FormControl mt={5} isRequired>
-                <FormLabel>{t(_t('Current Password'))}</FormLabel>
-                <Input type="password" value={oldPWD} onChange={(e) => { setOldPWD(e.target.value) }} />
-              </FormControl>
+              {
+                !isForgotProcessing && 
+                <FormControl mt={5} isRequired>
+                  <FormLabel>{t(_t('Current Password'))}</FormLabel>
+                  <Input type="password" value={oldPWD} onChange={(e) => { setOldPWD(e.target.value) }} />
+                </FormControl>
+              }
               <FormControl mt={5} isRequired>
                 <FormLabel>{t(_t('New Password'))}</FormLabel>
                 <Input type="password" value={newPWD} onChange={(e) => { setNewPWD(e.target.value) }} />

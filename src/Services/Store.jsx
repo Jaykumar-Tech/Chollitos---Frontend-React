@@ -38,8 +38,14 @@ const getStoreByNameService = async (name) => {
 };
 
 const activateStoreService = async ( id ) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'))
   try {
-    const response = await api.get('store/activate/' + id);
+    const response = await api.get('store/activate/' + id,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -48,8 +54,14 @@ const activateStoreService = async ( id ) => {
 }
 
 const deactivateStoreService = async ( id ) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'))
   try {
-    const response = await api.get('store/deactivate/' + id);
+    const response = await api.get('store/deactivate/' + id,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -58,8 +70,14 @@ const deactivateStoreService = async ( id ) => {
 }
 
 const createStoreService = async ( data ) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'))
   try {
-    const response = await api.post('store/add', data);
+    const response = await api.post('store/add', data,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -68,8 +86,14 @@ const createStoreService = async ( data ) => {
 }
 
 const updateStoreService = async ( data ) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'))
   try {
-    const response = await api.post('store/edit', data);
+    const response = await api.post('store/edit', data,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);

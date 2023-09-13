@@ -36,8 +36,14 @@ const getCategoryByIdService = async (id) => {
 };
 
 const activateCategoryService = async (id) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get('category/activate/' + id);
+    const response = await api.get('category/activate/' + id,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -46,8 +52,15 @@ const activateCategoryService = async (id) => {
 }
 
 const deactivateCategoryService = async (id) => {
+  
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.get('category/deactivate/' + id);
+    const response = await api.get('category/deactivate/' + id,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -56,8 +69,14 @@ const deactivateCategoryService = async (id) => {
 }
 
 const createCategoryService = async (data) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.post('category/add', data);
+    const response = await api.post('category/add', data,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -66,8 +85,14 @@ const createCategoryService = async (data) => {
 }
 
 const editCategoryService = async (data) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
-    const response = await api.post('category/edit', data);
+    const response = await api.post('category/edit', data,
+    {
+      headers: {
+        authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+    });
     return response;
   } catch (error) {
     console.log(error);

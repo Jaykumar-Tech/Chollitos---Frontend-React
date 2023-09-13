@@ -16,9 +16,15 @@ const getLangService = async () => {
 };
 
 const changeLangService = async (lang) => {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
     try {
         const response = await api.post("lang/change", {
             lang: lang,
+        },
+        {
+          headers: {
+            authorization: auth_token.token_type + " " + auth_token.access_token,
+          }
         });
         console.log(JSON.stringify(response));
         return response;

@@ -73,13 +73,10 @@ const resendCodeService = async (email) => {
   }
 }
 
-const resetPasswordService = async (email, password) => {
+const resetPasswordService = async (data) => {
 
   try {
-    const response = await api.post("user/reset_password", {
-      email: email,
-      password: password
-    });
+    const response = await api.post("user/reset_password", data);
     return response;
   } catch (error) {
     return error;
