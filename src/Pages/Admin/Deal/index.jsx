@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
@@ -29,6 +29,7 @@ import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { GlobalContext } from '../../../Components/GlobalContext';
 
 const ManageDeal = () => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -42,6 +43,8 @@ const ManageDeal = () => {
   const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
   const toast = useToast();
   const { t } = useTranslation();
+  const { globalProps } = useContext(GlobalContext);
+  const { categories, stores } = globalProps;
 
   useEffect(() => {
     if (localStorage.getItem('authToken'))
@@ -69,8 +72,8 @@ const ManageDeal = () => {
       Cell: ({ value }) => (
         value ?
           <a href={value?.startsWith("http") ? value : `https://${value}`} target="_blank" rel="noreferrer">
-            <Box color={'blue.500'}>
-              {value}
+            <Box color={'blue.500'}  maxW="200px" wordBreak="break-word">
+              {value} 
             </Box>
           </a>
           :
@@ -89,25 +92,26 @@ const ManageDeal = () => {
     },
     { Header: t(_t('Username')), accessor: 'username' },
     {
-      Header: t(_t('Start Date')), accessor: 'start_date',
-      Cell: ({ value }) => {
-        const date = new Date(value);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-        return <span>{formattedDate}</span>;
-      },
-    },
-    {
-      Header: t(_t('End Date')), accessor: 'expires',
+      Header: t(_t('Category')), accessor: 'category_id',
       Cell: ({ value }) => {
         // const date = new Date(value);
         // const year = date.getFullYear();
         // const month = String(date.getMonth() + 1).padStart(2, '0');
         // const day = String(date.getDate()).padStart(2, '0');
         // const formattedDate = `${year}-${month}-${day}`;
-        return <span>{value}</span>;
+        // return <span>{formattedDate}</span>;
+        return <span>{categories.find(category=>(category.id===value))?.name?? "root"}</span>;
+      },
+    },
+    {
+      Header: t(_t('Store')), accessor: 'store_id',
+      Cell: ({ value }) => {
+        // const date = new Date(value);
+        // const year = date.getFullYear();
+        // const month = String(date.getMonth() + 1).padStart(2, '0');
+        // const day = String(date.getDate()).padStart(2, '0');
+        // const formattedDate = `${year}-${month}-${day}`;
+        return <span>{stores.find(store=>(store.id===value))?.name?? ""}</span>;
       },
     },
     {
@@ -144,7 +148,7 @@ const ManageDeal = () => {
       Cell: ({ value, row }) => (
         <>
           {authToken?.user?.role === 'admin' &&
-            (value === 0 && row.original.vip ?
+            ( row.original.vip ?
               <Icon
                 onClick={() => handleUnsetVip(row.original.id)}
                 as={FaUser}
@@ -334,6 +338,9 @@ const ManageDeal = () => {
   }
 
   const handleUpdateDeal = async (_deal) => {
+    var authToken = JSON.parse(localStorage.getItem("authToken"))
+    if ( authToken && authToken.user && authToken.user.role !== 'admin' )
+      _deal.status = 0
     setDeals(deals.map(deal => {
       if (deal.id === _deal.id) {
         return {

@@ -49,6 +49,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
   const [isuploading, setIsuploading] = useState(false);
   const [code, setCode] = useState(discount?.code ?? "");
   const toast = useToast();
+  const [isupdating, setIsupdating] = useState(false)
 
   const modules = {
     toolbar: {
@@ -196,6 +197,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
   }
 
   const handleUpdate = async () => {
+    setIsupdating(true)
     var sendData = {
       deal_id: discount.id,
       title: title,
@@ -224,6 +226,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
         duration: 3000,
         isClosable: true,
       })
+      setIsupdating(false)
     }
   }
 
@@ -558,7 +561,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
               {t(_t("Cancel"))}
             </Button>
             <Button
-              isLoading={isloading}
+              isLoading={isupdating}
               w="6rem"
               colorScheme="blue"
               variant="solid"
