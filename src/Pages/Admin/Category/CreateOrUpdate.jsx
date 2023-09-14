@@ -40,7 +40,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
     label: "root",
     id: -1
   })
-  categoryOptions = categoryOptions.filter(category => (blackList.indexOf(category.id) === -1))
+  categoryOptions = categoryOptions?.filter(category => (blackList.indexOf(category.id) === -1))
 
   const getSlug = (_name) => {
     let _slug = _name.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase();

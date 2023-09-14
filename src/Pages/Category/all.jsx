@@ -28,7 +28,7 @@ const AllCategories = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredItems = categories.filter((item) => (
+  const filteredItems = categories?.filter((item) => (
     item.status && item.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
   );

@@ -99,6 +99,8 @@ const ChollitosTable = ({
           ...getTableProps()}
           size={'sm'}
           variant="striped"
+          w={'100%'}
+          layout={'fixed'}
         >
           <Thead>
             {headerGroups.map((headerGroup) => (
@@ -106,6 +108,11 @@ const ChollitosTable = ({
                 {headerGroup.headers.map((column) => (
                   <Th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
+                    color={'white'}
+                    bg={'blue.500'}
+                    position={'sticky'}
+                    top={0}
+                    zIndex={1}
                     onClick={() => {
                       column.toggleSortBy();
                       setTimeout(() => {

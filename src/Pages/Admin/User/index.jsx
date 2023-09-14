@@ -213,7 +213,7 @@ const User = () => {
     setIsloading(true);
     const response = await deleteUserService(id);
     if (response.status === 200) {
-      setUsers(users.filter(user => (user.id !== id)))
+      setUsers(users?.filter(user => (user.id !== id)))
       toast({
         title: t(_t('Success.')),
         description: t(_t("Deleting User Success")),

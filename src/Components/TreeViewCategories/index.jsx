@@ -16,13 +16,13 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
   const { t } = useTranslation();
   const [treeData, setTreeData] = useState([]);
   const [filterData, setFilter] = useState([]);
-  const [categories, setCategories] = useState(_categories.filter(category => (category.status)))
+  const [categories, setCategories] = useState(_categories?.filter(category => (category.status)))
   const themeColor = 'blue.500';
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
   const buildTree = (parentId) => {
     return categories
-      .filter((category) => category.parent_id === parentId)
+      ?.filter((category) => category.parent_id === parentId)
       .map((category) => ({
         ...category,
         children: buildTree(category.id),
@@ -86,7 +86,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
   const renderTree = (categories) => {
     return (
       <UnorderedList listStyleType={'none'} color={themeColor}>
-        {categories.filter(category => filterData.includes(category.parent_id)).map((category) => (
+        {categories?.filter(category => filterData.includes(category.parent_id)).map((category) => (
           <ListItem key={category.id}>
             <Link to={"/category/" + category.slug}>
               <Text
