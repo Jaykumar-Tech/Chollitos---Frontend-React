@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   Box,
+  Input,
   Button,
   Progress,
   Heading,
   useToast,
   Flex,
   Spacer,
+  FormControl,
+  FormLabel,
 } from '@chakra-ui/react';
 import ReactQuill from 'react-quill';
 import { useHistory } from 'react-router-dom';
@@ -16,6 +19,7 @@ import { _t } from "../../../Utils/_t";
 import { getBannerService, saveBannerService } from "../../../Services/Banner";
 
 const Banner = () => {
+  const [title, setTitle] = useState('');
   const [banner, setBanner] = useState('');
   const [isloading, setIsloading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -30,8 +34,8 @@ const Banner = () => {
         ['bold', 'italic', 'underline', 'strike'],
         ['link'],
         [{ image: 'image' }],
-        [{ align: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
+        // [{ align: [] }],
+        // [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
         [{ color: [] }, { background: [] }],
         ['clean']
@@ -65,7 +69,7 @@ const Banner = () => {
 
   const handleBannerSave = async () => {
     setIsUpdating(true);
-    var result = await saveBannerService(banner);
+    var result = await saveBannerService({ title, banner });
     setIsUpdating(false);
     if (result.status === 200) {
       sessionStorage.setItem('banner', 'show');
@@ -118,14 +122,24 @@ const Banner = () => {
           p={'20px'}
           shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
         >
-          <ReactQuill
-            name="banner"
-            theme="snow"
-            modules={modules}
-            formats={formats}
-            value={banner}
-            onChange={(content) => setBanner(content)}
-          />
+          <FormControl id="banner_title" mt={5}>
+            <FormLabel>{t(_t("Title"))}</FormLabel>
+            <Input type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="banner_title" mt={5}>
+            <FormLabel>{t(_t("Content"))}</FormLabel>
+            <ReactQuill
+              name="banner"
+              theme="snow"
+              modules={modules}
+              formats={formats}
+              value={banner}
+              onChange={(content) => setBanner(content)}
+            />
+          </FormControl>
         </Box>
         <Flex>
           <Spacer />

@@ -58,8 +58,8 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
         ['bold', 'italic', 'underline', 'strike'],
         ['link'],
         [{ image: 'image' }],
-        [{ align: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
+        // [{ align: [] }],
+        // [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
         [{ color: [] }, { background: [] }],
         ['clean']

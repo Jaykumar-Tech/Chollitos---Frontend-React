@@ -41,6 +41,9 @@ const AdminMenu = () => {
         <Link to="/admin/banner">
           <MenuItem>{t(_t("Banner"))}</MenuItem>
         </Link>
+        <Link to="/admin/settings">
+          <MenuItem>{t(_t("Settings"))}</MenuItem>
+        </Link>
         <Link to="/admin/users">
           <MenuItem>{t(_t("Users"))}</MenuItem>
         </Link>
@@ -53,7 +56,7 @@ const AdminMenu = () => {
         <Link to="/admin/shops">
           <MenuItem>{t(_t("Shops"))}</MenuItem>
         </Link>
-        <Menu>
+        {/* <Menu>
           <MenuButton
             px={3}
             py={2}
@@ -74,7 +77,7 @@ const AdminMenu = () => {
               Español
             </MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </MenuList>
     </Menu>
   )

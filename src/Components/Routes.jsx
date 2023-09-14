@@ -19,6 +19,7 @@ import AdminCategory from "../Pages/Admin/Category";
 import AdminStore from "../Pages/Admin/Store";
 import ManageDeal from "../Pages/Admin/Deal";
 import Banner from "../Pages/Admin/Banner";
+import Setting from "../Pages/Admin/Setting";
 
 
 function Routes() {
@@ -47,6 +48,7 @@ function Routes() {
         {authToken?.user?.role === 'admin' &&
           <Switch>
             <Route exact path="/admin/banner" component={Banner} />
+            <Route exact path="/admin/settings" component={Setting} />
             <Route exact path="/admin/users" component={User} />
             <Route exact path="/admin/categories" component={AdminCategory} />
             <Route exact path="/admin/shops" component={AdminStore} />

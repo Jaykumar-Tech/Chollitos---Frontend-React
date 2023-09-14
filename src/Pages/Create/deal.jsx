@@ -53,8 +53,8 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
         ['bold', 'italic', 'underline', 'strike'],
         ['link'],
         [{ image: 'image' }],
-        [{ align: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
+        // [{ align: [] }],
+        // [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
         [{ color: [] }, { background: [] }],
         ['clean']
