@@ -280,7 +280,8 @@ const Store = () => {
                       fontWeight={600}
                       color={'blue.500'}
                     >
-                      {Math.floor(deal.price_new)}%
+                      <span>{deal.price_low + "€ "}
+                        <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>
                     </Text>
                     <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>{t(_t("SALE"))}</Text>
                   </VStack>
