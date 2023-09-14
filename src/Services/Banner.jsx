@@ -15,11 +15,12 @@ const getBannerService = async (id) => {
   }
 }
 
-const saveBannerService = async (html) => {
+const saveBannerService = async ({ title, html }) => {
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post('banner/save', {
-      html: html
+      title: title,
+      html: html,
     }, {
       headers: {
         authorization: auth_token.token_type + " " + auth_token.access_token,
