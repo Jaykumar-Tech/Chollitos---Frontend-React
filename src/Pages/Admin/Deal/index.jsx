@@ -58,7 +58,9 @@ const ManageDeal = () => {
     {
       Header: t(_t('Image')), accessor: 'image_urls',
       Cell: ({ value, row }) => (
-        <Image alt={row.original.name} src={JSON.parse(value)[0]} />
+        <Link to={`/deal/${getUrlFromTitle(value)}-${row.original.id}`}>
+          <Image alt={row.original.name} src={JSON.parse(value)[0]} />
+        </Link>
       ),
     },
     {
@@ -74,9 +76,7 @@ const ManageDeal = () => {
       Cell: ({ value }) => (
         value ?
           <a href={value?.startsWith("http") ? value : `https://${value}`} target="_blank" rel="noreferrer">
-            <Box color={'blue.500'}  maxW="200px" wordBreak="break-word">
-              {value} 
-            </Box>
+            <Text color={'blue.500'} title={value}>{value.length > 20 ? value.slice(0, 20) + '...' : value}</Text>
           </a>
           :
           <></>
@@ -102,7 +102,7 @@ const ManageDeal = () => {
         // const day = String(date.getDate()).padStart(2, '0');
         // const formattedDate = `${year}-${month}-${day}`;
         // return <span>{formattedDate}</span>;
-        return <span>{categories.find(category=>(category.id===value))?.name?? "root"}</span>;
+        return <span>{categories.find(category => (category.id === value))?.name ?? "root"}</span>;
       },
     },
     {
@@ -113,7 +113,7 @@ const ManageDeal = () => {
         // const month = String(date.getMonth() + 1).padStart(2, '0');
         // const day = String(date.getDate()).padStart(2, '0');
         // const formattedDate = `${year}-${month}-${day}`;
-        return <span>{stores.find(store=>(store.id===value))?.name?? ""}</span>;
+        return <span>{stores.find(store => (store.id === value))?.name ?? ""}</span>;
       },
     },
     {
@@ -150,7 +150,7 @@ const ManageDeal = () => {
       Cell: ({ value, row }) => (
         <>
           {authToken?.user?.role === 'admin' &&
-            ( row.original.vip ?
+            (row.original.vip ?
               <Icon
                 onClick={() => handleUnsetVip(row.original.id)}
                 as={FaUser}
@@ -341,7 +341,7 @@ const ManageDeal = () => {
 
   const handleUpdateDeal = async (_deal) => {
     var authToken = JSON.parse(localStorage.getItem("authToken"))
-    if ( authToken && authToken.user && authToken.user.role !== 'admin' )
+    if (authToken && authToken.user && authToken.user.role !== 'admin')
       _deal.status = 0
     setDeals(deals.map(deal => {
       if (deal.id === _deal.id) {

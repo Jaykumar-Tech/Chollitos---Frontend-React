@@ -4,6 +4,7 @@ import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
 import {
   Box,
+  Text,
   Button,
   Icon,
   Progress,
@@ -48,9 +49,7 @@ const AdminStore = () => {
       Cell: ({ value }) => (
         value ?
           <a href={value?.startsWith("http") ? value : `https://${value}`} target="_blank" rel="noreferrer">
-            <Box color={'blue.500'}>
-              {value}
-            </Box>
+            <Text color={'blue.500'} title={value}>{value.length > 20 ? value.slice(0, 20) + '...' : value}</Text>
           </a>
           :
           <></>
