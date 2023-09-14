@@ -8,7 +8,7 @@ const themeColor = "blue.500"
 function CategoryBar({ _categories, categorySlug = null }) {
   const containerRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(true);
-  const [categories, setCategories] = useState(_categories ? _categories.filter(category => category.status) : [])
+  const [categories, setCategories] = useState(_categories ? _categories?.filter(category => category.status) : [])
   const [category, setCategory] = useState(null);
 
   useEffect(() => {

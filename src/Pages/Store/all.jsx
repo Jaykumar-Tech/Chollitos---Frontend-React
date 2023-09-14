@@ -28,7 +28,7 @@ const AllShops = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredItems = stores.filter((item) =>
+  const filteredItems = stores?.filter((item) =>
     (item.status && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 

@@ -10,7 +10,7 @@ const PopularCategories = ({ _categories }) => {
   const themeColor = 'blue.500';
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
-  const [categories, setCategories] = useState(_categories.filter(category => (category.status)))
+  const [categories, setCategories] = useState(_categories?.filter(category => (category.status)))
 
   return (
     <Box p={2}>

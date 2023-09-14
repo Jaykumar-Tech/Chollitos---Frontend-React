@@ -156,7 +156,7 @@ const Store = () => {
         </Text>
         <Box>
           {deals &&
-            deals.filter(v => (v.type !== "deal")).map((discount) => {
+            deals?.filter(v => (v.type !== "deal")).map((discount) => {
               return (
                 <Flex
                   key={discount.id}
@@ -265,7 +265,7 @@ const Store = () => {
         <Box>
           {
             deals ?
-              deals.filter(v => (v.type === "deal")).map((deal, index) => {
+              deals?.filter(v => (v.type === "deal")).map((deal, index) => {
                 return (<Flex
                   key={index}
                   bg={'white'}

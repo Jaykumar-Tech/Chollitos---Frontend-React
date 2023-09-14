@@ -19,7 +19,7 @@ const PopularShops = ({ _stores }) => {
       </Text>
       <Box pt={2}>
         {_stores
-          .filter(store => store.status)
+          ?.filter(store => store.status)
           .slice(0, 10).map((store, index) => (
             <Button
               as={Link}

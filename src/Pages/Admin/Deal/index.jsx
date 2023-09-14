@@ -245,7 +245,7 @@ const ManageDeal = () => {
         duration: 3000,
         isClosable: true,
       })
-      setDeals(deals.filter(deal => (deal.id !== deleteDealId)))
+      setDeals(deals?.filter(deal => (deal.id !== deleteDealId)))
     } else {
       toast({
         title: t(_t('Error.')),
