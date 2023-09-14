@@ -99,8 +99,6 @@ const ChollitosTable = ({
           ...getTableProps()}
           size={'sm'}
           variant="striped"
-          w={'100%'}
-          layout={'fixed'}
         >
           <Thead>
             {headerGroups.map((headerGroup) => (
