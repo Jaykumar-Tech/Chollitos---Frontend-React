@@ -11,21 +11,42 @@ import {
   Button,
   Divider,
   Badge,
-  Avatar
+  Avatar,
+  Icon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useToast,
+  useDisclosure
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaFire } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { AiOutlineDelete } from "react-icons/ai";
+import { activateDealService, deleteDealService, setVipService, unsetVipService } from "../../Services/Deal";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import CreateOrUpdateDeal from "../../Pages/Create/deal";
+import CreateOrUpdateDiscount from "../../Pages/Create/discount";
 
-const CustomCard = ({ deal }) => {
+const CustomCard = (props) => {
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { t } = useTranslation();
-  const [cntLike, setCntLike] = useState(deal.cnt_like);
+  const [cntLike, setCntLike] = useState(props.deal.cnt_like);
   const themeColor = 'blue.500';
+  const [deal, setDeal] = useState({ ...props.deal })
+  const [deleteDealId, setDeleteDealId] = useState(-1)
+  const toast = useToast()
+  const history = useHistory()
 
   const getUrlFromTitle = (title) => {
     const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
@@ -44,6 +65,122 @@ const CustomCard = ({ deal }) => {
     if (result.status === 200) {
       setCntLike(cntLike + (isLike ? 1 : -1));
     }
+  }
+
+  const authToken = JSON.parse(localStorage.getItem("authToken"))
+
+  const deleteDeal = async (deleteDealId) => {
+    var response = await deleteDealService(deleteDealId)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deleting deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      window.location.reload()
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleSetVip = async (id) => {
+    var response = await setVipService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Setting VIP success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        vip: 1
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUnsetVip = async (id) => {
+    var response = await unsetVipService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Unsetting VIP success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        vip: 0
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleActivateDeal = async (dealId) => {
+    var response = await activateDealService(dealId)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Activating deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        status: 1
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUpdateDeal = async (_deal) => {
+    if (authToken?.user?.role !== 'admin')
+      _deal.status = 0
+    setDeal({
+      ...deal,
+      ..._deal
+    })
   }
 
   return (
@@ -101,6 +238,17 @@ const CustomCard = ({ deal }) => {
             position={'absolute'}
           >
             {t(_t("Expired"))}
+          </Badge>
+        }
+        {!deal.status &&
+          <Badge
+            colorScheme="pink"
+            color={'orange'}
+            mt={5}
+            ml={-2}
+            position={'absolute'}
+          >
+            {t(_t("Pending"))}
           </Badge>
         }
       </CardHeader>
@@ -196,6 +344,74 @@ const CustomCard = ({ deal }) => {
             }
           </Flex>
           <Spacer />
+          <Flex alignItems="center">
+            {authToken?.user?.role === 'admin' &&
+              (deal.vip ?
+                <Box>
+                  <Icon
+                    onClick={() => handleUnsetVip(deal.id)}
+                    as={FaUser}
+                    color="gray.500"
+                    boxSize={5}
+                    cursor={'pointer'}
+                    title={t(_t('Unset VIP'))}
+                  /></Box>
+                :
+                <Box>
+                  <Icon
+                    onClick={() => handleSetVip(deal.id)}
+                    as={FaCrown}
+                    color="yellow.500"
+                    boxSize={5}
+                    cursor={'pointer'}
+                    title={t(_t('Set VIP'))}
+                  /></Box>
+              )
+            }
+            <Box>
+              <Icon
+                as={FaEdit}
+                color="blue.500"
+                boxSize={5}
+                ml={1}
+                cursor={'pointer'}
+                title={t(_t('edit'))}
+                onClick={async () => {
+                  setTimeout(() => {
+                    onEditOpen();
+                  }, 0);
+                }}
+              />
+            </Box>
+            {authToken?.user?.role === 'admin' &&
+              <Box>
+                <Icon
+                  as={AiOutlineDelete}
+                  color="red.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('delete'))}
+                  onClick={() => {
+                    setDeleteDealId(deal.id);
+                    onDeleteOpen();
+                  }}
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 0 &&
+              <Box>
+                <Icon
+                  onClick={() => handleActivateDeal(deal.id)}
+                  as={FaCheckCircle}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('activate'))}
+                />
+              </Box>
+            }
+          </Flex>
+          <Spacer />
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
               <Link
@@ -210,6 +426,41 @@ const CustomCard = ({ deal }) => {
           </Flex>
         </Flex>
       </CardFooter>
+      <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("Delete Deal"))}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {t(_t("Are you sure?"))}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onDeleteClose}>
+              {t(_t("Cancel"))}
+            </Button>
+            <Button colorScheme="red" onClick={() => {
+              deleteDeal(deleteDealId);
+              onDeleteClose();
+            }}>
+              {t(_t("Delete"))}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isEditOpen} onClose={onEditClose} closeOnOverlayClick={false} size={'4xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{t(_t("Edit Deal"))}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {deal.type === 'deal' ?
+              <CreateOrUpdateDeal deal={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
+              :
+              <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
+            }
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Card>
   );
 };
