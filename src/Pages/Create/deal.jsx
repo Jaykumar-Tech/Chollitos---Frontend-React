@@ -43,6 +43,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   const [endDate, setEndDate] = useState(deal?.expires ?? convertUTC(null));
   const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
+  const [isloadingUpdate, setIsloadingUpdate] = useState(false)
   const toast = useToast();
 
   const modules = {
@@ -192,6 +193,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   }
 
   const handleUpdate = async () => {
+    setIsloadingUpdate(true)
     var sendData = {
       deal_id: deal.id,
       title: title,
@@ -220,6 +222,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
         duration: 3000,
         isClosable: true,
       })
+      setIsloadingUpdate(false)
     }
   }
 
@@ -504,7 +507,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
                 {t(_t("Cancel"))}
               </Button>
               <Button
-                isLoading={isloading}
+                isLoading={isloadingUpdate}
                 w="6rem"
                 colorScheme="blue"
                 variant="solid"
