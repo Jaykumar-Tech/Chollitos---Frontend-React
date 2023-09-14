@@ -5,7 +5,7 @@ import TabBar from "./tabs";
 function DoubleTopBar({ categories, setFeature }) {
   return (
     <Flex direction="column">
-      <CategoryBar _categories={categories} />
+      <CategoryBar categories={categories} />
       <Divider />
       <TabBar setFeature={setFeature}/>
     </Flex>

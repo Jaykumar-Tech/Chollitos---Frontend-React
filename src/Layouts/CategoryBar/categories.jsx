@@ -5,10 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 
 const themeColor = "blue.500"
 
-function CategoryBar({ _categories, categorySlug = null }) {
+function CategoryBar({ categories, categorySlug = null }) {
   const containerRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(true);
-  const [categories, setCategories] = useState(_categories ? _categories?.filter(category => category.status) : [])
   const [category, setCategory] = useState(null);
 
   useEffect(() => {
@@ -19,10 +18,10 @@ function CategoryBar({ _categories, categorySlug = null }) {
 
   const getCategoryBySlug = (slug) => {
     categories.map((category) => {
-      category.slug === slug && setCategory(category);
+      category.slug === slug && category.status && setCategory(category);
     })
   }
-
+  
   const scrollLeft = () => {
     containerRef.current.scrollBy({
       left: -window.innerWidth + 100,
@@ -42,7 +41,9 @@ function CategoryBar({ _categories, categorySlug = null }) {
       <Flex align={'center'} height={'54px'} maxW={'1200px'} m={'auto'}>
         {isOverflow && <ChevronLeftIcon onClick={scrollLeft} bg={'transparent'} color={themeColor} boxSize={6} />}
         <Flex ref={containerRef} overflow={'hidden'}>
-          {categories.map((item) => (
+          {categories
+          .filter(category=>category.status)
+          .map((item) => (
             (category ? item.parent_id === category.id : item.parent_id === -1) &&
             <Link to={"/category/" + item.slug} key={item.id}>
               <Button
