@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import {
   Box,
@@ -33,6 +32,10 @@ const ChollitosTable = ({
   setIndex,
   size = 5,
   setSize,
+  filter = '',
+  setFilter,
+  sort = [{ desc: true }],
+  setSort,
 }) => {
   const {
     getTableProps,
@@ -55,7 +58,8 @@ const ChollitosTable = ({
       initialState: {
         pageIndex: index,
         pageSize: size,
-        sortBy: [{ desc: true }]
+        sortBy: sort,
+        globalFilter: filter,
       },
     },
     useGlobalFilter,
@@ -65,14 +69,6 @@ const ChollitosTable = ({
   const { globalFilter, pageIndex, pageSize } = state;
   const pageCount = pageOptions.length;
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setIndex(pageIndex);
-  }, [pageIndex]);
-
-  useEffect(() => {
-    setSize(pageSize);
-  }, [pageSize]);
 
   return (
     <Box>
@@ -90,7 +86,10 @@ const ChollitosTable = ({
           ml='20px'
           maxWidth={'300px'}
           value={globalFilter || ''}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          onChange={(e) => {
+            setGlobalFilter(e.target.value);
+            setFilter(e.target.value);
+          }}
           placeholder={t(_t('Search')) + '...'}
           mb={4}
         />
@@ -105,7 +104,18 @@ const ChollitosTable = ({
             {headerGroups.map((headerGroup) => (
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <Th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    onClick={() => {
+                      column.toggleSortBy();
+                      setTimeout(() => {
+                        setSort([{
+                          id: column.isSorted ? column.id : '',
+                          desc: column.isSortedDesc,
+                        }]);
+                      }, 0);
+                    }}
+                  >
                     {column.render('Header')}
                     <span>
                       {column.isSorted ? (column.isSortedDesc ? <ChevronDownIcon /> : <ChevronUpIcon />) : ''}
@@ -131,10 +141,21 @@ const ChollitosTable = ({
         </Table>
       </Box>
       <HStack spacing={2} mt={'12px'}>
-        <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage} size={'sm'}>
+        <Button onClick={() => {
+          gotoPage(0);
+          setIndex(0);
+        }}
+          disabled={!canPreviousPage} size={'sm'}
+        >
           {t(_t('First'))}
         </Button>
-        <Button onClick={() => previousPage()} disabled={!canPreviousPage} size={'sm'}>
+        <Button onClick={() => {
+          previousPage();
+          setIndex(index > 0 ? index - 1 : 0);
+        }}
+          disabled={!canPreviousPage}
+          size={'sm'}
+        >
           <ChevronLeftIcon />
         </Button>
         <Input
@@ -142,12 +163,27 @@ const ChollitosTable = ({
           maxWidth={'80px'}
           style={{ textAlign: 'center' }}
           value={pageIndex}
-          onChange={(e) => gotoPage(e.target.value)}
+          onChange={(e) => {
+            gotoPage(e.target.value);
+            setIndex(e.target.value);
+          }}
         />
-        <Button onClick={() => gotoPage(pageIndex * 1 + 1)} disabled={!canNextPage} size={'sm'}>
+        <Button onClick={() => {
+          gotoPage(pageIndex * 1 + 1);
+          setIndex(index * 1 + 1);
+        }}
+          disabled={!canNextPage}
+          size={'sm'}
+        >
           <ChevronRightIcon />
         </Button>
-        <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} size={'sm'}>
+        <Button onClick={() => {
+          gotoPage(pageCount - 1);
+          setIndex(pageCount - 1);
+        }}
+          disabled={!canNextPage}
+          size={'sm'}
+        >
           {t(_t('Last'))}
         </Button>
         <span>
@@ -164,6 +200,8 @@ const ChollitosTable = ({
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
+            setSize(size);
+            setIndex(0);
           }}
         >
           {paginationOptions.map((value) => (

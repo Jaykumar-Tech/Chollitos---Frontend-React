@@ -24,9 +24,10 @@ import { deactivateCategoryService } from "../../../Services/Category";
 const AdminStore = () => {
   const { globalProps } = useContext(GlobalContext);
   const { stores, _setStores } = globalProps;
-  // const [stores, _setStores] = useState([]);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
+  const [filter, setFilter] = useState('');
+  const [sort, setSort] = useState([{ id: 'id', desc: true }]);
   const [isloading] = useState(false);
   const [storeId, setStoreId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -104,21 +105,6 @@ const AdminStore = () => {
       ),
     },
   ];
-
-  // const getStores = async () => {
-  //   // setIsloading(true);
-  //   // const data = await getStoresService();
-  //   // _setStores(data);
-  //   // setIsloading(false);
-  // };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await getStores();
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const activateStore = async (id) => {
     var response = await activateStoreService(id);
@@ -215,6 +201,10 @@ const AdminStore = () => {
               setIndex={setTableIndex}
               size={tableSize}
               setSize={setTableSize}
+              filter={filter}
+              setFilter={setFilter}
+              sort={sort}
+              setSort={setSort}
             />
           </Box>
         }

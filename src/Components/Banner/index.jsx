@@ -10,16 +10,15 @@ const Banner = () => {
 
   const getBanner = async () => {
     const data = await getBannerService();
-    console.log(data);
     setBanner(data);
   }
 
   useEffect(() => {
-    if (!sessionStorage.getItem('banner') || sessionStorage.getItem('banner') === 'show') {
-      getBanner();
-      setIsOpen(true);
-    } else {
+    if (sessionStorage.getItem('banner') === 'hide') {
       setIsOpen(false);
+    } else {
+      getBanner();  
+      setIsOpen(true);
     }
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { GlobalContext } from "../../../Components/GlobalContext";
 import ChollitosTable from "../../../Components/DataTable";
 import { Helmet } from "react-helmet";
@@ -14,7 +14,7 @@ import {
   Heading,
   useToast,
 } from '@chakra-ui/react';
-import { activateCategoryService, deactivateCategoryService, getCategoriesService } from "../../../Services/Category";
+import { activateCategoryService, deactivateCategoryService } from "../../../Services/Category";
 import CreateOrUpdateCategory from "./CreateOrUpdate";
 import { FaCheckCircle, FaTimesCircle, FaEdit } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
@@ -25,8 +25,9 @@ const AdminCategory = () => {
   const { categories, _setCategories } = globalProps;
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
-  // const [categories, _setCategories] = useState([]);
-  const [isloading, setIsloading] = useState(false);
+  const [filter, setFilter] = useState('');
+  const [sort, setSort] = useState([{ id: 'id', desc: true }]);
+  const [isloading] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
@@ -97,21 +98,6 @@ const AdminCategory = () => {
       ),
     },
   ];
-
-  const getCategories = async () => {
-    setIsloading(true);
-    const data = await getCategoriesService();
-    _setCategories(data);
-    setIsloading(false);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await getCategories();
-    };
-
-    fetchData();
-  }, []);
 
   const activateCategory = async (id) => {
     var response = await activateCategoryService(id);
@@ -208,6 +194,10 @@ const AdminCategory = () => {
               setIndex={setTableIndex}
               size={tableSize}
               setSize={setTableSize}
+              filter={filter}
+              setFilter={setFilter}
+              sort={sort}
+              setSort={setSort}
             />
           </Box>
 

@@ -37,6 +37,8 @@ const User = () => {
   const [deleteUserId, setDeleteUserId] = useState(0);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
+  const [filter, setFilter] = useState('');
+  const [sort, setSort] = useState([{ desc: true }]);
   const [isloading, setIsloading] = useState(false);
   const toast = useToast();
   const { t } = useTranslation();
@@ -290,6 +292,10 @@ const User = () => {
               setIndex={setTableIndex}
               size={tableSize}
               setSize={setTableSize}
+              filter={filter}
+              setFilter={setFilter}
+              sort={sort}
+              setSort={setSort}
             />
           </Box>
           : !isloading &&

@@ -39,6 +39,8 @@ const ManageDeal = () => {
   const [deleteDealId, setDeleteDealId] = useState(0);
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
+  const [filter, setFilter] = useState('');
+  const [sort, setSort] = useState([{ desc: true }]);
   const [isloading, setIsloading] = useState(false);
   const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
   const toast = useToast();
@@ -389,6 +391,10 @@ const ManageDeal = () => {
               setIndex={setTableIndex}
               size={tableSize}
               setSize={setTableSize}
+              filter={filter}
+              setFilter={setFilter}
+              sort={sort}
+              setSort={setSort}
             />
           </Box>
           : !isloading &&
