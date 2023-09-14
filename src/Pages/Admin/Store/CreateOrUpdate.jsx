@@ -96,7 +96,9 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
       blog: blog
     }
     if (id === 0) {
+      setIsloading(true)
       var response = await createStoreService(data)
+      setIsloading(false)
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -123,11 +125,14 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
         })
       }
     } else {
+      setIsloading(true)
+
       let response = await updateStoreService({
         id: id,
         ...data,
         status: stores.find(store => (store.id === id)).status
       })
+      setIsloading(false)
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -195,7 +200,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
           </ModalBody>
           <ModalFooter>
             <Button onClick={onCloseModal}>{t(_t('Cancel'))}</Button>
-            <Button type="submit" colorScheme="blue" ml={3}>{id > 0 ? t(_t('Update')) : t(_t('Create'))}</Button>
+            <Button isLoading={isloading} type="submit" colorScheme="blue" ml={3}>{id > 0 ? t(_t('Update')) : t(_t('Create'))}</Button>
           </ModalFooter>
         </form>
       </ModalContent>

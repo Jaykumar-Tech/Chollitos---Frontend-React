@@ -26,6 +26,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
   const [slug, setSlug] = useState('');
   const [parentId, setParentId] = useState(-1);
   const [imageUrl, setImageUrl] = useState('');
+  const [isloading, setIsloading] = useState(false)
   const toast = useToast();
 
   const blackList = getAllChildren();
@@ -61,7 +62,9 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
       image_url: imageUrl
     }
     if (id === 0) {
+      setIsloading(true)
       var response = await createCategoryService(data)
+      setIsloading(false)
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -88,11 +91,13 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
         })
       }
     } else {
+      setIsloading(true)
       let response = await editCategoryService({
         id: id,
         ...data,
         status: categories.find(category => (category.id === id)).status
       })
+      setIsloading(false)
       if (response.status === 200) {
         toast({
           title: t(_t('Success.')),
@@ -200,6 +205,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
           <ModalFooter>
             <Button onClick={onCloseModal}>{t(_t('Cancel'))}</Button>
             <Button
+            isLoading={isloading}
               type="submit" colorScheme="blue" ml={3}
             >
               {id > 0 ? t(_t('Update')) : t(_t('Create'))}
