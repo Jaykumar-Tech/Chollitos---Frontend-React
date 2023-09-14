@@ -511,48 +511,51 @@ const Deal = () => {
                   /></Box>
               )
             }
-            <Box>
-              <Icon
-                as={FaEdit}
-                color="blue.500"
-                boxSize={5}
-                ml={1}
-                cursor={'pointer'}
-                title={t(_t('edit'))}
-              onClick={async () => {
-                setTimeout(() => {
-                  onEditOpen();
-                }, 0);
-              }}
-              />
+            {
+              authToken?.user?.role &&
+              <Box>
+                <Icon
+                  as={FaEdit}
+                  color="blue.500"
+                  boxSize={5}
+                  ml={1}
+                  cursor={'pointer'}
+                  title={t(_t('edit'))}
+                  onClick={async () => {
+                    setTimeout(() => {
+                      onEditOpen();
+                    }, 0);
+                  }}
+                />
               </Box>
-              {authToken?.user?.role === 'admin' &&
-                <Box>
-                  <Icon
-                    as={AiOutlineDelete}
-                    color="red.500"
-                    boxSize={5}
-                    cursor={'pointer'}
-                    title={t(_t('delete'))}
+            }
+            {authToken?.user?.role === 'admin' &&
+              <Box>
+                <Icon
+                  as={AiOutlineDelete}
+                  color="red.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('delete'))}
                   onClick={() => {
                     setDeleteDealId(deal.id);
                     onDeleteOpen();
                   }}
-                  />
-                </Box>
-              }
-              {authToken?.user?.role === 'admin' && deal.status === 0 &&
-                <Box>
-                  <Icon
-                    onClick={() => handleActivateDeal(deal.id)}
-                    as={FaCheckCircle}
-                    color="green.500"
-                    boxSize={5}
-                    cursor={'pointer'}
-                    title={t(_t('activate'))}
-                  />
-                </Box>
-              }
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 0 &&
+              <Box>
+                <Icon
+                  onClick={() => handleActivateDeal(deal.id)}
+                  as={FaCheckCircle}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('activate'))}
+                />
+              </Box>
+            }
           </Flex>
           <Spacer />
           <Flex alignItems={'center'}>

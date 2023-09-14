@@ -32,7 +32,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, setVipService, unsetVipService } from "../../Services/Deal";
+import { activateDealService, deleteDealService, getDealByIdService, setVipService, unsetVipService } from "../../Services/Deal";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import CreateOrUpdateDeal from "../../Pages/Create/deal";
 import CreateOrUpdateDiscount from "../../Pages/Create/discount";
@@ -56,6 +56,11 @@ const CustomCard = (props) => {
     return _title;
   }
 
+  const getDealById = async (dealId) => {
+    const data = await getDealByIdService(dealId);
+    return data;
+  };
+
   const handleLike = async (isLike) => {
     const result = await addLikeDealService({
       type: "deal",
@@ -68,6 +73,7 @@ const CustomCard = (props) => {
   }
 
   const authToken = JSON.parse(localStorage.getItem("authToken"))
+  // console.log(authToken.user.id )
 
   const deleteDeal = async (deleteDealId) => {
     var response = await deleteDealService(deleteDealId)
@@ -368,21 +374,26 @@ const CustomCard = (props) => {
                   /></Box>
               )
             }
-            <Box>
-              <Icon
-                as={FaEdit}
-                color="blue.500"
-                boxSize={5}
-                ml={1}
-                cursor={'pointer'}
-                title={t(_t('edit'))}
-                onClick={async () => {
-                  setTimeout(() => {
-                    onEditOpen();
-                  }, 0);
-                }}
-              />
-            </Box>
+            {
+              ( authToken?.user?.role && authToken.user.id === deal.user_id ) &&
+              <Box>
+                <Icon
+                  as={FaEdit}
+                  color="blue.500"
+                  boxSize={5}
+                  ml={1}
+                  cursor={'pointer'}
+                  title={t(_t('edit'))}
+                  onClick={async () => {
+                    setTimeout(async () => {
+                      var _deal = await getDealById(deal.id)
+                      setDeal(_deal)
+                      onEditOpen();
+                    }, 0);
+                  }}
+                />
+              </Box>
+            }
             {authToken?.user?.role === 'admin' &&
               <Box>
                 <Icon
