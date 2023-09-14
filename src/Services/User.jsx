@@ -44,7 +44,7 @@ const getAllUserService = async () => {
           authorization: auth_token.token_type + " " + auth_token.access_token,
         }
       });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     return error;
   }

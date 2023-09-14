@@ -127,7 +127,7 @@ function MenuBar({ appMode }) {
                     </Flex>
                     <Box p={2}>
                       {categories
-                        .filter((category) => (category.status && category.parent_id === -1 ))
+                        .filter((category) => (category.status && category.parent_id === -1))
                         .map((category) => (
                           <Link to={"/category/" + category.slug} key={category.id}>
                             <Text
@@ -164,19 +164,19 @@ function MenuBar({ appMode }) {
                     <Box pt={2}>
                       <Grid templateColumns="repeat(2, 1fr)" gap={2}>
                         {stores
-                        .filter(store=>store.status)
-                        .slice(0, 10).map((store) => (
-                          <Link to={`/shop/${store.name}`} key={store.id}>
-                            <Text
-                              mr={2}
-                              height={'2em'}
-                              fontWeight={400}
-                              onClick={() => setIsOpen(false)}
-                            >
-                              {store.name}
-                            </Text>
-                          </Link>
-                        ))}
+                          .filter(store => store.status)
+                          .slice(0, 10).map((store) => (
+                            <Link to={`/shop/${store.name}`} key={store.id}>
+                              <Text
+                                mr={2}
+                                height={'2em'}
+                                fontWeight={400}
+                                onClick={() => setIsOpen(false)}
+                              >
+                                {store.name}
+                              </Text>
+                            </Link>
+                          ))}
                       </Grid>
                       <Link to={"/shops"}>
                         <Text
@@ -238,7 +238,7 @@ function MenuBar({ appMode }) {
                 <Box p={2}>
                   <Grid templateColumns="repeat(2, 1fr)" gap={2}>
                     {categories
-                      .filter((category) => (category.status && category.parent_id === -1 ))
+                      .filter((category) => (category.status && category.parent_id === -1))
                       .map((category) => (
                         <Link to={"/category/" + category.slug} key={category.id}>
                           <Text
@@ -275,20 +275,20 @@ function MenuBar({ appMode }) {
                 </Flex>
                 <Box pt={2}>
                   <Grid templateColumns="repeat(2, 1fr)" gap={2}>
-                    {stores.filter(store=>store.status)
-                    .slice(0, 10).map((store) => (
-                      <Link to={`/shop/${store.name}`} key={store.id}>
-                        <Text
-                          mr={2}
-                          mb={2}
-                          height={'2em'}
-                          fontWeight={400}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {store.name}
-                        </Text>
-                      </Link>
-                    ))}
+                    {stores.filter(store => store.status)
+                      .slice(0, 10).map((store) => (
+                        <Link to={`/shop/${store.name}`} key={store.id}>
+                          <Text
+                            mr={2}
+                            mb={2}
+                            height={'2em'}
+                            fontWeight={400}
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {store.name}
+                          </Text>
+                        </Link>
+                      ))}
                   </Grid>
                   <Link to={"/shops"}>
                     <Text

@@ -8,7 +8,7 @@ const api = axios.create({
 const getStoresService = async () => {
   try {
     const response = await api.get('store/getall');
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     throw error;
@@ -18,7 +18,7 @@ const getStoresService = async () => {
 const getStoreByIdService = async (id) => {
   try {
     const response = await api.get('store/get/' + id);
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     throw error;
@@ -30,7 +30,7 @@ const getStoreByNameService = async (name) => {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (auth_token && auth_token.user.role !== 'customer') name += "_vip";
     const response = await api.get('store/getbyname/' + name);
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     throw error;

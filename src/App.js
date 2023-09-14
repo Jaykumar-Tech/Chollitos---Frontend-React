@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const getLangFunc = async () => {
       var response = await getLangService();
-      setLanguage(response.data.data)
+      setLanguage(response?.data?.data)
       setLoading(false)
     }
     getLangFunc();

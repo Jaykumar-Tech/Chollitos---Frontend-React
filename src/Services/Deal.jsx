@@ -10,7 +10,7 @@ const getDealsService = async () => {
     const data = { start_at: 0, length: 100 };
     const response = await api.post('deal/find', data);
     console.log('getDealsService');
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     throw error;
@@ -37,7 +37,7 @@ const getFilterDealsService = async (catIds) => {
     const data = { start_at: 0, length: 100, category_id: catIds };
     const response = await api.post('deal/find', data);
     console.log('getFilterDealsService');
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return [];
@@ -53,7 +53,7 @@ const getDealByIdService = async (dealId) => {
           authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
         }
       });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return [];
@@ -68,7 +68,7 @@ const getCountDealsService = async (catIds) => {
     // if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
     const response = await api.post('deal/count', data);
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return 0;
@@ -90,7 +90,7 @@ const getDealByFilter = async (data) => {
     }
  
     const response = await api.post('deal/find', data, { headers: headers });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return null;
@@ -184,7 +184,7 @@ const getAllService = async () => {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       }
     });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return [];

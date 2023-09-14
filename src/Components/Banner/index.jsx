@@ -4,6 +4,7 @@ import { getBannerService } from "../../Services/Banner";
 import { InfoIcon } from "@chakra-ui/icons";
 
 const Banner = () => {
+  // const [isOpen, setIsOpen] = useState(sessionStorage.getItem('banner') === 'show');
   const [isOpen, setIsOpen] = useState(false);
   const [banner, setBanner] = useState('');
 
@@ -14,15 +15,16 @@ const Banner = () => {
   }
 
   useEffect(() => {
-    if (!sessionStorage.getItem('banner')) {
-      sessionStorage.setItem('banner', 'show');
+    if (!sessionStorage.getItem('banner') || sessionStorage.getItem('banner') === 'show') {
       getBanner();
       setIsOpen(true);
+    } else {
+      setIsOpen(false);
     }
   }, []);
 
   return (
-    isOpen &&
+    isOpen && banner &&
     <Box
       p={2}
       mb={5}

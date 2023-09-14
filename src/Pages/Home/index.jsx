@@ -142,7 +142,7 @@ const Home = () => {
                 width={'20%'}
               >
                 <Banner />
-                <PopularShops stores={stores} />
+                <PopularShops _stores={stores} />
                 <PopularCategories _categories={categories} />
               </Box>
             }

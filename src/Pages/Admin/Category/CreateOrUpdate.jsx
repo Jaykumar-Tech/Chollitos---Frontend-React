@@ -72,7 +72,7 @@ const CreateOrUpdateCategory = ({ isModalOpen, onCloseModal, id = 0, categories,
           isClosable: true,
         })
         setCategories([...categories, {
-          id: response.data.data,
+          id: response?.data?.data,
           status: 1,
           ...data
         }].sort((a, b) => (a.name.localeCompare(b.name))))

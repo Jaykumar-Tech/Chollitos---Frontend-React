@@ -48,7 +48,7 @@ const User = () => {
   ];
 
   const columns = [
-    { Header: t(_t('Id')), accessor: 'id' },
+    { Header: t(_t('ID')), accessor: 'id' },
     { Header: t(_t('Username')), accessor: 'username' },
     { Header: t(_t('Email')), accessor: 'email' },
     {

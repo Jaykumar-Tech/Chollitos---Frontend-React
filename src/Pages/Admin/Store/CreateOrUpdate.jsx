@@ -107,7 +107,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
           isClosable: true,
         })
         _setStores([...stores, {
-          id: response.data.data,
+          id: response?.data?.data,
           status: 1,
           ...data
         }].sort((a, b) => (a.name.localeCompare(b.name))))

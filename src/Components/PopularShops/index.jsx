@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { _t } from "../../Utils/_t";
 import { useTranslation } from "react-i18next";
 
-const PopularShops = ({ stores }) => {
+const PopularShops = ({ _stores }) => {
   const { t } = useTranslation();
   const themeColor = 'blue.500';
   const currentDate = new Date();
@@ -18,27 +18,27 @@ const PopularShops = ({ stores }) => {
         {t(_t("Working codes, discounts and vouchers for"))} {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
-        {stores
-        .filter(store=>store.status)
-        .slice(0, 10).map((store, index) => (
-          <Button
-            as={Link}
-            to={`/shop/${store.name}`}
-            key={index}
-            mr={2}
-            mb={2}
-            height={'2em'}
-            minW={'auto'}
-            fontSize={'0.9em'}
-            fontWeight={400}
-            bg={'gray.200'}
-            _hover={{
-              bg: 'gray.300',
-            }}
-          >
-            {store.name}
-          </Button>
-        ))}
+        {_stores
+          .filter(store => store.status)
+          .slice(0, 10).map((store, index) => (
+            <Button
+              as={Link}
+              to={`/shop/${store.name}`}
+              key={index}
+              mr={2}
+              mb={2}
+              height={'2em'}
+              minW={'auto'}
+              fontSize={'0.9em'}
+              fontWeight={400}
+              bg={'gray.200'}
+              _hover={{
+                bg: 'gray.300',
+              }}
+            >
+              {store.name}
+            </Button>
+          ))}
       </Box>
       <Box
         fontSize={'0.9em'}

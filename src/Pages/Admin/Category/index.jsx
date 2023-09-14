@@ -33,12 +33,7 @@ const AdminCategory = () => {
   const toast = useToast();
 
   const columns = [
-    {
-      Header: t(_t('No')), accessor: 'id',
-      Cell: ({ row }) => {
-        return row.index + 1;
-      }
-    },
+    { Header: t(_t('ID')), accessor: 'id' },
     {
       Header: t(_t('Image')), accessor: 'image_url',
       Cell: ({ value, row }) => (

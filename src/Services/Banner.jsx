@@ -8,7 +8,7 @@ const api = axios.create({
 const getBannerService = async (id) => {
   try {
     const response = await api.get('banner/load');
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return null;

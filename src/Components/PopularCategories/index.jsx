@@ -10,7 +10,7 @@ const PopularCategories = ({ _categories }) => {
   const themeColor = 'blue.500';
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
-  const [categories, setCategories] = useState(_categories.filter(category=>(category.status)))
+  const [categories, setCategories] = useState(_categories.filter(category => (category.status)))
 
   return (
     <Box p={2}>
@@ -20,11 +20,10 @@ const PopularCategories = ({ _categories }) => {
         {t(_t("Working discounts, coupons for"))} {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           category.parent_id === -1 &&
           <Link to={"/category/" + category.slug} key={category.id}>
             <Button
-              key={category.id}
               mr={2}
               mb={2}
               height={'2em'}

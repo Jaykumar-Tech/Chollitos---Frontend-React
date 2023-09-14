@@ -18,6 +18,8 @@ import {
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from '@chakra-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
@@ -50,7 +52,11 @@ const ChollitosTable = ({
     {
       columns: columns,
       data: data,
-      initialState: { pageIndex: index, pageSize: size },
+      initialState: {
+        pageIndex: index,
+        pageSize: size,
+        sortBy: [{ desc: true }]
+      },
     },
     useGlobalFilter,
     useSortBy,
@@ -102,7 +108,7 @@ const ChollitosTable = ({
                   <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render('Header')}
                     <span>
-                      {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                      {column.isSorted ? (column.isSortedDesc ? <ChevronDownIcon /> : <ChevronUpIcon />) : ''}
                     </span>
                   </Th>
                 ))}

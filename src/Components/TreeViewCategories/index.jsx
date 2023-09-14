@@ -16,7 +16,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
   const { t } = useTranslation();
   const [treeData, setTreeData] = useState([]);
   const [filterData, setFilter] = useState([]);
-  const [categories, setCategories] = useState(_categories.filter(category=>(category.status)))
+  const [categories, setCategories] = useState(_categories.filter(category => (category.status)))
   const themeColor = 'blue.500';
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
 
@@ -54,7 +54,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
     // var res = [];
     var que = [id];
     var index = 0;
-    while ( index < que.length ) {
+    while (index < que.length) {
       var cur = que[index];
       // var isParent = false;
       for (let i = 0; i < categories.length; i++) {
@@ -65,7 +65,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
       }
       // if (!isParent)
       //   res.push(cur);
-      index ++ ;
+      index++;
     }
     return que;
   }

@@ -8,7 +8,7 @@ const api = axios.create({
 const getBlogByIdService = async (id) => {
   try {
     const response = await api.get('blog/get/' + id);
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return [];

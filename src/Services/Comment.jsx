@@ -11,7 +11,7 @@ const getCommentsByDealIdService = async (dealId) => {
       "type": "deal",
       "dest_id": dealId
     });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return [];
@@ -30,7 +30,7 @@ const createCommentService = async ( {blog, dealId} ) => {
         authorization: auth_token.token_type + " " + auth_token.access_token,
       }
     });
-    return response.data.data;
+    return response?.data?.data;
   } catch (error) {
     console.log(error);
     return null;
