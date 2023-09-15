@@ -59,6 +59,8 @@ const Deal = () => {
   const [newComment, setNewComment] = useState(null);
   const [comments, setComments] = useState([]);
   const [deleteDealId, setDeleteDealId] = useState(-1)
+  const [isDeletingDeal, setDeletingDeal] = useState(true)
+  const [deleteCommentId, setDeleteCommentId] = useState(-1)
   const history = useHistory();
 
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
@@ -395,7 +397,7 @@ const Deal = () => {
     })
   }
 
-  const handleDeleteComment = async (id) => {
+  const deleteComment = async (id) => {
     var response = await deleteCommentService(id)
     if (response.status === 200) {
       toast({
@@ -731,7 +733,9 @@ const Deal = () => {
                   cursor={'pointer'}
                   title={t(_t('delete'))}
                   onClick={() => {
-                    handleDeleteComment(comment.id)
+                    setDeleteCommentId(comment.id)
+                    setDeletingDeal(false)
+                    onDeleteOpen(true)
                   }}
                 />
               </Box>
@@ -906,7 +910,10 @@ const Deal = () => {
               {t(_t("Cancel"))}
             </Button>
             <Button colorScheme="red" onClick={() => {
-              deleteDeal(deleteDealId);
+              if ( isDeletingDeal )
+                deleteDeal(deleteDealId);
+              else 
+                deleteComment(deleteCommentId)
               onDeleteClose();
             }}>
               {t(_t("Delete"))}
