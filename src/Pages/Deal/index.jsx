@@ -29,11 +29,11 @@ import {
 } from "@chakra-ui/react";
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, /*FaReply*/ } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaStarHalfAlt, FaRegStar, /*FaReply*/ } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
-import { activateDealService, deleteDealService, getDealByIdService, setVipService, unsetVipService } from "../../Services/Deal";
+import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
 import { getTimeDiff, isMoreThanAMonth } from "../../Helpers";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -410,7 +410,61 @@ const Deal = () => {
         ...deal,
         cnt_comment: deal.cnt_comment - 1
       })
-      setComments(comments.filter(comment=>comment.id !== id))
+      setComments(comments.filter(comment => comment.id !== id))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handlePinDeal = async (id) => {
+    var response = await setPinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully pinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        pinned: 1
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+  
+  const handleUnpinDeal = async (id) => {
+    var response = await setUnpinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully unpinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        pinned: 0
+      })
     } else {
       toast({
         title: t(_t('Error.')),
@@ -584,6 +638,30 @@ const Deal = () => {
                   boxSize={5}
                   cursor={'pointer'}
                   title={t(_t('activate'))}
+                />
+              </Box>
+            }
+            {( authToken?.user?.role === 'admin' && deal.pinned === 1) &&
+              <Box>
+                <Icon
+                  onClick={() => handleUnpinDeal(deal.id)}
+                  as={FaStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('unpin'))}
+                />
+              </Box>
+            }
+            { (authToken?.user?.role === 'admin' && deal.pinned === 0) &&
+              <Box>
+                <Icon
+                  onClick={() => handlePinDeal(deal.id)}
+                  as={FaRegStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('pin'))}
                 />
               </Box>
             }

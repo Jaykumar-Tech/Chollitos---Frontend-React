@@ -222,5 +222,9 @@
     "Language":"Language",
     "Popular_Shops":"Popular Shops",
     "Popular_Categories":"Popular Categories",
-    "Delete": "Delete"
+    "Deleting_comment_success": "Deleting comment success",
+    "Successfully_pinned": "Successfully pinned",
+    "Successfully_unpinned": "Successfully unpinned",
+    "pin": "pin",
+    "unpin": "unpin"
 }

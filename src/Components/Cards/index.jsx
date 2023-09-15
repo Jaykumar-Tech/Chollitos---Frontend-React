@@ -24,7 +24,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
@@ -32,7 +32,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getDealByIdService, setVipService, unsetVipService } from "../../Services/Deal";
+import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import CreateOrUpdateDeal from "../../Pages/Create/deal";
 import CreateOrUpdateDiscount from "../../Pages/Create/discount";
@@ -188,6 +188,60 @@ const CustomCard = (props) => {
       ...deal,
       ..._deal
     })
+  }
+
+  const handlePinDeal = async (id) => {
+    var response = await setPinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully pinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        pinned: 1
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+  
+  const handleUnpinDeal = async (id) => {
+    var response = await setUnpinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully unpinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        pinned: 0
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -419,6 +473,30 @@ const CustomCard = (props) => {
                   boxSize={5}
                   cursor={'pointer'}
                   title={t(_t('activate'))}
+                />
+              </Box>
+            }
+            {( authToken?.user?.role === 'admin' && deal.pinned === 1) &&
+              <Box>
+                <Icon
+                  onClick={() => handleUnpinDeal(deal.id)}
+                  as={FaStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('unpin'))}
+                />
+              </Box>
+            }
+            { (authToken?.user?.role === 'admin' && deal.pinned === 0) &&
+              <Box>
+                <Icon
+                  onClick={() => handlePinDeal(deal.id)}
+                  as={FaRegStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('pin'))}
                 />
               </Box>
             }
