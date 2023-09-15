@@ -92,8 +92,7 @@ const Store = () => {
     fetchData();
   }, [store_name]);
 
-  const DealHeader = ({ deal }) => {
-    const [cntLike, setCntLike] = useState(0)
+  const DealHeader = ({ deal, setDeals, deals }) => {
     const toast = useToast()
 
     const handleLike = async (isLike) => {
@@ -106,17 +105,15 @@ const Store = () => {
           duration: 3000,
           isClosable: true,
         });
-  
         return;
       }
-  
+
       const result = await addLikeDealService({
         type: "deal",
         dest_id: deal.id,
         is_like: isLike
       });
       if (result.status === 200) {
-        setCntLike(cntLike + (isLike ? 1 : -1))
         toast({
           title: t(_t('Success.')),
           description: t(_t('Thank you for your feedback.')),
@@ -125,6 +122,10 @@ const Store = () => {
           duration: 3000,
           isClosable: true,
         })
+        setDeals(deals.map(_deal => deal.id !== _deal.id? _deal: {
+          ..._deal,
+          cnt_like: _deal.cnt_like + (isLike ? 1 : -1)
+        }))
       } else {
         toast({
           title: t(_t('Error.')),
@@ -203,7 +204,7 @@ const Store = () => {
             <Box _hover={{ color: themeColor }}>
               <Link title="Like" to="#">
                 <FaThumbsUp
-                onClick={() => handleLike(true)}
+                  onClick={() => handleLike(true)}
                 />
               </Link>
             </Box>
@@ -211,7 +212,7 @@ const Store = () => {
             <Box _hover={{ color: themeColor }}>
               <Link title="Dislike" to="#">
                 <FaThumbsDown
-                onClick={() => handleLike(false)}
+                  onClick={() => handleLike(false)}
                 />
               </Link>
             </Box>
@@ -220,7 +221,7 @@ const Store = () => {
               borderRadius={5}
               fontWeight={600}
             >
-              {deal.cnt_like ?? 0}
+              {deal?.cnt_like ?? 0}
             </Text>
           </Flex>
           <Spacer />
@@ -568,14 +569,14 @@ const Store = () => {
                             <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
                           </Flex>
                         </Flex>
-                        <DealHeader deal={deal} />
+                        <DealHeader deal={deal} setDeals={setDeals} deals={deals} />
                       </Box>
                     </Flex>
                     :
                     <>
                       <Carousel images={JSON.parse(deal.image_urls)} m={'auto'} />
                       <Spacer h={'10px'} />
-                      <DealHeader deal={deal} />
+                      <DealHeader deal={deal} setDeals={setDeals} deals={deals} />
                     </>
                   }
                 </Box>
