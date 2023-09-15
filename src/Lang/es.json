@@ -11,7 +11,6 @@
     "All_Shops": "Todas las Tiendas",
     "All_Categories": "Todas las Categorías",
     "Logout": "Cerrar Sesión",
-    "days": "días",
     "HOT": "CALIENTE",
     "EXPIRED": "EXPIRADO",
     "deal": "oferta",
@@ -229,5 +228,15 @@
     "pin": "fijar",
     "unpin": "desfijar",
     "Preview_HTML": "Vista previa HTML",
-    "Deactivating_deal_success":"Desactivando el éxito del trato"
+    "Deactivating_deal_success": "Desactivando el éxito del trato",
+    "years": "años",
+    "months": "meses",
+    "days": "días",
+    "hours": "horas",
+    "minutes": "minutos",
+    "year": "año",
+    "month": "mes",
+    "day": "día",
+    "hour": "hora",
+    "minute": "minuto"
 }

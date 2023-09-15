@@ -34,7 +34,7 @@ import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { activateDealService, deactivateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
-import { getTimeDiff, isMoreThanAMonth } from "../../Helpers";
+import { GetTimeDiff, isMoreThanAMonth } from "../../Helpers";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './index.css'
@@ -737,7 +737,7 @@ const Deal = () => {
           <Text>{comment.username}</Text>
           <Spacer />
           <TimeIcon />
-          <Text ml={1}>{getTimeDiff(comment.start_date)}</Text>
+          <Text ml={1}>{GetTimeDiff(comment.start_date)}</Text>
         </Flex>
         <Box>
           <Text
@@ -882,7 +882,7 @@ const Deal = () => {
               <Spacer />
               <Flex alignItems={'center'}>
                 <TimeIcon />
-                <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+                <Text ml={1}>{GetTimeDiff(deal.start_date)}</Text>
               </Flex>
             </Flex>
             <Text className="rich_description" dangerouslySetInnerHTML={{ __html: deal.description }} />

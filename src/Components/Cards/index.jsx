@@ -26,7 +26,7 @@ import {
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, FaEyeSlash, FaEye } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
-import { getTimeDiff } from "../../Helpers";
+import { GetTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -290,7 +290,7 @@ const CustomCard = (props) => {
           <Spacer />
           <Flex alignItems={'center'}>
             <TimeIcon />
-            <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+            <Text ml={1}>{GetTimeDiff(deal.start_date)}</Text>
           </Flex>
         </Flex>
         {cntLike > 1 &&

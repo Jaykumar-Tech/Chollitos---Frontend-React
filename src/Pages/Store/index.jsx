@@ -35,7 +35,7 @@ import { MdHome } from "react-icons/md";
 import { getStoreByNameService } from "../../Services/Store";
 import { getDealByFilter } from "../../Services/Deal";
 import { Helmet } from "react-helmet";
-import { getTimeDiff } from "../../Helpers";
+import { GetTimeDiff } from "../../Helpers";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { addLikeDealService } from "../../Services/Like";
@@ -566,7 +566,7 @@ const Store = () => {
                           <Spacer />
                           <Flex alignItems={'center'}>
                             <TimeIcon />
-                            <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+                            <Text ml={1}>{GetTimeDiff(deal.start_date)}</Text>
                           </Flex>
                         </Flex>
                         <DealHeader deal={deal} setDeals={setDeals} deals={deals} />
