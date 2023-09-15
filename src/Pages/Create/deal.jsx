@@ -29,7 +29,7 @@ import { convertUTC } from "../../Utils/date";
 export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
 
   const [url, setUrl] = useState(deal?.deal_url ?? '');
   const [images, setImages] = useState(deal?.image_urls ? JSON.parse(deal?.image_urls) : []);
@@ -234,7 +234,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
     >
       {!deal.id &&
         <Helmet>
-          <title>{t(_t("Chollitos"))} - {t(_t("Share deals"))}</title>
+          <title>{config?.site_title} - {t(_t("Share deals"))}</title>
         </Helmet>
       }
       {!deal.id &&

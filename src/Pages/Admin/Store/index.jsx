@@ -24,7 +24,7 @@ import { deactivateCategoryService } from "../../../Services/Category";
 
 const AdminStore = () => {
   const { globalProps } = useContext(GlobalContext);
-  const { stores, _setStores } = globalProps;
+  const { stores, _setStores, config } = globalProps;
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
   const [filter, setFilter] = useState('');
@@ -171,7 +171,7 @@ const AdminStore = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("shops"))} </title>
+        <title>{config?.site_title} - {t(_t("shops"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>

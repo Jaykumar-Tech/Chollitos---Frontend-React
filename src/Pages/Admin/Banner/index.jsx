@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   Box,
@@ -17,8 +17,11 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
 import { getBannerService, saveBannerService } from "../../../Services/Banner";
+import { GlobalContext } from "../../../Components/GlobalContext";
 
 const Banner = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { config } = globalProps;
   const [title, setTitle] = useState('');
   const [banner, setBanner] = useState('');
   const [isloading, setIsloading] = useState(false);
@@ -69,7 +72,7 @@ const Banner = () => {
 
   const handleBannerSave = async () => {
     setIsUpdating(true);
-    var result = await saveBannerService({ title, banner });
+    var result = await saveBannerService({ title: title, content: banner });
     setIsUpdating(false);
     if (result.status === 200) {
       sessionStorage.setItem('banner', 'show');
@@ -105,7 +108,7 @@ const Banner = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("banner"))} </title>
+        <title>{config?.site_title} - {t(_t("Banner"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>

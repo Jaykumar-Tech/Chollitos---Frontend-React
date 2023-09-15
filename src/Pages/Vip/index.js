@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, SimpleGrid, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { MdHome } from "react-icons/md";
@@ -10,12 +10,15 @@ import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../Utils/_t";
+import { GlobalContext } from "../../Components/GlobalContext";
 
 let isScrolled = false;
 let offset = 0;
 let isend = false;
 
 const Vip = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { config } = globalProps;
   const { t } = useTranslation();
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
@@ -94,7 +97,7 @@ const Vip = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("VIP"))} {t(_t("deals"))} </title>
+        <title>{config?.site_title} - {t(_t("VIP"))} {t(_t("deals"))} </title>
       </Helmet>
       <TabBar setFeature={setDealFeature} />
       <Box maxW={'1200px'} m={'auto'}>

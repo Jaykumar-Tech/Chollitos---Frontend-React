@@ -32,7 +32,7 @@ import { convertUTC } from "../../Utils/date";
 export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdate }) {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
   const typeStr = ["discount_percent", "discount_fixed", "free"];
 
   const [url, setUrl] = useState(discount?.deal_url ?? '');
@@ -237,7 +237,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
     >
       {!discount.id &&
         <Helmet>
-          <title>{t(_t("Chollitos"))} - {t(_t("Share discounts"))}</title>
+          <title>{config?.site_title} - {t(_t("Share discounts"))}</title>
         </Helmet>
       }
       {!discount.id &&

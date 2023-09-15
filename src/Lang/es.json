@@ -212,5 +212,14 @@
     "Changing_Role_of_Role_Success": "Cambio de Rol de Usuario Exitoso",
     "User_Management": "Gestión de Usuarios",
     "Delete_User": "Eliminar Usuario",
-    "Deal_Management": "Gestión de acuerdos"    
+    "Deal_Management": "Gestión de acuerdos",
+    "Settings": "Configuración",
+    "Content": "Contenido",
+    "Resetting_config_success": "Configuración restablecida exitosamente",
+    "settings": "ajustes",
+    "Site_Name": "Nombre del sitio",
+    "Welcome_Message": "Mensaje de bienvenida",
+    "Language": "Idioma",
+    "Popular_Shops": "Tiendas populares",
+    "Popular_Categories": "Categorías populares"
 }

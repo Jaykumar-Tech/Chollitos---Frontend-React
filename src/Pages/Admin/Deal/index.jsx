@@ -46,7 +46,7 @@ const ManageDeal = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
 
   useEffect(() => {
     if (localStorage.getItem('authToken'))
@@ -366,7 +366,7 @@ const ManageDeal = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("deals"))} </title>
+        <title>{config?.site_title} - {t(_t("deals"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>

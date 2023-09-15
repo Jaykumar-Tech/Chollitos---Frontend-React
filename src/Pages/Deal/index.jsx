@@ -51,7 +51,7 @@ const Deal = () => {
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
   const { dealTitle } = useParams();
   const [deal, setDeal] = useState({});
   const [images, setImages] = useState([]);
@@ -396,7 +396,7 @@ const Deal = () => {
     return (
       <>
         <Helmet>
-          <title>{t(_t("Chollitos")) + " - " + deal.title}</title>
+          <title>{config?.site_title + " - " + deal.title}</title>
         </Helmet>
         <Box
           color={themeColor}
@@ -512,7 +512,7 @@ const Deal = () => {
               )
             }
             {
-              authToken?.user?.role &&
+              ( authToken?.user?.role && authToken.user.id === deal.user_id ) &&
               <Box>
                 <Icon
                   as={FaEdit}
@@ -763,8 +763,8 @@ const Deal = () => {
             </Box>
           </Box>
           <Box>
-            <PopularShops stores={stores} />
-            <PopularCategories _categories={categories} />
+            <PopularShops />
+            <PopularCategories />
           </Box>
         </Box>
       </Box>

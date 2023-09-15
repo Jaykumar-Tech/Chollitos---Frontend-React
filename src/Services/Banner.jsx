@@ -5,7 +5,7 @@ const api = axios.create({
   // baseURL: process.env.API_BASE_URL,
 });
 
-const getBannerService = async (id) => {
+const getBannerService = async () => {
   try {
     const response = await api.get('banner/load');
     return response?.data?.data;
@@ -15,12 +15,12 @@ const getBannerService = async (id) => {
   }
 }
 
-const saveBannerService = async ({ title, html }) => {
+const saveBannerService = async ({ title, content }) => {
   const auth_token = JSON.parse(localStorage.getItem('authToken'));
   try {
     const response = await api.post('banner/save', {
       title: title,
-      html: html,
+      content: content,
     }, {
       headers: {
         authorization: auth_token.token_type + " " + auth_token.access_token,

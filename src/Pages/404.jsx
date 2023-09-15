@@ -3,15 +3,19 @@ import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { _t } from "../Utils/_t";
+import { useContext } from "react";
+import { GlobalContext } from "../Components/GlobalContext";
 
 const Page404 = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { config } = globalProps;
   const { t } = useTranslation()
   const history = useHistory();
 
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("Page not found"))}</title>
+        <title>{config?.site_title} - {t(_t("Page not found"))}</title>
       </Helmet>
       <Flex
         align="center"

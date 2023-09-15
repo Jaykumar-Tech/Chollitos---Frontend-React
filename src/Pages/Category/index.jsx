@@ -18,7 +18,7 @@ let isend = false;
 const Category = () => {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
-  const { categories } = globalProps;
+  const { categories, config } = globalProps;
   const { categorySlug } = useParams();
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
@@ -94,7 +94,7 @@ const Category = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {categorySlug} {t(_t("deals"))}</title>
+        <title>{config?.site_title} - {categorySlug} {t(_t("deals"))}</title>
       </Helmet>
       <Box
         shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
