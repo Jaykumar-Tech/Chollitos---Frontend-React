@@ -512,7 +512,7 @@ const Deal = () => {
               )
             }
             {
-              ( authToken?.user?.role && authToken.user.id === deal.user_id ) &&
+              ( authToken?.user?.role && ( authToken.user.id === deal.user_id || authToken.user.role === 'admin' ) ) &&
               <Box>
                 <Icon
                   as={FaEdit}
@@ -797,8 +797,7 @@ const Deal = () => {
           <ModalBody>
             {deal.type === 'deal' ?
               <CreateOrUpdateDeal deal={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
-              :
-              <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
+              : <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
             }
           </ModalBody>
         </ModalContent>

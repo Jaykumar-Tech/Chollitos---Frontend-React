@@ -25,6 +25,7 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { convertUTC } from "../../Utils/date";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   const { t } = useTranslation();
@@ -44,6 +45,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
   const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
   const [isloadingUpdate, setIsloadingUpdate] = useState(false)
+  const history = useHistory()
   const toast = useToast();
 
   const modules = {
@@ -160,17 +162,14 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
     setIsloading(false);
 
     if (response.status === 200) {
-
       setUrl("");
       setImages([]);
       setPrice("0");
       setLowPrice("0");
       setTitle("")
       setDescription("")
-      setCategoryId(-1)
-      setStoreId(-1)
       setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
-      setEndDate('');
+      setEndDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
       toast({
         title: t(_t('Deal created.')),
         description: t(_t("We've created your deal.")),
@@ -179,7 +178,7 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
         duration: 3000,
         isClosable: true,
       })
-
+      history.push("/")
     } else {
       toast({
         title: t(_t('Error.')),
@@ -199,8 +198,8 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
       title: title,
       description: description,
       type: "deal",
-      price_new: ""+price,
-      price_low: ""+lowPrice,
+      price_new: "" + price,
+      price_low: "" + lowPrice,
       deal_url: url,
       image_urls: JSON.stringify(images),
       category_id: categoryId,
@@ -211,7 +210,10 @@ export default function CreateOrUpdateDeal({ deal = {}, onClose, onUpdate }) {
     if (response.status === 200) {
       delete sendData.deal_id
       sendData.id = deal.id
-      onUpdate(sendData)
+      onUpdate({
+        ...sendData,
+        storename: stores.find(store => store.id === storeId)?.name
+      })
       onClose(false)
     } else {
       toast({

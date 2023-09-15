@@ -181,6 +181,7 @@ const CustomCard = (props) => {
   }
 
   const handleUpdateDeal = async (_deal) => {
+    console.log(_deal)
     if (authToken?.user?.role !== 'admin')
       _deal.status = 0
     setDeal({
@@ -375,7 +376,7 @@ const CustomCard = (props) => {
               )
             }
             {
-              ( authToken?.user?.role && authToken.user.id === deal.user_id ) &&
+              ( authToken?.user?.role && ( authToken.user.id === deal.user_id || authToken.user.role === 'admin' ) ) &&
               <Box>
                 <Icon
                   as={FaEdit}
