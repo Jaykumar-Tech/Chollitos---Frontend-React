@@ -20,6 +20,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  useToast,
 } from "@chakra-ui/react"
 import { TimeIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState, useContext } from "react";
@@ -37,6 +38,7 @@ import { Helmet } from "react-helmet";
 import { getTimeDiff } from "../../Helpers";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { addLikeDealService } from "../../Services/Like";
 
 const Store = () => {
   const { globalProps } = useContext(GlobalContext);
@@ -91,6 +93,50 @@ const Store = () => {
   }, [store_name]);
 
   const DealHeader = ({ deal }) => {
+    const [cntLike, setCntLike] = useState(0)
+    const toast = useToast()
+
+    const handleLike = async (isLike) => {
+      if (!localStorage.getItem('authToken')) {
+        toast({
+          title: t(_t('Warning.')),
+          description: t(_t('Please login.')),
+          position: 'top',
+          status: 'warning',
+          duration: 3000,
+          isClosable: true,
+        });
+  
+        return;
+      }
+  
+      const result = await addLikeDealService({
+        type: "deal",
+        dest_id: deal.id,
+        is_like: isLike
+      });
+      if (result.status === 200) {
+        setCntLike(cntLike + (isLike ? 1 : -1))
+        toast({
+          title: t(_t('Success.')),
+          description: t(_t('Thank you for your feedback.')),
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: t(_t('Error.')),
+          description: result?.response?.data?.message,
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+    }
+
     return (
       <>
         <Box maxW="full" h="4em" overflow="hidden" p={1}>
@@ -157,7 +203,7 @@ const Store = () => {
             <Box _hover={{ color: themeColor }}>
               <Link title="Like" to="#">
                 <FaThumbsUp
-                // onClick={() => handleLike(true)}
+                onClick={() => handleLike(true)}
                 />
               </Link>
             </Box>
@@ -165,7 +211,7 @@ const Store = () => {
             <Box _hover={{ color: themeColor }}>
               <Link title="Dislike" to="#">
                 <FaThumbsDown
-                // onClick={() => handleLike(false)}
+                onClick={() => handleLike(false)}
                 />
               </Link>
             </Box>
@@ -178,7 +224,7 @@ const Store = () => {
             </Text>
           </Flex>
           <Spacer />
-          <Flex alignItems="center">
+          {/* <Flex alignItems="center">
             {authToken?.user?.role === 'admin' &&
               (deal.vip ?
                 <Box>
@@ -272,7 +318,7 @@ const Store = () => {
               </Box>
             }
           </Flex>
-          <Spacer />
+          <Spacer /> */}
           <Flex alignItems={'center'}>
             <Box _hover={{ color: themeColor }}>
               <Link
