@@ -7,6 +7,7 @@ import {
   Flex,
   Button,
   ButtonGroup,
+  Badge,
   Avatar,
   Text,
   useBreakpointValue,
@@ -29,7 +30,7 @@ import {
 } from "@chakra-ui/react";
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, FaEye, FaEyeSlash, /*FaReply*/ } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaStar, FaRegStar, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
@@ -845,6 +846,44 @@ const Deal = () => {
                 </MenuList>
               </Menu>
             </Flex> */}
+            <Box ml={-6} position={'absolute'} zIndex={2}>
+              {deal.cntLike > 1 &&
+                <Badge
+                  colorScheme="pink"
+                  color={'red'}
+                  position={'absolute'}
+                >
+                  {t(_t("HOT"))}
+                </Badge>
+              }
+              {deal.vip > 0 &&
+                <Badge
+                  colorScheme="green"
+                  color={'green'}
+                  position={'absolute'}
+                >
+                  {t(_t("VIP"))}
+                </Badge>
+              }
+              {new Date(deal.expires) < new Date() &&
+                <Badge
+                  colorScheme="gray"
+                  color={'gray'}
+                  position={'absolute'}
+                >
+                  {t(_t("Expired"))}
+                </Badge>
+              }
+              {!deal.status &&
+                <Badge
+                  colorScheme="pink"
+                  color={'orange'}
+                  position={'absolute'}
+                >
+                  {t(_t("Pending"))}
+                </Badge>
+              }
+            </Box>
             {appMode === 'lg' ?
               <Flex>
                 <Box flex='0.4'>
@@ -949,9 +988,9 @@ const Deal = () => {
               {t(_t("Cancel"))}
             </Button>
             <Button colorScheme="red" onClick={() => {
-              if ( isDeletingDeal )
+              if (isDeletingDeal)
                 deleteDeal(deleteDealId);
-              else 
+              else
                 deleteComment(deleteCommentId)
               onDeleteClose();
             }}>

@@ -21,7 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { FaCheckCircle, FaEdit, FaCrown, FaUser, FaStar, FaRegStar, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEdit, FaCrown, FaUser, FaStar, FaRegStar, FaEye, FaEyeSlash } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import { activateDealService, deactivateDealService, deleteDealService, getAllService, setPinService, setUnpinService, setVipService, unsetVipService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';

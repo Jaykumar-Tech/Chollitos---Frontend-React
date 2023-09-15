@@ -4,6 +4,7 @@ import {
   Heading,
   Image,
   Text,
+  Badge,
   Button,
   Spacer,
   Breadcrumb,
@@ -27,9 +28,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { GlobalContext } from "../../Components/GlobalContext";
 import Carousel from "../../Components/Carousel"
-import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
 import 'react-quill/dist/quill.snow.css';
-import { AiOutlineDelete } from "react-icons/ai";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
 import { getStoreByNameService } from "../../Services/Store";
@@ -53,7 +53,6 @@ const Store = () => {
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const themeColor = 'blue.500';
-  const authToken = JSON.parse(localStorage.getItem("authToken"));
 
   const getStoreByName = async () => {
     const store = await getStoreByNameService(store_name);
@@ -122,7 +121,7 @@ const Store = () => {
           duration: 3000,
           isClosable: true,
         })
-        setDeals(deals.map(_deal => deal.id !== _deal.id? _deal: {
+        setDeals(deals.map(_deal => deal.id !== _deal.id ? _deal : {
           ..._deal,
           cnt_like: _deal.cnt_like + (isLike ? 1 : -1)
         }))
@@ -541,7 +540,46 @@ const Store = () => {
                   borderRadius={3}
                   shadow={"1px 1px 3px rgba(0,0,0,0.3)"}
                   alignItems={'center'}
+                  position={'relative'}
                 >
+                  <Box ml={-3} zIndex={2} position={'absolute'}>
+                    {deal.cntLike > 1 &&
+                      <Badge
+                        colorScheme="pink"
+                        color={'red'}
+                        position={'absolute'}
+                      >
+                        {t(_t("HOT"))}
+                      </Badge>
+                    }
+                    {deal.vip > 0 &&
+                      <Badge
+                        colorScheme="green"
+                        color={'green'}
+                        position={'absolute'}
+                      >
+                        {t(_t("VIP"))}
+                      </Badge>
+                    }
+                    {new Date(deal.expires) < new Date() &&
+                      <Badge
+                        colorScheme="gray"
+                        color={'gray'}
+                        position={'absolute'}
+                      >
+                        {t(_t("Expired"))}
+                      </Badge>
+                    }
+                    {!deal.status &&
+                      <Badge
+                        colorScheme="pink"
+                        color={'orange'}
+                        position={'absolute'}
+                      >
+                        {t(_t("Pending"))}
+                      </Badge>
+                    }
+                  </Box>
                   {appMode === 'lg' ?
                     <Flex>
                       <Box flex='0.3'>

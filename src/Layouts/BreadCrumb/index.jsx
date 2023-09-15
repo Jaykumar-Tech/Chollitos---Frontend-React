@@ -91,14 +91,14 @@ function MyBreadcrumb({ categories, categorySlug }) {
               <BreadcrumbLink
                 as={Link}
                 key={idx}
-                to={"/categoría/" + v.slug}
+                to={"/categoria/" + v.slug}
               >
                 {v.name}
               </BreadcrumbLink>
             </BreadcrumbItem>
             :
             <BreadcrumbItem key={idx} isCurrentPage>
-              <BreadcrumbLink as={Link} key={idx} to={"/categoría/" + v.slug}>
+              <BreadcrumbLink as={Link} key={idx} to={"/categoria/" + v.slug}>
                 {v.name + " " + dspDeal}
               </BreadcrumbLink>
             </BreadcrumbItem>

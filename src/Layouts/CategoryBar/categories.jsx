@@ -45,7 +45,7 @@ function CategoryBar({ categories, categorySlug = null }) {
             .filter(category => category.status)
             .map((item) => (
               (category ? item.parent_id === category.id : item.parent_id === -1) &&
-              <Link to={"/categoría/" + item.slug} key={item.id}>
+              <Link to={"/categoria/" + item.slug} key={item.id}>
                 <Button
                   key={item.id}
                   mr={2}
