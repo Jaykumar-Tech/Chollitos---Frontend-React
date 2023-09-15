@@ -24,7 +24,7 @@ const PopularCategories = () => {
       <Box pt={2}>
         {categories?.filter(category => (config?.popular_categories?.indexOf(category.id) >= 0))
           .map((category) => (
-            <Link to={"/categoría/" + category.slug} key={category.id}>
+            <Link to={"/categoria/" + category.slug} key={category.id}>
               <Button
                 mr={2}
                 mb={2}

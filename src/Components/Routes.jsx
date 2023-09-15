@@ -37,7 +37,7 @@ function Routes() {
         {authToken && <Route exact path="/crear/chollo" component={CreateOrUpdateDeal} />}
         {authToken && <Route exact path="/crear/descuento" component={CreateOrUpdateDiscount} />}
         <Route exact path="/categorias" component={AllCategories} />
-        <Route path="/categoría/:categorySlug" component={Category} />
+        <Route path="/categoria/:categorySlug" component={Category} />
         <Route exact path="/stores" component={AllShops} />
         <Route path="/store/:store_name" component={Store} />
         {authToken && <Route exact path="/chollos" component={ManageDeal} />}

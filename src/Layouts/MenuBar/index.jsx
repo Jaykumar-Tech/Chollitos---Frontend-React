@@ -129,7 +129,7 @@ function MenuBar({ appMode }) {
                       {categories
                         ?.filter((category) => (category.status && config?.popular_categories?.indexOf(category.id) >= 0))
                         .map((category) => (
-                          <Link to={"/categoría/" + category.slug} key={category.id}>
+                          <Link to={"/categoria/" + category.slug} key={category.id}>
                             <Text
                               mr={2}
                               mb={2}
@@ -240,7 +240,7 @@ function MenuBar({ appMode }) {
                     {categories
                       ?.filter((category) => (category.status && config?.popular_categories?.indexOf(category.id) >= 0))
                       .map((category) => (
-                        <Link to={"/categoría/" + category.slug} key={category.id}>
+                        <Link to={"/categoria/" + category.slug} key={category.id}>
                           <Text
                             mr={2}
                             mb={2}

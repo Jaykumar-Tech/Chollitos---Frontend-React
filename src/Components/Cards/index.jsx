@@ -24,7 +24,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, FaEyeSlash, FaEye } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaStar, FaRegStar, FaEyeSlash, FaEye } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { GetTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
@@ -293,50 +293,44 @@ const CustomCard = (props) => {
             <Text ml={1}><GetTimeDiff date={deal.start_date} /></Text>
           </Flex>
         </Flex>
-        {cntLike > 1 &&
-          <Badge
-            colorScheme="pink"
-            color={'red'}
-            mt={5}
-            ml={-2}
-            position={'absolute'}
-          >
-            {t(_t("HOT"))}
-          </Badge>
-        }
-        {deal.vip > 0 &&
-          <Badge
-            colorScheme="green"
-            color={'green'}
-            mt={5}
-            ml={-2}
-            position={'absolute'}
-          >
-            {t(_t("VIP"))}
-          </Badge>
-        }
-        {new Date(deal.expires) < new Date() &&
-          <Badge
-            colorScheme="gray"
-            color={'gray'}
-            mt={5}
-            ml={-2}
-            position={'absolute'}
-          >
-            {t(_t("Expired"))}
-          </Badge>
-        }
-        {!deal.status &&
-          <Badge
-            colorScheme="pink"
-            color={'orange'}
-            mt={5}
-            ml={-2}
-            position={'absolute'}
-          >
-            {t(_t("Pending"))}
-          </Badge>
-        }
+        <Box mt={5} ml={-2}>
+          {cntLike > 1 &&
+            <Badge
+              colorScheme="pink"
+              color={'red'}
+              position={'absolute'}
+            >
+              {t(_t("HOT"))}
+            </Badge>
+          }
+          {deal.vip > 0 &&
+            <Badge
+              colorScheme="green"
+              color={'green'}
+              position={'absolute'}
+            >
+              {t(_t("VIP"))}
+            </Badge>
+          }
+          {new Date(deal.expires) < new Date() &&
+            <Badge
+              colorScheme="gray"
+              color={'gray'}
+              position={'absolute'}
+            >
+              {t(_t("Expired"))}
+            </Badge>
+          }
+          {!deal.status &&
+            <Badge
+              colorScheme="pink"
+              color={'orange'}
+              position={'absolute'}
+            >
+              {t(_t("Pending"))}
+            </Badge>
+          }
+        </Box>
       </CardHeader>
       <CardBody p={2}>
         <Link to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}>
