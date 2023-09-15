@@ -39,9 +39,9 @@ const AdminMenu = () => {
         <Link to="/admin/users">
           <MenuItem>{t(_t("Users"))}</MenuItem>
         </Link>
-        {/* <Link to="/deals">
+        <Link to="/deals">
           <MenuItem>{t(_t("Deals"))}</MenuItem>
-        </Link> */}
+        </Link>
         <Link to="/admin/categories">
           <MenuItem>{t(_t("Categories"))}</MenuItem>
         </Link>

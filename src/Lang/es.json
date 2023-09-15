@@ -220,7 +220,13 @@
     "Site_Name": "Nombre del sitio",
     "Welcome_Message": "Mensaje de bienvenida",
     "Language": "Idioma",
-    "Popular_Shops": "Tiendas populares",
-    "Popular_Categories": "Categorías populares",
-    "Delete": "Borrar"
+    "Popular_Shops": "Tiendas Populares",
+    "Delete": "Eliminar",
+    "Popular_Categories": "Categorías Populares",
+    "Deleting_comment_success": "Comentario eliminado exitosamente",
+    "Successfully_pinned": "Fijado exitosamente",
+    "Successfully_unpinned": "Desfijado exitosamente",
+    "pin": "fijar",
+    "unpin": "desfijar",
+    "Preview_HTML": "Vista previa HTML"
 }

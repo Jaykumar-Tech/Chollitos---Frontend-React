@@ -21,9 +21,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { FaCheckCircle, FaEdit, FaCrown, FaUser } from "react-icons/fa";
+import { FaCheckCircle, FaEdit, FaCrown, FaUser, FaStar, FaRegStar } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getAllService, setVipService, unsetVipService } from '../../../Services/Deal';
+import { activateDealService, deleteDealService, getAllService, setPinService, setUnpinService, setVipService, unsetVipService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';
 import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
@@ -40,7 +40,7 @@ const ManageDeal = () => {
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
   const [filter, setFilter] = useState('');
-  const [sort, setSort] = useState([{ desc: true }]);
+  const [sort, setSort] = useState([{ id: "pinned", desc: true }]);
   const [isloading, setIsloading] = useState(false);
   const [authToken, setAuthToken] = useState(JSON.parse(localStorage.getItem('authToken')));
   const toast = useToast();
@@ -130,6 +130,19 @@ const ManageDeal = () => {
       ),
     },
     {
+      Header: t(_t('STAR')), accessor: 'pinned',
+      Cell: ({ value }) => (
+        <Badge
+          color={value ? "green" : "gray"}
+          bg={value ? "green.100" : "gray.200"}
+          size="sm"
+          p={1}
+        >
+          {value ? t(_t('Yes')) : t(_t('No'))}
+        </Badge>
+      ),
+    },
+    {
       Header: t(_t('Status')),
       accessor: 'status',
       Cell: ({ value }) => (
@@ -205,6 +218,26 @@ const ManageDeal = () => {
               boxSize={5}
               cursor={'pointer'}
               title={t(_t('activate'))}
+            />
+          }
+          {(authToken?.user?.role === 'admin' && row.original.pinned === 1) &&
+            <Icon
+              onClick={() => handleUnpinDeal(row.original.id)}
+              as={FaStar}
+              color="green.500"
+              boxSize={5}
+              cursor={'pointer'}
+              title={t(_t('unpin'))}
+            />
+          }
+          {(authToken?.user?.role === 'admin' && row.original.pinned === 0) &&
+            <Icon
+              onClick={() => handlePinDeal(row.original.id)}
+              as={FaRegStar}
+              color="green.500"
+              boxSize={5}
+              cursor={'pointer'}
+              title={t(_t('pin'))}
             />
           }
         </>
@@ -362,6 +395,62 @@ const ManageDeal = () => {
 
     fetchData();
   }, []);
+
+
+  const handlePinDeal = async (id) => {
+    var response = await setPinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully pinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal=>deal.id!==id?deal:{
+        ...deal,
+        pinned: 1
+      }))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleUnpinDeal = async (id) => {
+    var response = await setUnpinService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Successfully unpinned')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal=>deal.id!==id?deal:{
+        ...deal,
+        pinned: 0
+      }))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
 
   return (
     <>
