@@ -20,10 +20,10 @@ let isend = false;
 const Home = () => {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores, config } = globalProps;
+  const { categories, config } = globalProps;
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
-  const [feature,setFeature] = useState("new")
+  const [feature, setFeature] = useState("new")
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
   const limit = 24;
 
@@ -43,7 +43,7 @@ const Home = () => {
     });
 
     if (data) {
-      
+
       if (data.length !== limit) {
         isend = true;
       }
@@ -86,10 +86,10 @@ const Home = () => {
       isScrolled = true;
       getDeals();
     }
-    window.removeEventListener("scroll", () => {});
+    window.removeEventListener("scroll", () => { });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     localStorage.setItem("feature", "new");
     return () => {
@@ -102,7 +102,7 @@ const Home = () => {
       <Helmet>
         <title>{config?.site_title} - {feature} {t(_t("deals"))} </title>
       </Helmet>
-      <DoubleTopBar categories={categories} setFeature={setFeature}/>
+      <DoubleTopBar categories={categories} setFeature={setFeature} />
       <Box maxW={'1200px'} m={'auto'}>
         <MyBreadcrumb />
         <Box id="Home">
@@ -143,7 +143,7 @@ const Home = () => {
               >
                 <Banner />
                 <PopularShops />
-                <PopularCategories/>
+                <PopularCategories />
               </Box>
             }
           </Flex>

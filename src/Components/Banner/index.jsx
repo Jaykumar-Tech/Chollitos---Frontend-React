@@ -85,6 +85,7 @@ const Banner = () => {
       />
       <iframe
         ref={iframeRef}
+        title="banner"
         srcDoc={banner?.content}
         width='100%'
         frameBorder="0"

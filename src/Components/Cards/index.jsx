@@ -33,7 +33,6 @@ import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { AiOutlineDelete } from "react-icons/ai";
 import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import CreateOrUpdateDeal from "../../Pages/Create/deal";
 import CreateOrUpdateDiscount from "../../Pages/Create/discount";
 
@@ -46,7 +45,6 @@ const CustomCard = (props) => {
   const [deal, setDeal] = useState({ ...props.deal })
   const [deleteDealId, setDeleteDealId] = useState(-1)
   const toast = useToast()
-  const history = useHistory()
 
   const getUrlFromTitle = (title) => {
     const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
@@ -216,7 +214,7 @@ const CustomCard = (props) => {
       })
     }
   }
-  
+
   const handleUnpinDeal = async (id) => {
     var response = await setUnpinService(id)
     if (response.status === 200) {
@@ -324,6 +322,7 @@ const CustomCard = (props) => {
           />
         </Link>
         <Box
+          h={"3em"}
           color={themeColor}
           _hover={{ color: 'gray.800' }}
           fontSize={'0.8em'}
@@ -430,7 +429,7 @@ const CustomCard = (props) => {
               )
             }
             {
-              ( authToken?.user?.role && ( authToken.user.id === deal.user_id || authToken.user.role === 'admin' ) ) &&
+              (authToken?.user?.role && (authToken.user.id === deal.user_id || authToken.user.role === 'admin')) &&
               <Box>
                 <Icon
                   as={FaEdit}
@@ -476,7 +475,7 @@ const CustomCard = (props) => {
                 />
               </Box>
             }
-            {( authToken?.user?.role === 'admin' && deal.pinned === 1) &&
+            {(authToken?.user?.role === 'admin' && deal.pinned === 1) &&
               <Box>
                 <Icon
                   onClick={() => handleUnpinDeal(deal.id)}
@@ -488,7 +487,7 @@ const CustomCard = (props) => {
                 />
               </Box>
             }
-            { (authToken?.user?.role === 'admin' && deal.pinned === 0) &&
+            {(authToken?.user?.role === 'admin' && deal.pinned === 0) &&
               <Box>
                 <Icon
                   onClick={() => handlePinDeal(deal.id)}

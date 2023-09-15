@@ -53,11 +53,11 @@ function MyBreadcrumb({ categories, categorySlug }) {
     var index = 0;
     while (index < que.length) {
       var cur = que[index];
-      var isParent = false;
+      // var isParent = false;
       for (let i = 0; i < categories.length; i++) {
-        if (categories[i].parent_id === cur && categories[i].status ) {
+        if (categories[i].parent_id === cur && categories[i].status) {
           que.push(categories[i].id);
-          isParent = true;
+          // isParent = true;
         }
       }
       // if (!isParent)

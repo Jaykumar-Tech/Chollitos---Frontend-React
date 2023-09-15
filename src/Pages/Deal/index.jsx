@@ -29,8 +29,8 @@ import {
 } from "@chakra-ui/react";
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaStarHalfAlt, FaRegStar, /*FaReply*/ } from "react-icons/fa";
-import { ExternalLinkIcon, TimeIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, /*FaReply*/ } from "react-icons/fa";
+import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
@@ -51,7 +51,7 @@ const Deal = () => {
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores, config } = globalProps;
+  const { categories, config } = globalProps;
   const { dealTitle } = useParams();
   const [deal, setDeal] = useState({});
   const [images, setImages] = useState([]);
@@ -449,7 +449,7 @@ const Deal = () => {
       })
     }
   }
-  
+
   const handleUnpinDeal = async (id) => {
     var response = await setUnpinService(id)
     if (response.status === 200) {
@@ -641,7 +641,7 @@ const Deal = () => {
                 />
               </Box>
             }
-            {( authToken?.user?.role === 'admin' && deal.pinned === 1) &&
+            {(authToken?.user?.role === 'admin' && deal.pinned === 1) &&
               <Box>
                 <Icon
                   onClick={() => handleUnpinDeal(deal.id)}
@@ -653,7 +653,7 @@ const Deal = () => {
                 />
               </Box>
             }
-            { (authToken?.user?.role === 'admin' && deal.pinned === 0) &&
+            {(authToken?.user?.role === 'admin' && deal.pinned === 0) &&
               <Box>
                 <Icon
                   onClick={() => handlePinDeal(deal.id)}

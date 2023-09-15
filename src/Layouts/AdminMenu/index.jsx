@@ -4,10 +4,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Spacer,
-  Flex,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
@@ -15,11 +12,6 @@ import { changeLangService } from "../../Services/Lang";
 
 const AdminMenu = () => {
   const { t, i18n } = useTranslation()
-
-  const handleChangeLanguage = (lang) => {
-    i18n.changeLanguage(lang)
-    changeLangService(lang)
-  }
 
   return (
     <Menu>
@@ -47,9 +39,9 @@ const AdminMenu = () => {
         <Link to="/admin/users">
           <MenuItem>{t(_t("Users"))}</MenuItem>
         </Link>
-        <Link to="/deals">
+        {/* <Link to="/deals">
           <MenuItem>{t(_t("Deals"))}</MenuItem>
-        </Link>
+        </Link> */}
         <Link to="/admin/categories">
           <MenuItem>{t(_t("Categories"))}</MenuItem>
         </Link>

@@ -59,9 +59,28 @@ const Vip = () => {
     }, 100);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
-    if (!auth_token || auth_token.user.role === "customer") history.push('/404');
+    if (!auth_token || auth_token.user.role === "customer") {
+      history.push('/404');
+      return;
+    }
+
+    const handleScroll = () => {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.offsetHeight;
+
+      if (scrollPosition + 1000 >= documentHeight) {
+        if (isScrolled)
+          return;
+
+        isScrolled = true;
+        getDeals();
+      }
+
+      window.removeEventListener("scroll", () => { });
+    }
+
     window.addEventListener("scroll", handleScroll);
     localStorage.setItem("feature", "new");
     return () => {
@@ -76,23 +95,6 @@ const Vip = () => {
 
     fetchData();
   }, [dealFeature]);
-
-  const handleScroll = () => {
-
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const documentHeight = document.documentElement.offsetHeight;
-
-    if (scrollPosition + 1000 >= documentHeight) {
-
-      if (isScrolled)
-        return;
-      isScrolled = true;
-
-      getDeals();
-    }
-
-    window.removeEventListener("scroll", () => { });
-  }
 
   return (
     <>

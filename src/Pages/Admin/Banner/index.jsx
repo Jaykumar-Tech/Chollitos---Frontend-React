@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   Box,
-  Input,
   Button,
   Progress,
   Heading,

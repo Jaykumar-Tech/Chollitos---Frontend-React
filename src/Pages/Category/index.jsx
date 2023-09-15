@@ -3,7 +3,7 @@ import { GlobalContext } from "../../Components/GlobalContext";
 import { useParams } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import CategoryBar from "../../Layouts/CategoryBar/categories";
-import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner, Center, Button } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import CustomCard from "../../Components/Cards";
 import TreeViewCategories from "../../Components/TreeViewCategories";
 import { getDealByFilter } from "../../Services/Deal";
@@ -31,7 +31,7 @@ const Category = () => {
   const getDeals = async (loadmore = true) => {
 
     if (!loadmore) {
-      offset = 0 ;
+      offset = 0;
       isend = false;
       setDeals([]);
       setIsloading(true);
@@ -58,8 +58,8 @@ const Category = () => {
     !isend && (isScrolled = false);
   };
 
-  useEffect(()=>{
-    if ( !catIds.length ) return ;
+  useEffect(() => {
+    if (!catIds.length) return;
     const fetchData = async () => {
       await getDeals(false);
     };
@@ -84,13 +84,13 @@ const Category = () => {
     window.removeEventListener("scroll", () => { });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [])
-  
+
   return (
     <>
       <Helmet>
