@@ -17,7 +17,7 @@ const Banner = () => {
     if (sessionStorage.getItem('banner') === 'hide') {
       setIsOpen(false);
     } else {
-      getBanner();  
+      getBanner();
       setIsOpen(true);
     }
   }, []);
@@ -41,11 +41,11 @@ const Banner = () => {
           setIsOpen(false);
         }}
       />
-      <Text fontWeight={600} fontSize={'1.1em'}>
-        <InfoIcon boxSize={5} mr={2} mt={'-1px'} color={'blue.500'} />
-        {banner?.title}
-      </Text>
-      <Text mt={5} dangerouslySetInnerHTML={{ __html: banner?.content }} />
+      <iframe
+        srcDoc={banner?.content}
+        width='100%'
+        height="100%"
+      />
     </Box>
   )
 }
