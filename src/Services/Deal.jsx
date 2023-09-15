@@ -93,6 +93,22 @@ const activateDealService = async (id) => {
   }
 }
 
+const deactivateDealService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/deactivate/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
 const setVipService = async (id) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -212,6 +228,7 @@ export {
   unsetVipService,
   deleteDealService,
   activateDealService,
+  deactivateDealService,
   updateDealService,
   getAllService,
   setPinService,

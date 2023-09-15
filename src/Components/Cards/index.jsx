@@ -24,7 +24,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaFire, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, FaEyeSlash, FaEye } from "react-icons/fa";
 import { TimeIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getTimeDiff } from "../../Helpers";
 import { addLikeDealService } from "../../Services/Like";
@@ -32,7 +32,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
+import { activateDealService, deactivateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
 import CreateOrUpdateDeal from "../../Pages/Create/deal";
 import CreateOrUpdateDiscount from "../../Pages/Create/discount";
 
@@ -165,6 +165,33 @@ const CustomCard = (props) => {
       setDeal({
         ...deal,
         status: 1
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleDeactivateDeal = async (dealId) => {
+    var response = await deactivateDealService(dealId)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deactivating deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        status: 0
       })
     } else {
       toast({
@@ -467,11 +494,23 @@ const CustomCard = (props) => {
               <Box>
                 <Icon
                   onClick={() => handleActivateDeal(deal.id)}
-                  as={FaCheckCircle}
-                  color="green.500"
+                  as={FaEye}
+                  color="blue.500"
                   boxSize={5}
                   cursor={'pointer'}
                   title={t(_t('activate'))}
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 1 &&
+              <Box>
+                <Icon
+                  onClick={() => handleDeactivateDeal(deal.id)}
+                  as={FaEyeSlash}
+                  color="blue.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('deactivate'))}
                 />
               </Box>
             }

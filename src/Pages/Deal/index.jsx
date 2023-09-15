@@ -29,11 +29,11 @@ import {
 } from "@chakra-ui/react";
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
-import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, /*FaReply*/ } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar, FaEye, FaEyeSlash, /*FaReply*/ } from "react-icons/fa";
 import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
-import { activateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
+import { activateDealService, deactivateDealService, deleteDealService, getDealByIdService, setPinService, setUnpinService, setVipService, unsetVipService } from "../../Services/Deal";
 import { getTimeDiff, isMoreThanAMonth } from "../../Helpers";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -388,6 +388,33 @@ const Deal = () => {
     }
   }
 
+  const handleDeactivateDeal = async (dealId) => {
+    var response = await deactivateDealService(dealId)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deactivating deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        status: 0
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
   const handleUpdateDeal = async (_deal) => {
     if (authToken?.user?.role !== 'admin')
       _deal.status = 0
@@ -635,11 +662,23 @@ const Deal = () => {
               <Box>
                 <Icon
                   onClick={() => handleActivateDeal(deal.id)}
-                  as={FaCheckCircle}
-                  color="green.500"
+                  as={FaEye}
+                  color="blue.500"
                   boxSize={5}
                   cursor={'pointer'}
                   title={t(_t('activate'))}
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 1 &&
+              <Box>
+                <Icon
+                  onClick={() => handleDeactivateDeal(deal.id)}
+                  as={FaEyeSlash}
+                  color="blue.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('deactivate'))}
                 />
               </Box>
             }

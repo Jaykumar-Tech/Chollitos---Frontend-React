@@ -21,9 +21,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { FaCheckCircle, FaEdit, FaCrown, FaUser, FaStar, FaRegStar } from "react-icons/fa";
+import { FaCheckCircle, FaEdit, FaCrown, FaUser, FaStar, FaRegStar, FaEye, FaEyeSlash } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
-import { activateDealService, deleteDealService, getAllService, setPinService, setUnpinService, setVipService, unsetVipService } from '../../../Services/Deal';
+import { activateDealService, deactivateDealService, deleteDealService, getAllService, setPinService, setUnpinService, setVipService, unsetVipService } from '../../../Services/Deal';
 import CreateOrUpdateDeal from '../../Create/deal';
 import CreateOrUpdateDiscount from '../../Create/discount';
 import { getDealByIdService } from '../../../Services/Deal';
@@ -213,11 +213,21 @@ const ManageDeal = () => {
           {authToken?.user?.role === 'admin' && value === 0 &&
             <Icon
               onClick={() => handleActivateDeal(row.original.id)}
-              as={FaCheckCircle}
-              color="green.500"
+              as={FaEye}
+              color="blue.500"
               boxSize={5}
               cursor={'pointer'}
               title={t(_t('activate'))}
+            />
+          }
+          {authToken?.user?.role === 'admin' && value === 1 &&
+            <Icon
+              onClick={() => handleDeactivateDeal(row.original.id)}
+              as={FaEyeSlash}
+              color="blue.500"
+              boxSize={5}
+              cursor={'pointer'}
+              title={t(_t('deactivate'))}
             />
           }
           {(authToken?.user?.role === 'admin' && row.original.pinned === 1) &&
@@ -372,6 +382,33 @@ const ManageDeal = () => {
     }
   }
 
+  const handleDeactivateDeal = async (dealId) => {
+    var response = await deactivateDealService(dealId)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deactivating deal success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeals(deals.map(deal => (deal.id !== dealId ? deal : {
+        ...deal,
+        status: 0
+      })))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
   const handleUpdateDeal = async (_deal) => {
     var authToken = JSON.parse(localStorage.getItem("authToken"))
     if (authToken && authToken.user && authToken.user.role !== 'admin')
@@ -408,7 +445,7 @@ const ManageDeal = () => {
         duration: 3000,
         isClosable: true,
       })
-      setDeals(deals.map(deal=>deal.id!==id?deal:{
+      setDeals(deals.map(deal => deal.id !== id ? deal : {
         ...deal,
         pinned: 1
       }))
@@ -435,7 +472,7 @@ const ManageDeal = () => {
         duration: 3000,
         isClosable: true,
       })
-      setDeals(deals.map(deal=>deal.id!==id?deal:{
+      setDeals(deals.map(deal => deal.id !== id ? deal : {
         ...deal,
         pinned: 0
       }))
