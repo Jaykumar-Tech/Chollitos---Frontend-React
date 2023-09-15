@@ -566,7 +566,7 @@ const Store = () => {
                           <Spacer />
                           <Flex alignItems={'center'}>
                             <TimeIcon />
-                            <Text ml={1}>{GetTimeDiff(deal.start_date)}</Text>
+                            <Text ml={1}><GetTimeDiff date={deal.start_date} /></Text>
                           </Flex>
                         </Flex>
                         <DealHeader deal={deal} setDeals={setDeals} deals={deals} />
