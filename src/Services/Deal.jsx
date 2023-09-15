@@ -125,6 +125,38 @@ const unsetVipService = async (id) => {
   }
 }
 
+const setPinService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/pin/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
+const setUnpinService = async (id) => {
+  try {
+    const auth_token = JSON.parse(localStorage.getItem('authToken'));
+    const response = await api.get('deal/unpin/' + id,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
+    return response
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
 const deleteDealService = async (id) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -181,5 +213,7 @@ export {
   deleteDealService,
   activateDealService,
   updateDealService,
-  getAllService
+  getAllService,
+  setPinService,
+  setUnpinService
 };

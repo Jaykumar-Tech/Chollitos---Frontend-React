@@ -18,6 +18,21 @@ const getCommentsByDealIdService = async (dealId) => {
   }
 }
 
+const deleteCommentService = async (id) => {
+  const auth_token = JSON.parse(localStorage.getItem('authToken'));
+  try {
+    const response = await api.get('comment/delete/' + id, {
+      headers: {
+          authorization: auth_token.token_type + " " + auth_token.access_token,
+      }
+  } );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
 const createCommentService = async ( {blog, dealId} ) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -39,5 +54,6 @@ const createCommentService = async ( {blog, dealId} ) => {
 
 export {
   getCommentsByDealIdService,
-  createCommentService
+  createCommentService,
+  deleteCommentService
 };
