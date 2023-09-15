@@ -11,6 +11,7 @@ import {
   Spacer,
   FormControl,
   FormLabel,
+  Code,
 } from '@chakra-ui/react';
 import ReactQuill from 'react-quill';
 import { useHistory } from 'react-router-dom';
@@ -126,14 +127,14 @@ const Banner = () => {
           p={'20px'}
           shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
         >
-          <FormControl id="banner_title" mt={5}>
+          {/* <FormControl id="banner_title" mt={5}>
             <FormLabel>{t(_t("Title"))}</FormLabel>
             <Input type="text"
               value={title}
               onChange={e => setTitle(e.target.value)}
             />
-          </FormControl>
-          <FormControl id="banner_title" mt={5}>
+          </FormControl> */}
+          <FormControl id="banner_content" mt={5}>
             <FormLabel>{t(_t("Content"))}</FormLabel>
             <ReactQuill
               name="banner"
@@ -143,6 +144,10 @@ const Banner = () => {
               value={banner}
               onChange={(content) => setBanner(content)}
             />
+          </FormControl>
+          <FormControl id="preview_html" mt={5}>
+            <FormLabel>{t(_t("Preview HTML"))}</FormLabel>
+            <Code p={2}>{banner.replace(/(data:image\/[^;]+;base64)([^"]*)/g, "$1,...")}</Code>
           </FormControl>
         </Box>
         <Flex>
