@@ -22,7 +22,7 @@ const Banner = () => {
       if (!contentDocument || !contentWindow) return;
       const { body } = contentDocument;
       if (!body) return;
-      const height = `${body.scrollHeight + 25}px`;
+      const height = `${body.scrollHeight + 40}px`;
       if (iframe.style.height !== height) {
         iframe.style.height = height;
       }
