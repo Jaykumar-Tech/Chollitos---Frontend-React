@@ -26,6 +26,8 @@ const Setting = () => {
   const [siteName, setSiteName] = useState('');
   const [welcomeEmail, setWelcomeEmail] = useState('');
   const [language, setLanguage] = useState('en');
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [popularShops, setPopularShops] = useState([]);
   const [popularCategories, setPopularCategories] = useState([]);
   const { globalProps } = useContext(GlobalContext);
@@ -86,7 +88,9 @@ const Setting = () => {
       welcome_email: welcomeEmail,
       language: language,
       popular_shops: JSON.stringify(popularShops.map(popularShop => popularShop.id)),
-      popular_categories: JSON.stringify(popularCategories.map(popularCategory => popularCategory.id))
+      popular_categories: JSON.stringify(popularCategories.map(popularCategory => popularCategory.id)),
+      email: email,
+      password: password
     })
     setIsloading(false)
     if (response.status === 200) {
@@ -103,7 +107,9 @@ const Setting = () => {
         welcome_email: welcomeEmail,
         language: language,
         popular_shops: JSON.stringify(popularShops.map(popularShop => popularShop.id)),
-        popular_categories: JSON.stringify(popularCategories.map(popularCategory => popularCategory.id))
+        popular_categories: JSON.stringify(popularCategories.map(popularCategory => popularCategory.id)),
+        email: email,
+        password: password
       })
     } else {
       toast({
@@ -133,6 +139,12 @@ const Setting = () => {
     if (config?.language) {
       setLanguage(config.language)
     }
+    if (config?.email) {
+      setEmail(config.email)
+    }
+    if (config?.password) {
+      setPassword(config.password)
+    }
   }, [config])
 
   return (
@@ -155,6 +167,20 @@ const Setting = () => {
           p={'20px'}
           shadow={'0 3px 3px rgba(0,0,0,.15), 0 0 0 rgba(0,0,0,.15)'}
         >
+          <FormControl id="email" mt={5}>
+            <FormLabel>{t(_t("Email"))}</FormLabel>
+            <Input type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="password" mt={5}>
+            <FormLabel>{t(_t("Password"))}</FormLabel>
+            <Input type="text"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+          </FormControl>
           <FormControl id="site_name" mt={5}>
             <FormLabel>{t(_t("Site Name"))}</FormLabel>
             <Input type="text"

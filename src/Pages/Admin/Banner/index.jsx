@@ -146,7 +146,7 @@ const Banner = () => {
           </FormControl>
           <FormControl id="preview_html" mt={5}>
             <FormLabel>{t(_t("Preview HTML"))}</FormLabel>
-            <Code p={2}>{banner.replace(/(data:image\/[^;]+;base64)([^"]*)/g, "$1,...")}</Code>
+            <Code p={2}>{banner?.replace(/(data:image\/[^;]+;base64)([^"]*)/g, "$1,...")}</Code>
           </FormControl>
         </Box>
         <Flex>

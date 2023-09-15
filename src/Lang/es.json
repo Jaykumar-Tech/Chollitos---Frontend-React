@@ -223,5 +223,10 @@
     "Popular_Shops": "Tiendas populares",
     "Popular_Categories": "Categorías populares",
     "Delete": "Borrar",
-    "Preview_HTML": "Vista previa de HTML"
+    "Deleting_comment_success": "Comentario eliminado exitosamente",
+    "Successfully_pinned": "Fijado exitosamente",
+    "Successfully_unpinned": "Desfijado exitosamente",
+    "pin": "fijar",
+    "unpin": "desfijar",
+    "Preview_HTML": "Vista previa HTML"
 }
