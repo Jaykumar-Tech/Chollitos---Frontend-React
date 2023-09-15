@@ -221,5 +221,6 @@
     "Welcome_Message":"Welcome Message",
     "Language":"Language",
     "Popular_Shops":"Popular Shops",
-    "Popular_Categories":"Popular Categories"
+    "Popular_Categories":"Popular Categories",
+    "Delete": "Delete"
 }

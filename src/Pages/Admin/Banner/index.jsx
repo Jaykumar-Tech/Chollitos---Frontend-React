@@ -66,7 +66,8 @@ const Banner = () => {
   const getBanner = async () => {
     setIsloading(true);
     const data = await getBannerService();
-    setBanner(data.html);
+    setTitle(data.title)
+    setBanner(data.content);
     setIsloading(false);
   };
 

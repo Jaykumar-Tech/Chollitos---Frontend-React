@@ -30,7 +30,7 @@ import {
 import Carousel from "../../Components/Carousel"
 import { Helmet } from "react-helmet";
 import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, /*FaReply*/ } from "react-icons/fa";
-import { ExternalLinkIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, TimeIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons";
 import PopularCategories from "../../Components/PopularCategories";
 import PopularShops from "../../Components/PopularShops";
 import { activateDealService, deleteDealService, getDealByIdService, setVipService, unsetVipService } from "../../Services/Deal";
@@ -41,7 +41,7 @@ import './index.css'
 import { addLikeDealService } from "../../Services/Like";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
-import { createCommentService, getCommentsByDealIdService } from "../../Services/Comment";
+import { createCommentService, deleteCommentService, getCommentsByDealIdService } from "../../Services/Comment";
 import { AiOutlineDelete } from "react-icons/ai";
 import CreateOrUpdateDeal from "../Create/deal";
 import CreateOrUpdateDiscount from "../Create/discount";
@@ -177,8 +177,8 @@ const Deal = () => {
   }
 
   const handleAddComment = async () => {
+    setNewComment("");
     if (!localStorage.getItem('authToken')) {
-      setNewComment("");
       toast({
         title: t(_t('Warning.')),
         description: t(_t('Please login.')),
@@ -187,7 +187,6 @@ const Deal = () => {
         duration: 3000,
         isClosable: true,
       });
-
       return;
     }
 
@@ -218,6 +217,10 @@ const Deal = () => {
         result,
         ...comments
       ])
+      setDeal({
+        ...deal,
+        cnt_comment: deal.cnt_comment + 1
+      })
     } else {
       toast({
         title: t(_t('Warning.')),
@@ -392,6 +395,34 @@ const Deal = () => {
     })
   }
 
+  const handleDeleteComment = async (id) => {
+    var response = await deleteCommentService(id)
+    if (response.status === 200) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Deleting comment success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setDeal({
+        ...deal,
+        cnt_comment: deal.cnt_comment - 1
+      })
+      setComments(comments.filter(comment=>comment.id !== id))
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
   const DealHeader = () => {
     return (
       <>
@@ -512,7 +543,7 @@ const Deal = () => {
               )
             }
             {
-              ( authToken?.user?.role && ( authToken.user.id === deal.user_id || authToken.user.role === 'admin' ) ) &&
+              (authToken?.user?.role && (authToken.user.id === deal.user_id || authToken.user.role === 'admin')) &&
               <Box>
                 <Icon
                   as={FaEdit}
@@ -611,6 +642,22 @@ const Deal = () => {
               </Flex>
             </Link>
             <Text>{comment.cnt_like ?? 0}</Text>
+            <Spacer />
+            {
+              authToken?.user?.role === "admin" &&
+              <Box>
+                <Icon
+                  as={AiOutlineDelete}
+                  color="red.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('delete'))}
+                  onClick={() => {
+                    handleDeleteComment(comment.id)
+                  }}
+                />
+              </Box>
+            }
             {/* <Flex _hover={{ color: themeColor }} ml={5}>
                 <Link title="Reply" to="#" onClick={() => setIsOpen(!isOpen)}>
                   <Flex mr={2}>
