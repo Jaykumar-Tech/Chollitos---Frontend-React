@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   activateUserService,
   deactivateUserService,
@@ -30,8 +30,11 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { GlobalContext } from '../../../Components/GlobalContext';
 
 const User = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { config } = globalProps;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [users, setUsers] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(0);
@@ -267,7 +270,7 @@ const User = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("users"))} </title>
+        <title>{config?.site_title} - {t(_t("users"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>

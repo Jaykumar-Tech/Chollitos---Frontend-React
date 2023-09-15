@@ -22,15 +22,18 @@ import {
 import { Link } from "react-router-dom";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getStoreByNameService } from "../../Services/Store";
 import { getDealByFilter } from "../../Services/Deal";
 import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
+import { GlobalContext } from "../../Components/GlobalContext";
 
 const Store = () => {
+  const { globalProps } = useContext(GlobalContext);
+  const { config } = globalProps;
   const { t } = useTranslation()
   const { store_name } = useParams();
   const [store, setStore] = useState(null);
@@ -73,7 +76,7 @@ const Store = () => {
   return (
     <Box maxW={'960px'} m={'auto'} p={2}>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {store_name} {t(_t("discount codes"))}</title>
+        <title>{config?.site_title} - {store_name} {t(_t("discount codes"))}</title>
       </Helmet>
       <Breadcrumb
         separator=">"

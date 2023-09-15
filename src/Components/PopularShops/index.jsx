@@ -3,8 +3,12 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { _t } from "../../Utils/_t";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { GlobalContext } from "../GlobalContext";
 
-const PopularShops = ({ _stores }) => {
+const PopularShops = () => {
+  const {globalProps} = useContext(GlobalContext) ;
+  const {config, stores} = globalProps ;
   const { t } = useTranslation();
   const themeColor = 'blue.500';
   const currentDate = new Date();
@@ -18,8 +22,8 @@ const PopularShops = ({ _stores }) => {
         {t(_t("Working codes, discounts and vouchers for"))} {month} {currentDate.getFullYear()}
       </Text>
       <Box pt={2}>
-        {_stores
-          ?.filter(store => store.status)
+        {stores
+          ?.filter(store => (config?.popular_shops?.indexOf(store.id)>=0))
           .slice(0, 10).map((store, index) => (
             <Button
               as={Link}

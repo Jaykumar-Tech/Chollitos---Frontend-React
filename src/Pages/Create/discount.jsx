@@ -28,11 +28,12 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
 import { convertUTC } from "../../Utils/date";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdate }) {
   const { t } = useTranslation()
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
   const typeStr = ["discount_percent", "discount_fixed", "free"];
 
   const [url, setUrl] = useState(discount?.deal_url ?? '');
@@ -48,8 +49,9 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
   const [isloading, setIsloading] = useState(false);
   const [isuploading, setIsuploading] = useState(false);
   const [code, setCode] = useState(discount?.code ?? "");
-  const toast = useToast();
   const [isupdating, setIsupdating] = useState(false)
+  const toast = useToast();
+  const history = useHistory()
 
   const modules = {
     toolbar: {
@@ -157,8 +159,8 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
       sendData.type = typeStr[type];
       sendData.price_new = price;
     }
-    if (categoryId.id !== -1) sendData.category_id = categoryId.id;
-    if (storeId !== -1) sendData.store_id = storeId.id;
+    if (categoryId !== -1) sendData.category_id = categoryId;
+    if (storeId !== -1) sendData.store_id = storeId;
     if (startDate !== "") sendData.start_date = startDate;
     if (endDate !== "") sendData.expires = endDate;
 
@@ -171,10 +173,8 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
       setPrice("0");
       setTitle("");
       setDescription("");
-      setCategoryId({ name: "", id: -1 });
-      setStoreId({ name: "", id: -1 });
       setStartDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
-      setEndDate('');
+      setEndDate(`${new Date(new Date().toUTCString()).getFullYear()}-${String(new Date(new Date().toUTCString()).getMonth() + 1).padStart(2, '0')}-${String(new Date(new Date().toUTCString()).getDate() - 1).padStart(2, '0')}`);
       setCode("");
       toast({
         title: t(_t('Deal created.')),
@@ -184,6 +184,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
         duration: 3000,
         isClosable: true,
       })
+      history.push("/")
     } else {
       toast({
         title: t(_t('Error.')),
@@ -215,7 +216,10 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
     if (response.status === 200) {
       delete sendData.deal_id
       sendData.id = discount.id
-      onUpdate(sendData)
+      onUpdate({
+        ...sendData,
+        storename: stores.find(store => store.id === storeId)?.name
+      })
       onClose(false)
     } else {
       toast({
@@ -237,7 +241,7 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
     >
       {!discount.id &&
         <Helmet>
-          <title>{t(_t("Chollitos"))} - {t(_t("Share discounts"))}</title>
+          <title>{config?.site_title} - {t(_t("Share discounts"))}</title>
         </Helmet>
       }
       {!discount.id &&
@@ -548,29 +552,29 @@ export default function CreateOrUpdateDiscount({ discount = {}, onClose, onUpdat
                 {t(_t("Create"))}
               </Button>
             </Flex>
-          </ButtonGroup>:
+          </ButtonGroup> :
           <ButtonGroup mt="5%" w="100%">
-          <Flex w="100%" justifyContent="space-between">
-            <Button
-              colorScheme="teal"
-              variant="outline"
-              w="6rem"
-              mr="5%"
-              onClick={() => onClose(false)}
-            >
-              {t(_t("Cancel"))}
-            </Button>
-            <Button
-              isLoading={isupdating}
-              w="6rem"
-              colorScheme="blue"
-              variant="solid"
-              onClick={handleUpdate}
-            >
-              {t(_t("Update"))}
-            </Button>
-          </Flex>
-        </ButtonGroup>
+            <Flex w="100%" justifyContent="space-between">
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                w="6rem"
+                mr="5%"
+                onClick={() => onClose(false)}
+              >
+                {t(_t("Cancel"))}
+              </Button>
+              <Button
+                isLoading={isupdating}
+                w="6rem"
+                colorScheme="blue"
+                variant="solid"
+                onClick={handleUpdate}
+              >
+                {t(_t("Update"))}
+              </Button>
+            </Flex>
+          </ButtonGroup>
         }
       </Box>
     </Box>

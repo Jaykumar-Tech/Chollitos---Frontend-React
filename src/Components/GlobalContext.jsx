@@ -1,12 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getCategoriesService } from "../Services/Category";
 import { getStoresService } from "../Services/Store";
+import { getConfigService } from '../Services/Config';
 
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [categories, _setCategories] = useState([]);
   const [stores, _setStores] = useState([]);
+  const [config, _setConfig] = useState({})
 
   const getCategories = async () => {
     const data = await getCategoriesService();
@@ -18,10 +20,16 @@ export const GlobalProvider = ({ children }) => {
     _setStores(data);
   };
 
+  const getConfig = async () => {
+    const data = await getConfigService()
+    _setConfig(data)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       await getCategories();
       await getStores();
+      await getConfig();
     };
   
     fetchData();
@@ -30,8 +38,10 @@ export const GlobalProvider = ({ children }) => {
   const globalProps = {
     categories: categories,
     stores: stores,
+    config: config,
     _setCategories: _setCategories,
     _setStores: _setStores,
+    _setConfig: _setConfig
   };
 
   return (

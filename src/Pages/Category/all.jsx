@@ -21,7 +21,7 @@ import { Helmet } from "react-helmet";
 const AllCategories = () => {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories } = globalProps;
+  const { categories, config } = globalProps;
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {
@@ -36,7 +36,7 @@ const AllCategories = () => {
   return (
     <Box maxWidth="1200px" m={'auto'} p={'10px'}>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("all categories"))}</title>
+        <title>{config?.site_title} - {t(_t("all categories"))}</title>
       </Helmet>
       <Breadcrumb
         separator=">"

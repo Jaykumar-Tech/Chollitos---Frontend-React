@@ -21,15 +21,16 @@ import Select from 'react-select';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
+import { setConfigService } from "../../../Services/Config";
 
 const Setting = () => {
   const [siteName, setSiteName] = useState('');
-  const [banner, setBanner] = useState('');
+  const [welcomeEmail, setWelcomeEmail] = useState('');
   const [language, setLanguage] = useState('en');
   const [popularShops, setPopularShops] = useState([]);
   const [popularCategories, setPopularCategories] = useState([]);
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config, _setConfig } = globalProps;
   const [isloading, setIsloading] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
@@ -80,18 +81,66 @@ const Setting = () => {
     id: store.id,
   }));
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const handleSave = async () => {
+    setIsloading(true)
+    var response = await setConfigService({
+      site_title: siteName,
+      welcome_email: welcomeEmail,
+      language: language,
+      popular_shops: JSON.stringify(popularShops.map(popularShop=>popularShop.id)),
+      popular_categories: JSON.stringify(popularCategories.map(popularCategory=>popularCategory.id))
+    })
+    setIsloading(false)
+    if ( response.status === 200 ) {
+      toast({
+        title: t(_t('Success.')),
+        description: t(_t('Resetting config success')),
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      _setConfig({
+        site_title: siteName,
+        welcome_email: welcomeEmail,
+        language: language,
+        popular_shops: JSON.stringify(popularShops.map(popularShop=>popularShop.id)),
+        popular_categories: JSON.stringify(popularCategories.map(popularCategory=>popularCategory.id))
+      })
+    } else {
+      toast({
+        title: t(_t('Error.')),
+        description: response?.response?.data?.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
 
-    };
-
-    fetchData();
-  }, []);
+  useEffect(()=>{
+    if ( config?.popular_shops ) {
+      setPopularShops(storeOptions.filter(storeOption=>(JSON.parse(config.popular_shops).indexOf(storeOption.id)>=0)))
+    }
+    if ( config?.popular_categories ) {
+      setPopularCategories(categoryOptions.filter(categoryOption=>(JSON.parse(config.popular_categories).indexOf(categoryOption.id)>=0)))
+    }
+    if ( config?.site_title ) {
+      setSiteName(config.site_title)
+    }
+    if ( config?.welcome_email ) {
+      setWelcomeEmail(config.welcome_email)
+    }
+    if ( config?.language ) {
+      setLanguage(config.language)
+    }
+  }, [config])
 
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("settings"))} </title>
+        <title>{config?.site_title} - {t(_t("settings"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>
@@ -122,8 +171,8 @@ const Setting = () => {
               theme="snow"
               modules={modules}
               formats={formats}
-              value={banner}
-              onChange={(content) => setBanner(content)}
+              value={welcomeEmail}
+              onChange={(content) => setWelcomeEmail(content)}
             />
           </FormControl>
           <FormControl id="select_language" mt={5}>
@@ -166,7 +215,7 @@ const Setting = () => {
           <Button variant="outline" colorScheme="teal" onClick={() => window.history.back()} mt={2}>
             {t(_t('Back'))}
           </Button>
-          <Button isLoading={isloading} colorScheme="blue" onClick={() => { }} m={2}>
+          <Button isLoading={isloading} colorScheme="blue" onClick={handleSave} m={2}>
             {t(_t('Save'))}
           </Button>
         </Flex>

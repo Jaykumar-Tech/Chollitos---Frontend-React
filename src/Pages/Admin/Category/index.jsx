@@ -22,7 +22,7 @@ import { _t } from "../../../Utils/_t";
 
 const AdminCategory = () => {
   const { globalProps } = useContext(GlobalContext);
-  const { categories, _setCategories } = globalProps;
+  const { categories, _setCategories, config } = globalProps;
   const [tableIndex, setTableIndex] = useState(0);
   const [tableSize, setTableSize] = useState(5);
   const [filter, setFilter] = useState('');
@@ -165,7 +165,7 @@ const AdminCategory = () => {
   return (
     <>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {t(_t("shops"))} </title>
+        <title>{config?.site_title} - {t(_t("shops"))} </title>
       </Helmet>
       <Box maxW={'1200px'} m={'auto'}>
         <Box>

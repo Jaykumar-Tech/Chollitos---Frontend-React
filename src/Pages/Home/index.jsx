@@ -20,7 +20,7 @@ let isend = false;
 const Home = () => {
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores} = globalProps;
+  const { categories, stores, config } = globalProps;
   const [deals, setDeals] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [feature,setFeature] = useState("new")
@@ -100,7 +100,7 @@ const Home = () => {
   return (
     <div>
       <Helmet>
-        <title>{t(_t("Chollitos"))} - {feature} {t(_t("deals"))} </title>
+        <title>{config?.site_title} - {feature} {t(_t("deals"))} </title>
       </Helmet>
       <DoubleTopBar categories={categories} setFeature={setFeature}/>
       <Box maxW={'1200px'} m={'auto'}>
@@ -142,8 +142,8 @@ const Home = () => {
                 width={'20%'}
               >
                 <Banner />
-                <PopularShops _stores={stores} />
-                <PopularCategories _categories={categories} />
+                <PopularShops />
+                <PopularCategories/>
               </Box>
             }
           </Flex>

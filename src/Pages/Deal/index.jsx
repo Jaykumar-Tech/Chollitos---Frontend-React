@@ -51,7 +51,7 @@ const Deal = () => {
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { t } = useTranslation();
   const { globalProps } = useContext(GlobalContext);
-  const { categories, stores } = globalProps;
+  const { categories, stores, config } = globalProps;
   const { dealTitle } = useParams();
   const [deal, setDeal] = useState({});
   const [images, setImages] = useState([]);
@@ -396,7 +396,7 @@ const Deal = () => {
     return (
       <>
         <Helmet>
-          <title>{t(_t("Chollitos")) + " - " + deal.title}</title>
+          <title>{config?.site_title + " - " + deal.title}</title>
         </Helmet>
         <Box
           color={themeColor}
@@ -511,48 +511,51 @@ const Deal = () => {
                   /></Box>
               )
             }
-            <Box>
-              <Icon
-                as={FaEdit}
-                color="blue.500"
-                boxSize={5}
-                ml={1}
-                cursor={'pointer'}
-                title={t(_t('edit'))}
-              onClick={async () => {
-                setTimeout(() => {
-                  onEditOpen();
-                }, 0);
-              }}
-              />
+            {
+              ( authToken?.user?.role && ( authToken.user.id === deal.user_id || authToken.user.role === 'admin' ) ) &&
+              <Box>
+                <Icon
+                  as={FaEdit}
+                  color="blue.500"
+                  boxSize={5}
+                  ml={1}
+                  cursor={'pointer'}
+                  title={t(_t('edit'))}
+                  onClick={async () => {
+                    setTimeout(() => {
+                      onEditOpen();
+                    }, 0);
+                  }}
+                />
               </Box>
-              {authToken?.user?.role === 'admin' &&
-                <Box>
-                  <Icon
-                    as={AiOutlineDelete}
-                    color="red.500"
-                    boxSize={5}
-                    cursor={'pointer'}
-                    title={t(_t('delete'))}
+            }
+            {authToken?.user?.role === 'admin' &&
+              <Box>
+                <Icon
+                  as={AiOutlineDelete}
+                  color="red.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('delete'))}
                   onClick={() => {
                     setDeleteDealId(deal.id);
                     onDeleteOpen();
                   }}
-                  />
-                </Box>
-              }
-              {authToken?.user?.role === 'admin' && deal.status === 0 &&
-                <Box>
-                  <Icon
-                    onClick={() => handleActivateDeal(deal.id)}
-                    as={FaCheckCircle}
-                    color="green.500"
-                    boxSize={5}
-                    cursor={'pointer'}
-                    title={t(_t('activate'))}
-                  />
-                </Box>
-              }
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 0 &&
+              <Box>
+                <Icon
+                  onClick={() => handleActivateDeal(deal.id)}
+                  as={FaCheckCircle}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('activate'))}
+                />
+              </Box>
+            }
           </Flex>
           <Spacer />
           <Flex alignItems={'center'}>
@@ -760,8 +763,8 @@ const Deal = () => {
             </Box>
           </Box>
           <Box>
-            <PopularShops stores={stores} />
-            <PopularCategories _categories={categories} />
+            <PopularShops />
+            <PopularCategories />
           </Box>
         </Box>
       </Box>
@@ -794,8 +797,7 @@ const Deal = () => {
           <ModalBody>
             {deal.type === 'deal' ?
               <CreateOrUpdateDeal deal={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
-              :
-              <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
+              : <CreateOrUpdateDiscount discount={deal} onClose={onEditClose} onUpdate={handleUpdateDeal} />
             }
           </ModalBody>
         </ModalContent>

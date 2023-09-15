@@ -5,18 +5,6 @@ const api = axios.create({
   // baseURL: process.env.API_BASE_URL,
 });
 
-const getDealsService = async () => {
-  try {
-    const data = { start_at: 0, length: 100 };
-    const response = await api.post('deal/find', data);
-    console.log('getDealsService');
-    return response?.data?.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-}
-
 const createDealService = async (data) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
@@ -29,18 +17,6 @@ const createDealService = async (data) => {
   } catch (error) {
     console.log(error);
     return error;
-  }
-}
-
-const getFilterDealsService = async (catIds) => {
-  try {
-    const data = { start_at: 0, length: 100, category_id: catIds };
-    const response = await api.post('deal/find', data);
-    console.log('getFilterDealsService');
-    return response?.data?.data;
-  } catch (error) {
-    console.log(error);
-    return [];
   }
 }
 
@@ -65,9 +41,14 @@ const getCountDealsService = async (catIds) => {
     const data = { category_id: catIds };
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
-    // if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
-    const response = await api.post('deal/count', data);
+
+    const response = await api.post('deal/count', data,
+    {
+      headers: {
+        authorization: auth_token ? (auth_token.token_type + " " + auth_token.access_token) : "",
+      }
+    });
     return response?.data?.data;
   } catch (error) {
     console.log(error);
@@ -79,7 +60,6 @@ const getDealByFilter = async (data) => {
   try {
     const auth_token = JSON.parse(localStorage.getItem('authToken'));
     if (!data.vip && auth_token && auth_token.user.role !== "customer") data.vip = 2;
-    // if (!data.vip && auth_token && auth_token.user.role === "vip") data.vip = 2;
     else if (!data.vip) data.vip = 0;
 
     var headers = {};
@@ -192,9 +172,7 @@ const getAllService = async () => {
 }
 
 export {
-  getDealsService,
   createDealService,
-  getFilterDealsService,
   getDealByIdService,
   getCountDealsService,
   getDealByFilter,
