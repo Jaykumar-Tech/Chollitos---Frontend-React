@@ -24,7 +24,7 @@ const PopularCategories = () => {
       <Box pt={2}>
         {categories?.filter(category => (config?.popular_categories?.indexOf(category.id) >= 0))
           .map((category) => (
-            <Link to={"/category/" + category.slug} key={category.id}>
+            <Link to={"/categoría/" + category.slug} key={category.id}>
               <Button
                 mr={2}
                 mb={2}
@@ -48,7 +48,7 @@ const PopularCategories = () => {
         color={themeColor}
         _hover={{ color: 'gray.800' }}
       >
-        <Link to="/categories">
+        <Link to="/categorias">
           {t(_t("All Categories"))} <ArrowForwardIcon />
         </Link>
       </Box>

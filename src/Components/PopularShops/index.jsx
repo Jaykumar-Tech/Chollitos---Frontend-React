@@ -27,7 +27,7 @@ const PopularShops = () => {
           .slice(0, 10).map((store, index) => (
             <Button
               as={Link}
-              to={`/shop/${store.name}`}
+              to={`/store/${store.name}`}
               key={index}
               mr={2}
               mb={2}
@@ -50,7 +50,7 @@ const PopularShops = () => {
         color={themeColor}
         _hover={{ color: 'gray.800' }}
       >
-        <Link to="/shops">
+        <Link to="/stores">
           {t(_t("All Shops"))} <ArrowForwardIcon />
         </Link>
       </Box>

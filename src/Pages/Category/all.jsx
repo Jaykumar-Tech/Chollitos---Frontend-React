@@ -66,7 +66,7 @@ const AllCategories = () => {
         bg={'white'}
       >
         {filteredItems.map((item, index) => (
-          <Link to={"/category/" + item.slug} key={index}>
+          <Link to={"/categoría/" + item.slug} key={index}>
             <Flex
               key={item.id}
               p={4}

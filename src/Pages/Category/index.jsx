@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../../Components/GlobalContext";
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import MyBreadcrumb from "../../Layouts/BreadCrumb";
 import CategoryBar from "../../Layouts/CategoryBar/categories";
 import { Box, Flex, SimpleGrid, useBreakpointValue, Spinner } from "@chakra-ui/react";
@@ -16,7 +16,8 @@ let offset = 0;
 let isend = false;
 
 const Category = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  const history = useHistory();
   const { globalProps } = useContext(GlobalContext);
   const { categories, config } = globalProps;
   const { categorySlug } = useParams();
@@ -138,7 +139,7 @@ const Category = () => {
                 />
               }
               {deals && deals.map((deal) => (
-                <Box key={deal.id} opacity={isloading ? 0.3 : 1}>
+                <Box key={deal?.id} opacity={isloading ? 0.3 : 1}>
                   <CustomCard deal={deal} />
                 </Box>
               ))}

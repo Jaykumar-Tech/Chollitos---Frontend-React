@@ -312,7 +312,7 @@ const CustomCard = (props) => {
         }
       </CardHeader>
       <CardBody p={2}>
-        <Link to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}>
+        <Link to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}>
           <Image
             src={deal.image_urls && JSON.parse(deal.image_urls)[0]}
             alt="image"
@@ -328,14 +328,14 @@ const CustomCard = (props) => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link to={"/shop/" + deal.storename}>
+          <Link to={"/store/" + deal.storename}>
             {deal.storename} {t(_t("discount code"))}
           </Link>
         </Box>
         <Box maxW="full" h="3em" overflow="hidden" p={1}>
-          <Link to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}>
+          <Link to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}>
             <Text
-              lineHeight="1.2"
+              lineHeight="1.3"
               css={{
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
@@ -505,7 +505,7 @@ const CustomCard = (props) => {
             <Box _hover={{ color: themeColor }}>
               <Link
                 title="Comments"
-                to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}
               >
                 <FaComment />
               </Link>

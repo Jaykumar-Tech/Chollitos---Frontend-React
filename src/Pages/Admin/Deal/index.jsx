@@ -58,7 +58,7 @@ const ManageDeal = () => {
     {
       Header: t(_t('Image')), accessor: 'image_urls',
       Cell: ({ value, row }) => (
-        <Link to={`/deal/${getUrlFromTitle(value)}-${row.original.id}`}>
+        <Link to={`/chollo/${getUrlFromTitle(value)}-${row.original.id}`}>
           <Image alt={row.original.name} src={JSON.parse(value)[0]} />
         </Link>
       ),
@@ -66,7 +66,7 @@ const ManageDeal = () => {
     {
       Header: t(_t('Title')), accessor: 'title',
       Cell: ({ value, row }) => (
-        <Link to={`/deal/${getUrlFromTitle(value)}-${row.original.id}`}>
+        <Link to={`/chollo/${getUrlFromTitle(value)}-${row.original.id}`}>
           <Text title={value}>{value.length > 20 ? value.slice(0, 20) + '...' : value}</Text>
         </Link>
       ),

@@ -88,7 +88,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
       <UnorderedList listStyleType={'none'} color={themeColor}>
         {categories?.filter(category => filterData.includes(category.parent_id)).map((category) => (
           <ListItem key={category.id}>
-            <Link to={"/category/" + category.slug}>
+            <Link to={"/categoría/" + category.slug}>
               <Text
                 _hover={{ textDecoration: "underline" }}
                 fontWeight={filterData.includes(category.id) ? 600 : 400}

@@ -21,7 +21,7 @@ function CategoryBar({ categories, categorySlug = null }) {
       category.slug === slug && category.status && setCategory(category);
     })
   }
-  
+
   const scrollLeft = () => {
     containerRef.current.scrollBy({
       left: -window.innerWidth + 100,
@@ -42,27 +42,27 @@ function CategoryBar({ categories, categorySlug = null }) {
         {isOverflow && <ChevronLeftIcon onClick={scrollLeft} bg={'transparent'} color={themeColor} boxSize={6} />}
         <Flex ref={containerRef} overflow={'hidden'}>
           {categories
-          .filter(category=>category.status)
-          .map((item) => (
-            (category ? item.parent_id === category.id : item.parent_id === -1) &&
-            <Link to={"/category/" + item.slug} key={item.id}>
-              <Button
-                key={item.id}
-                mr={2}
-                minW={'auto'}
-                fontSize={{ base: '0.8em', md: '0.9em' }}
-                fontWeight={400}
-                bg={'blue.50'}
-                color={themeColor}
-                _hover={{
-                  bg: themeColor,
-                  color: 'white'
-                }}
-              >
-                {item.name}
-              </Button>
-            </Link>
-          ))}
+            .filter(category => category.status)
+            .map((item) => (
+              (category ? item.parent_id === category.id : item.parent_id === -1) &&
+              <Link to={"/categoría/" + item.slug} key={item.id}>
+                <Button
+                  key={item.id}
+                  mr={2}
+                  minW={'auto'}
+                  fontSize={{ base: '0.8em', md: '0.9em' }}
+                  fontWeight={400}
+                  bg={'blue.50'}
+                  color={themeColor}
+                  _hover={{
+                    bg: themeColor,
+                    color: 'white'
+                  }}
+                >
+                  {item.name}
+                </Button>
+              </Link>
+            ))}
         </Flex>
         {isOverflow && <ChevronRightIcon onClick={scrollRight} bg={'transparent'} color={themeColor} boxSize={6} />}
       </Flex>

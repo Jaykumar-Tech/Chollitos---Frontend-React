@@ -5,10 +5,12 @@ import {
   Image,
   Text,
   Button,
+  Spacer,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Icon,
+  Avatar,
   VStack,
   useBreakpointValue,
   Modal,
@@ -19,17 +21,22 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react"
-import { Link } from "react-router-dom";
+import { TimeIcon } from "@chakra-ui/icons";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
+import { GlobalContext } from "../../Components/GlobalContext";
+import Carousel from "../../Components/Carousel"
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUser, FaCrown, FaEdit, FaCheckCircle, FaStar, FaRegStar } from "react-icons/fa";
+import 'react-quill/dist/quill.snow.css';
+import { AiOutlineDelete } from "react-icons/ai";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdHome } from "react-icons/md";
-import { useState, useEffect, useContext } from "react";
 import { getStoreByNameService } from "../../Services/Store";
 import { getDealByFilter } from "../../Services/Deal";
-import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
+import { getTimeDiff } from "../../Helpers";
 import { useTranslation } from "react-i18next";
 import { _t } from "../../Utils/_t";
-import { GlobalContext } from "../../Components/GlobalContext";
 
 const Store = () => {
   const { globalProps } = useContext(GlobalContext);
@@ -43,6 +50,8 @@ const Store = () => {
   const currentDate = new Date();
   const month = currentDate.toLocaleString('en-US', { month: 'long' });
   const appMode = useBreakpointValue({ base: "sm", sm: "md", md: "lg" });
+  const themeColor = 'blue.500';
+  const authToken = JSON.parse(localStorage.getItem("authToken"));
 
   const getStoreByName = async () => {
     const store = await getStoreByNameService(store_name);
@@ -65,6 +74,14 @@ const Store = () => {
     setIsOpen(true);
   }
 
+  const getUrlFromTitle = (title) => {
+    const _title = title.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+    if (_title.length > 30) {
+      return _title.slice(0, 30) + "...";
+    }
+    return _title;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       await getStoreByName();
@@ -72,6 +89,206 @@ const Store = () => {
 
     fetchData();
   }, [store_name]);
+
+  const DealHeader = ({ deal }) => {
+    return (
+      <>
+        <Box maxW="full" h="4em" overflow="hidden" p={1}>
+          <Link
+            title="Comments"
+            to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}
+          >
+            <Text
+              lineHeight="1.3"
+              css={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontWeight: 600,
+                fontSize: "1.4em",
+              }}
+            >
+              {deal.title}
+            </Text>
+          </Link>
+        </Box>
+        <Flex mt={2}>
+          <Text
+            colorScheme="blue"
+            color={themeColor}
+            bg={'blue.50'}
+            h={'2.4em'}
+            p={2}
+            borderRadius={5}
+            fontWeight={600}
+          >
+            <span>
+              {
+                (deal.type === 'free' || (deal.price_low < 0.001 && deal.type === 'deal')) ?
+                  t(_t("FREE")) :
+                  deal.type === 'deal' ? <span>{deal.price_low + "€ "}
+                    <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span> :
+                    deal.type === 'discount_percent' ?
+                      <span>-{deal.price_new}%</span> :
+                      <span>-{deal.price_new}€</span>
+              }
+            </span>
+          </Text>
+          <Spacer flex={0.2} />
+          <Button
+            as={'a'}
+            href={deal.deal_url}
+            target="_blank"
+            rel="nofollow noopener"
+            colorScheme="blue"
+            display="flex"
+            alignItems="center"
+            w={"50%"}
+            flex={1}
+          >
+            <ExternalLinkIcon mr={1} />
+            {t(_t("Go to Sale"))}
+          </Button>
+        </Flex>
+        <Flex alignItems="center" width={'100%'} mt={2}>
+          <Flex alignItems="center">
+            <Box _hover={{ color: themeColor }}>
+              <Link title="Like" to="#">
+                <FaThumbsUp
+                // onClick={() => handleLike(true)}
+                />
+              </Link>
+            </Box>
+            <Spacer mx={'5px'} />
+            <Box _hover={{ color: themeColor }}>
+              <Link title="Dislike" to="#">
+                <FaThumbsDown
+                // onClick={() => handleLike(false)}
+                />
+              </Link>
+            </Box>
+            <Text
+              p={2}
+              borderRadius={5}
+              fontWeight={600}
+            >
+              {deal.cnt_like ?? 0}
+            </Text>
+          </Flex>
+          <Spacer />
+          <Flex alignItems="center">
+            {authToken?.user?.role === 'admin' &&
+              (deal.vip ?
+                <Box>
+                  <Icon
+                    // onClick={() => handleUnsetVip(deal.id)}
+                    as={FaUser}
+                    color="gray.500"
+                    boxSize={5}
+                    cursor={'pointer'}
+                    title={t(_t('Unset VIP'))}
+                  /></Box>
+                :
+                <Box>
+                  <Icon
+                    // onClick={() => handleSetVip(deal.id)}
+                    as={FaCrown}
+                    color="yellow.500"
+                    boxSize={5}
+                    cursor={'pointer'}
+                    title={t(_t('Set VIP'))}
+                  /></Box>
+              )
+            }
+            {
+              (authToken?.user?.role && (authToken.user.id === deal.user_id || authToken.user.role === 'admin')) &&
+              <Box>
+                <Icon
+                  as={FaEdit}
+                  color="blue.500"
+                  boxSize={5}
+                  ml={1}
+                  cursor={'pointer'}
+                  title={t(_t('edit'))}
+                // onClick={async () => {
+                //   setTimeout(() => {
+                //     onEditOpen();
+                //   }, 0);
+                // }}
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' &&
+              <Box>
+                <Icon
+                  as={AiOutlineDelete}
+                  color="red.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('delete'))}
+                // onClick={() => {
+                //   setDeleteDealId(deal.id);
+                //   onDeleteOpen();
+                // }}
+                />
+              </Box>
+            }
+            {authToken?.user?.role === 'admin' && deal.status === 0 &&
+              <Box>
+                <Icon
+                  // onClick={() => handleActivateDeal(deal.id)}
+                  as={FaCheckCircle}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('activate'))}
+                />
+              </Box>
+            }
+            {(authToken?.user?.role === 'admin' && deal.pinned === 1) &&
+              <Box>
+                <Icon
+                  // onClick={() => handleUnpinDeal(deal.id)}
+                  as={FaStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('unpin'))}
+                />
+              </Box>
+            }
+            {(authToken?.user?.role === 'admin' && deal.pinned === 0) &&
+              <Box>
+                <Icon
+                  // onClick={() => handlePinDeal(deal.id)}
+                  as={FaRegStar}
+                  color="green.500"
+                  boxSize={5}
+                  cursor={'pointer'}
+                  title={t(_t('pin'))}
+                />
+              </Box>
+            }
+          </Flex>
+          <Spacer />
+          <Flex alignItems={'center'}>
+            <Box _hover={{ color: themeColor }}>
+              <Link
+                title="Comments"
+                to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}
+              >
+                <FaComment />
+              </Link>
+            </Box>
+            <Spacer mx={'5px'} />
+            <span>{deal.cnt_comment}</span>
+          </Flex>
+        </Flex>
+      </>
+    )
+  }
 
   return (
     <Box maxW={'960px'} m={'auto'} p={2}>
@@ -93,7 +310,7 @@ const Store = () => {
         <BreadcrumbItem>
           <BreadcrumbLink
             as={Link}
-            to={"/shops/"}
+            to={"/stores/"}
           >
             {t(_t("shop"))}
           </BreadcrumbLink>
@@ -266,51 +483,58 @@ const Store = () => {
           {store?.name + ' ' + t(_t("deals")) + ' (' + (store?.cnt_deal ?? 0) + ')'}
         </Text>
         <Box>
-          {
-            deals ?
-              deals?.filter(v => (v.type === "deal")).map((deal, index) => {
-                return (<Flex
+          {deals?.length > 0 &&
+            deals?.filter(v => (v.type === "deal")).map((deal, index) => {
+              return (
+                <Box
                   key={index}
                   bg={'white'}
-                  p={2}
+                  p={3}
                   mb={'10px'}
                   borderRadius={3}
                   shadow={"1px 1px 3px rgba(0,0,0,0.3)"}
+                  alignItems={'center'}
                 >
-                  <VStack p={'10px 20px'} justifyContent={'center'}>
-                    <Text
-                      fontSize={'1.5em'}
-                      fontWeight={600}
-                      color={'blue.500'}
-                    >
-                      <span>{deal.price_low + "€ "}
-                        <strike style={{ fontSize: '0.8em' }} >{deal.price_new}€</strike></span>
-                    </Text>
-                    <Text fontWeight={600} color={'gray.400'} letterSpacing={'-1px'}>{t(_t("SALE"))}</Text>
-                  </VStack>
-                  <VStack p={'10px'} flex={1} justifyContent={'center'}>
-                    <Text fontWeight={600}>{t(_t("Extra"))} {Math.floor(deal.price_new)}% {t(_t("off on all products at"))} {store?.name}</Text>
-                  </VStack>
-                  <VStack p={'10px'} justifyContent={'center'}>
-                    {appMode === 'lg' ? (
-                      <Button
-                        as={'a'}
-                        href={deal.deal_url}
-                        target="_blank"
-                        rel="nofollow noopener"
-                        colorScheme="blue"
-                        p={'0 100px'}
-                      >
-                        {t(_t("Go to Sale"))}
-                      </Button>
-                    ) : (
-                      <Button colorScheme="blue" borderRadius={'50%'} w={'40px'} h={'40px'}>
-                        <ChevronRightIcon boxSize={6} />
-                      </Button>
-                    )}
-                  </VStack>
-                </Flex>)
-              }) : null
+                  {appMode === 'lg' ?
+                    <Flex>
+                      <Box flex='0.3'>
+                        <Link
+                          title="Comments"
+                          to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                        >
+                          <Carousel images={JSON.parse(deal.image_urls)} m={'auto'} />
+                        </Link>
+                      </Box>
+                      <Box flex='0.7' ml={5}>
+                        <Flex color={"gray.400"} fontSize={'0.8em'} mb={3}>
+                          <Flex alignItems="center">
+                            <Avatar
+                              src={deal.avatar}
+                              name={deal.username}
+                              size={'xs'}
+                              mr={2}
+                            />
+                            <Text>{deal.username}</Text>
+                          </Flex>
+                          <Spacer />
+                          <Flex alignItems={'center'}>
+                            <TimeIcon />
+                            <Text ml={1}>{getTimeDiff(deal.start_date)}</Text>
+                          </Flex>
+                        </Flex>
+                        <DealHeader deal={deal} />
+                      </Box>
+                    </Flex>
+                    :
+                    <>
+                      <Carousel images={JSON.parse(deal.image_urls)} m={'auto'} />
+                      <Spacer h={'10px'} />
+                      <DealHeader deal={deal} />
+                    </>
+                  }
+                </Box>
+              )
+            })
           }
         </Box>
       </Box>

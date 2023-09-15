@@ -156,7 +156,7 @@ export default function SearchBar({ appMode }) {
                   {deals && deals.map((deal) => (
                     <Link
                       key={deal.id}
-                      to={`/deal/${getUrlFromTitle(deal.title)}-${deal.id}`}
+                      to={`/chollo/${getUrlFromTitle(deal.title)}-${deal.id}`}
                       onClick={() => { setIsOpen(false) }}
                     >
                       <Flex fontSize={'0.9em'}>

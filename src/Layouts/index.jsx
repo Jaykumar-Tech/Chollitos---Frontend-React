@@ -351,7 +351,7 @@ export default function Navbar() {
           {authToken?.user?.role === "admin" && <AdminMenu />}
 
           {(authToken?.user?.role === "vip" || authToken?.user?.role === "customer") &&
-            <Link to="/deals">
+            <Link to="/chollos">
               <Button
                 className="btnRes"
                 border={`solid white 2px`}
@@ -395,10 +395,10 @@ export default function Navbar() {
                   )}
                 </MenuButton>
                 <MenuList>
-                  <Link to="/create/deal">
+                  <Link to="/crear/chollo">
                     <MenuItem>{t(_t("Deal"))}</MenuItem>
                   </Link>
-                  <Link to="/create/discount">
+                  <Link to="/crear/descuento">
                     <MenuItem>{t(_t("Discount"))}</MenuItem>
                   </Link>
                 </MenuList>

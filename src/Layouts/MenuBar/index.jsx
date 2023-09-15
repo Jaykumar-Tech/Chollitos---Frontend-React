@@ -129,7 +129,7 @@ function MenuBar({ appMode }) {
                       {categories
                         ?.filter((category) => (category.status && config?.popular_categories?.indexOf(category.id) >= 0))
                         .map((category) => (
-                          <Link to={"/category/" + category.slug} key={category.id}>
+                          <Link to={"/categoría/" + category.slug} key={category.id}>
                             <Text
                               mr={2}
                               mb={2}
@@ -141,7 +141,7 @@ function MenuBar({ appMode }) {
                             </Text>
                           </Link>
                         ))}
-                      <Link to={"/categories"}>
+                      <Link to={"/categorias"}>
                         <Text
                           mr={2}
                           mb={2}
@@ -166,7 +166,7 @@ function MenuBar({ appMode }) {
                         {stores
                           ?.filter(store => (store.status && config?.popular_shops?.indexOf(store.id) >= 0))
                           .map((store) => (
-                            <Link to={`/shop/${store.name}`} key={store.id}>
+                            <Link to={`/store/${store.name}`} key={store.id}>
                               <Text
                                 mr={2}
                                 height={'2em'}
@@ -178,7 +178,7 @@ function MenuBar({ appMode }) {
                             </Link>
                           ))}
                       </Grid>
-                      <Link to={"/shops"}>
+                      <Link to={"/stores"}>
                         <Text
                           mr={2}
                           mt={2}
@@ -194,7 +194,7 @@ function MenuBar({ appMode }) {
                   </Box>
 
                   <Box px={2} flex={0.7} borderRight={'1px'} pl={10}>
-                    <Link to="/free" onClick={() => setIsOpen(false)}>
+                    <Link to="/gratis" onClick={() => setIsOpen(false)}>
                       <Flex p={'15px 0'} cursor={"pointer"}>
                         <FaMoneyBill style={{ marginTop: '5px' }} />
                         <Text fontWeight={600} ml={2} >{t(_t("Free"))}</Text>
@@ -214,7 +214,7 @@ function MenuBar({ appMode }) {
               </Box>
               :
               <Box>
-                <Link to="/free" onClick={() => setIsOpen(false)}>
+                <Link to="/gratis" onClick={() => setIsOpen(false)}>
                   <Flex p={'15px 0'}>
                     <FaMoneyBill style={{ marginTop: '5px' }} />
                     <Text fontWeight={600} fontSize={'1.1em'} ml={2}>{t(_t("Free"))}</Text>
@@ -240,7 +240,7 @@ function MenuBar({ appMode }) {
                     {categories
                       ?.filter((category) => (category.status && config?.popular_categories?.indexOf(category.id) >= 0))
                       .map((category) => (
-                        <Link to={"/category/" + category.slug} key={category.id}>
+                        <Link to={"/categoría/" + category.slug} key={category.id}>
                           <Text
                             mr={2}
                             mb={2}
@@ -253,7 +253,7 @@ function MenuBar({ appMode }) {
                         </Link>
                       ))}
                   </Grid>
-                  <Link to={"/categories"}>
+                  <Link to={"/categorias"}>
                     <Text
                       mr={2}
                       mb={2}
@@ -278,7 +278,7 @@ function MenuBar({ appMode }) {
                     {stores
                       ?.filter(store => (store.status && config?.popular_shops?.indexOf(store.id) >= 0))
                       .slice(0, 10).map((store) => (
-                        <Link to={`/shop/${store.name}`} key={store.id}>
+                        <Link to={`/store/${store.name}`} key={store.id}>
                           <Text
                             mr={2}
                             mb={2}
@@ -291,7 +291,7 @@ function MenuBar({ appMode }) {
                         </Link>
                       ))}
                   </Grid>
-                  <Link to={"/shops"}>
+                  <Link to={"/stores"}>
                     <Text
                       mr={2}
                       mb={2}

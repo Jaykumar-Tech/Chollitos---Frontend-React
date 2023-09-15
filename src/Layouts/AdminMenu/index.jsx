@@ -33,19 +33,19 @@ const AdminMenu = () => {
         <Link to="/admin/banner">
           <MenuItem>{t(_t("Banner"))}</MenuItem>
         </Link>
-        <Link to="/admin/settings">
+        <Link to="/admin/configuración">
           <MenuItem>{t(_t("Settings"))}</MenuItem>
         </Link>
-        <Link to="/admin/users">
+        <Link to="/admin/usuarios">
           <MenuItem>{t(_t("Users"))}</MenuItem>
         </Link>
-        {/* <Link to="/deals">
+        <Link to="/chollos">
           <MenuItem>{t(_t("Deals"))}</MenuItem>
-        </Link> */}
-        <Link to="/admin/categories">
+        </Link>
+        <Link to="/admin/categorias">
           <MenuItem>{t(_t("Categories"))}</MenuItem>
         </Link>
-        <Link to="/admin/shops">
+        <Link to="/admin/stores">
           <MenuItem>{t(_t("Shops"))}</MenuItem>
         </Link>
         {/* <Menu>

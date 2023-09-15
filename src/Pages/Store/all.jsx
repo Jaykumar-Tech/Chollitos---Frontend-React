@@ -65,7 +65,7 @@ const AllShops = () => {
         bg={'white'}
       >
         {filteredItems.map((item, index) => (
-          <Link to={"/shop/" + item.name} key={index}>
+          <Link to={"/store/" + item.name} key={index}>
             <Flex
               key={item.id}
               p={4}

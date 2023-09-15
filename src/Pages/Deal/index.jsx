@@ -489,13 +489,13 @@ const Deal = () => {
           fontSize={'0.8em'}
           p={1}
         >
-          <Link to={"/shop/" + deal.storename}>
+          <Link to={"/store/" + deal.storename}>
             {deal.storename} {t(_t("discount code"))}
           </Link>
         </Box>
         <Box maxW="full" h="4em" overflow="hidden" p={1}>
           <Text
-            lineHeight="1.2"
+            lineHeight="1.3"
             css={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
