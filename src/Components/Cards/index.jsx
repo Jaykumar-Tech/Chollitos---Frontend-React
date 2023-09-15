@@ -329,13 +329,13 @@ const CustomCard = (props) => {
                 <FaThumbsUp onClick={() => handleLike(true)} />
               </Link>
             </Box>
-            <Spacer mx={'5px'} />
+            <Spacer mx={'2px'} />
             <Box _hover={{ color: themeColor }}>
               <Link title="Dislike" to="#">
                 <FaThumbsDown onClick={() => handleLike(false)} />
               </Link>
             </Box>
-            <Spacer mx={'5px'} />
+            <Spacer mx={'2px'} />
             <span>{cntLike ?? 0}</span>
             {cntLike > 1 &&
               <Box color="red" ml={1}>
@@ -421,7 +421,7 @@ const CustomCard = (props) => {
                 <FaComment />
               </Link>
             </Box>
-            <Spacer mx={'5px'} />
+            <Spacer mx={'2px'} />
             <span>{deal.cnt_comment}</span>
           </Flex>
         </Flex>

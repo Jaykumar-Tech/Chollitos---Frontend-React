@@ -42,8 +42,8 @@ const Setting = () => {
         ['bold', 'italic', 'underline', 'strike'],
         ['link'],
         [{ image: 'image' }],
-        // [{ align: [] }],
-        // [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ align: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
         [{ color: [] }, { background: [] }],
         ['clean']
@@ -140,6 +140,7 @@ const Setting = () => {
             <Select
               options={storeOptions}
               value={popularShops}
+              menuPortalTarget={document.body}
               onChange={(popularShops) => {
                 setPopularShops(popularShops);
               }}
@@ -151,8 +152,10 @@ const Setting = () => {
             <Select
               options={categoryOptions}
               value={popularCategories}
+              menuPortalTarget={document.body}
               onChange={(popularCategories) => {
                 setPopularCategories(popularCategories);
+                console.log(popularCategories);
               }}
               isMulti
             />
