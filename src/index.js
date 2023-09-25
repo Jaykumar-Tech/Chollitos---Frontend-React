@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { GlobalProvider } from './Components/GlobalContext';
 import { ChakraProvider } from '@chakra-ui/react';
+import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -15,3 +16,5 @@ root.render(
     </GlobalProvider>
   </ChakraProvider>
 );
+
+reportWebVitals();

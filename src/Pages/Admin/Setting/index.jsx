@@ -228,7 +228,7 @@ const Setting = () => {
               menuPortalTarget={document.body}
               onChange={(popularCategories) => {
                 setPopularCategories(popularCategories);
-                console.log(popularCategories);
+                // console.log(popularCategories);
               }}
               isMulti
             />

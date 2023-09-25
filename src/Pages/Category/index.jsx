@@ -52,7 +52,7 @@ const Category = () => {
 
       loadmore ? setDeals((prevDeals) => [...prevDeals, ...data]) : setDeals(data);
       offset += limit;
-      console.log(data[0], offset)
+      // console.log(data[0], offset)
     }
 
     setIsloading(false);

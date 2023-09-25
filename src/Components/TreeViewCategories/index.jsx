@@ -77,7 +77,7 @@ const TreeViewCategories = ({ _categories, categorySlug, filterDeals }) => {
     const curId = buildFilter();
     if (curId >= 0) {
       var catIds = getAllChildren(curId)
-      console.log(categorySlug, curId)
+      // console.log(categorySlug, curId)
       localStorage.setItem("category", JSON.stringify(catIds))
       filterDeals(catIds);
     }

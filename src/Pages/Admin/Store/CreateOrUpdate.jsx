@@ -1,5 +1,4 @@
 import {
-  Flex,
   Button,
   Image,
   Modal,
@@ -13,9 +12,14 @@ import {
   FormLabel,
   Input,
   useToast,
+  Box,
+  Spinner,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createStoreService, getStoreByIdService, updateStoreService } from "../../../Services/Store";
+import { useDropzone } from 'react-dropzone';
+import { FaFileImage } from "react-icons/fa";
+import { getUrlUploadedService } from '../../../Services/Resource';
 import ReactQuill from 'react-quill';
 import { useTranslation } from 'react-i18next';
 import { _t } from "../../../Utils/_t";
@@ -24,6 +28,7 @@ import { GlobalContext } from "../../../Components/GlobalContext";
 
 const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
   const { t } = useTranslation();
+  const [isuploading, setIsuploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
@@ -31,7 +36,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
   const [blog, setBlog] = useState('');
   const { globalProps } = useContext(GlobalContext);
   const { stores, _setStores } = globalProps;
-  const toast = useToast()
+  const toast = useToast();
 
   const modules = {
     toolbar: {
@@ -86,6 +91,55 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
 
     id > 0 ? fetchData() : setData();
   }, [id]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: 'image/*',
+    onDrop: (acceptedFiles) => {
+      setIsuploading(true);
+      if (acceptedFiles.length === 0) {
+        setIsuploading(false);
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", acceptedFiles[0]);
+
+      getUrlUploadedService(formData)
+        .then((result) => {
+          setIsuploading(false);
+          if (result && result.status === 200) {
+            setImage(result.data.url);
+            toast({
+              title: t(_t('Upload Success.')),
+              description: t(_t("We've uploaded your image.")),
+              position: 'top',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            })
+          } else {
+            toast({
+              title: t(_t('Error.')),
+              description: result?.response?.data.message,
+              position: 'top',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })
+          }
+        })
+        .catch((error) => {
+          setIsuploading(false);
+          toast({
+            title: t(_t('Error.')),
+            description: error.message,
+            position: 'top',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          })
+        })
+    }
+  });
 
   const handleCreateStore = async (e) => {
     e.preventDefault()
@@ -159,7 +213,7 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
         })
       }
     }
-    console.log(name, url, image, blog)
+    // console.log(name, url, image, blog)
   }
 
   return (
@@ -180,11 +234,59 @@ const CreateOrUpdateStore = ({ isModalOpen, onCloseModal, id = 0 }) => {
               <Input type="text" value={url} onChange={(e) => { setUrl(e.target.value) }} />
             </FormControl>
             <FormControl mt={5}>
-              <FormLabel>{t(_t('Image URL'))}</FormLabel>
-              <Input type="text" value={image} onChange={(e) => { setImage(e.target.value) }} />
-              <Flex justifyContent="center" alignItems="center" h="120px">
-                <Image src={image} alt={t(_t("Image Not Found"))} h={'100px'} w={'auto'} />
-              </Flex>
+              <FormLabel
+                fontWeight={600}
+                htmlFor="image"
+                mt="2%">
+                {t(_t('Image URL'))}
+              </FormLabel>
+              <Box
+                {...getRootProps()}
+                p={4}
+                minHeight={'120px'}
+                borderWidth={2}
+                borderStyle="dashed"
+                borderRadius="md"
+                position={'relative'}
+                textAlign="center"
+                cursor="pointer"
+                borderColor={isDragActive ? "blue.500" : "gray.200"}
+              >
+                <input {...getInputProps()} />
+                {image ?
+                  <Image src={image} alt="Uploaded" m={'auto'} />
+                  :
+                  <>
+                    <Box>
+                      <FaFileImage size={24} />
+                    </Box>
+                    {!isuploading &&
+                      <>
+                        <Box mt={2} fontWeight="semibold" >
+                          {isDragActive ? t(_t("Drop the image here")) : t(_t("Drag and drop an image here"))}
+                        </Box>
+                        <Box mt={2} fontSize="sm" color="gray.500">
+                          {t(_t("Supported formats: JPEG, PNG"))}
+                        </Box>
+                      </>
+                    }
+                  </>
+                }
+                {isuploading &&
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="lg"
+                    position={'absolute'}
+                    top="calc(50%)"
+                    left="calc(50% - 20px)"
+                    transform="translate(-50%, -50%)"
+                    zIndex={1}
+                  />
+                }
+              </Box>
             </FormControl>
             <FormControl mt={5}>
               <FormLabel>{t(_t('Info HTML'))}</FormLabel>

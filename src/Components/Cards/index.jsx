@@ -206,7 +206,7 @@ const CustomCard = (props) => {
   }
 
   const handleUpdateDeal = async (_deal) => {
-    console.log(_deal)
+    // console.log(_deal)
     if (authToken?.user?.role !== 'admin')
       _deal.status = 0
     setDeal({

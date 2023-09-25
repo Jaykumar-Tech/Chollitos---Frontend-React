@@ -11,7 +11,7 @@ const signInService = async (email, password) => {
       email: email,
       password: password,
     });
-    console.log(JSON.stringify(response));
+    // console.log(JSON.stringify(response));
     return response;
   } catch (error) {
     console.log(error)
@@ -27,7 +27,7 @@ const signUpService = async (email, password, username, birthday) => {
       username: username,
       birthday: birthday
     });
-    console.log(JSON.stringify(response));
+    // console.log(JSON.stringify(response));
     return response;
   } catch (error) {
     return error;

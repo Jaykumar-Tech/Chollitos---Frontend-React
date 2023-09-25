@@ -26,7 +26,7 @@ const changeLangService = async (lang) => {
             authorization: auth_token.token_type + " " + auth_token.access_token,
           }
         });
-        console.log(JSON.stringify(response));
+        // console.log(JSON.stringify(response));
         return response;
     } catch (error) {
         console.log(error)
